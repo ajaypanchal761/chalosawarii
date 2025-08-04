@@ -10,8 +10,10 @@ const HeroSection = () => {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const [departureDate, setDepartureDate] = useState("2025-08-04");
+  const [returnDate, setReturnDate] = useState("2025-08-06");
+  const [pickupTime, setPickupTime] = useState("09:00");
   const [selectedDate, setSelectedDate] = useState("04");
-  const [activeService, setActiveService] = useState("redBus");
+  const [activeService, setActiveService] = useState("oneWay");
   const [womenBooking, setWomenBooking] = useState(false);
 
   const handleSwapLocations = () => {
@@ -130,40 +132,36 @@ const HeroSection = () => {
       {/* Mobile Layout */}
       <div className="block md:hidden flex-1 flex flex-col">
         {/* Top Service Navigation */}
-        <div className="flex justify-center space-x-8 p-4 border-b border-border">
-          <div 
-            className={`flex flex-col items-center space-y-1 cursor-pointer ${
-              activeService === "redBus" ? "text-primary" : "text-muted-foreground"
+        <div className="flex justify-center space-x-4 p-4 border-b border-border">
+          <Button 
+            variant={activeService === "oneWay" ? "default" : "outline"}
+            size="sm"
+            className={`${
+              activeService === "oneWay" 
+                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                : "text-muted-foreground border-border hover:bg-muted"
             }`}
-            onClick={() => setActiveService("redBus")}
+            onClick={() => setActiveService("oneWay")}
           >
-            <Bus className={`w-6 h-6 ${activeService === "redBus" ? "text-primary" : "text-muted-foreground"}`} />
-            <span className="text-xs font-medium">redBus</span>
-            <span className="text-xs">Bus tickets</span>
-            {activeService === "redBus" && (
-              <div className="w-full h-0.5 bg-primary rounded-full"></div>
-            )}
-          </div>
+            One Way
+          </Button>
           
-          <div 
-            className={`flex flex-col items-center space-y-1 cursor-pointer ${
-              activeService === "redRail" ? "text-primary" : "text-muted-foreground"
+          <Button 
+            variant={activeService === "roundTrip" ? "default" : "outline"}
+            size="sm"
+            className={`${
+              activeService === "roundTrip" 
+                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                : "text-muted-foreground border-border hover:bg-muted"
             }`}
-            onClick={() => setActiveService("redRail")}
+            onClick={() => setActiveService("roundTrip")}
           >
-            <Train className={`w-6 h-6 ${activeService === "redRail" ? "text-primary" : "text-muted-foreground"}`} />
-            <span className="text-xs font-medium">redRail</span>
-            <span className="text-xs">Train tickets</span>
-            {activeService === "redRail" && (
-              <div className="w-full h-0.5 bg-primary rounded-full"></div>
-            )}
-          </div>
+            Round Trip
+          </Button>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-4 space-y-4">
-          {/* Bus Tickets Heading */}
-          <h1 className="text-2xl font-bold text-foreground">Bus Tickets</h1>
+        <div className="flex-1 p-4 space-y-4 pb-20">
 
           {/* Main Booking Card */}
           <Card className="p-4 bg-background shadow-sm rounded-xl border border-border">
@@ -195,43 +193,63 @@ const HeroSection = () => {
 
             {/* Date of Journey */}
             <div className="mb-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-5 h-5 text-muted-foreground" />
-                  <span className="text-sm font-medium text-foreground">Date of Journey</span>
+                  <span className="text-sm font-medium text-foreground">Pickup Date</span>
                 </div>
-                <span className="text-sm text-muted-foreground">05 Aug, 2025</span>
               </div>
-              <div className="flex space-x-2 mt-2">
-                <Button variant="outline" size="sm" className="text-primary border-primary/20 bg-primary/5 hover:bg-primary/10">
-                  Today
-                </Button>
-                <Button variant="outline" size="sm" className="text-primary border-primary/20 bg-primary/5 hover:bg-primary/10">
-                  Tomorrow
-                </Button>
+              <div className="relative">
+                <Input
+                  type="date"
+                  value={departureDate}
+                  onChange={(e) => setDepartureDate(e.target.value)}
+                  className="h-12 border-border rounded-lg"
+                />
               </div>
             </div>
+
+             {/* Pickup Time - Show for both One Way and Round Trip */}
+             <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="w-5 h-5 text-muted-foreground" />
+                  <span className="text-sm font-medium text-foreground">Pickup Time</span>
+                </div>
+              </div>
+              <div className="relative">
+                <Input
+                  type="time"
+                  value={pickupTime}
+                  onChange={(e) => setPickupTime(e.target.value)}
+                  className="h-12 border-border rounded-lg"
+                />
+              </div>
+            </div>
+
+            {/* Return Date - Only show for Round Trip */}
+            {activeService === "roundTrip" && (
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-sm font-medium text-foreground">Return Date</span>
+                  </div>
+                </div>
+                <div className="relative">
+                  <Input
+                    type="date"
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                    className="h-12 border-border rounded-lg"
+                  />
+                </div>
+              </div>
+            )}
+
+           
           </Card>
 
-          {/* Women Booking Card */}
-          <Card className="p-4 bg-background shadow-sm rounded-xl border border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">Booking for women</p>
-                  <a href="#" className="text-xs text-primary">Know more</a>
-                </div>
-              </div>
-              <Switch 
-                checked={womenBooking}
-                onCheckedChange={setWomenBooking}
-                className="data-[state=checked]:bg-primary"
-              />
-            </div>
-          </Card>
 
           {/* Search Button */}
           <Button 
@@ -244,7 +262,7 @@ const HeroSection = () => {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="border-t border-border bg-background">
+        <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">
           <div className="flex justify-around py-2">
             <div className="flex flex-col items-center space-y-1">
               <Home className="w-5 h-5 text-primary" />
