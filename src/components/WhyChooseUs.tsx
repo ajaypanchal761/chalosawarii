@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Shield, Clock, MapPin, Headphones, CreditCard, Star } from "lucide-react";
+import { Shield, Clock, MapPin, Headphones, CreditCard, Star, Users } from "lucide-react";
 
 const WhyChooseUs = () => {
   const features = [
@@ -28,6 +28,11 @@ const WhyChooseUs = () => {
       icon: <Star className="w-8 h-8" />,
       title: "Best Prices",
       description: "Compare prices across operators and get the best deals on Bus, Car, and Traveller bookings"
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Quality Services",
+      description: "Chalo Sawari provides the best quality services to its customers"
     }
   ];
 
