@@ -1,0 +1,31 @@
+import TopNavigation from "@/components/TopNavigation";
+import HeroSection from "@/components/HeroSection";
+import OffersSection from "@/components/OffersSection";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import PopularRoutes from "@/components/PopularRoutes";
+import BookingBenefits from "@/components/BookingBenefits";
+import HowToBook from "@/components/HowToBook";
+import PartnersSection from "@/components/PartnersSection";
+import RoutesTable from "@/components/RoutesTable";
+import LiveTrackingSection from "@/components/LiveTrackingSection";
+import AppDownloadSection from "@/components/AppDownloadSection";
+import Footer from "@/components/Footer";
+
+const Index = () => {
+  return (
+    <div className="min-h-screen">
+      <TopNavigation />
+      <HeroSection />
+      <OffersSection />
+      <WhyChooseUs />
+      <PopularRoutes />
+      <BookingBenefits />
+      <HowToBook />
+      <PartnersSection />     
+      <AppDownloadSection />
+      <Footer />
+    </div>
+  );
+};
+
+export default Index;
