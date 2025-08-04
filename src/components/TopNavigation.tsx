@@ -7,6 +7,10 @@ import { Link } from "react-router-dom";
 const TopNavigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const handleLoginClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <nav className="w-full bg-white shadow-sm border-b">
       <div className="container mx-auto px-4">
@@ -80,8 +84,9 @@ const TopNavigation = () => {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="w-14 h-14"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMobileMenuOpen ? <X className="w-9 h-9" /> : <Menu className="w-9 h-9" />}
             </Button>
           </div>
         </div>
@@ -100,7 +105,7 @@ const TopNavigation = () => {
                 Offers
               </Button>
               <div className="flex flex-col space-y-2 pt-4 border-t">
-                <Link to="/auth" className="w-full">
+                <Link to="/auth" className="w-full" onClick={handleLoginClick}>
                   <Button variant="ghost" className="justify-start w-full">
                     <User className="w-4 h-4 mr-2" />
                     Login/Signup

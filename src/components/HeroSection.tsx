@@ -35,9 +35,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section 
-      className="relative min-h-screen flex flex-col bg-white"
-    >
+    <section  className="relative min-h-[600px] flex flex-col bg-white">
       {/* Desktop Hero Content */}
       <div className="hidden md:block relative min-h-[500px] flex items-center justify-center bg-cover bg-center"
         style={{ backgroundImage: `url(${HomeBanner})` }}>
@@ -58,7 +56,7 @@ const HeroSection = () => {
             <Card className="max-w-4xl mx-auto p-6 bg-background/95 backdrop-blur-sm shadow-lg">
               <div className="grid grid-cols-5 gap-4 items-end">
                 {/* From */}
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <label className="text-sm font-medium text-foreground">From</label>
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center z-10">
@@ -71,23 +69,22 @@ const HeroSection = () => {
                       onChange={(e) => setFromLocation(e.target.value)}
                     />
                   </div>
-                </div>
-
-                {/* Swap button */}
-                <div className="flex justify-center self-end mb-3">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="rounded-full hover:bg-muted hover:border-primary transition-colors"
-                    onClick={handleSwapLocations}
-                    title="Swap locations"
-                  >
-                    <ArrowLeftRight className="w-4 h-4" />
-                  </Button>
+                  {/* Swap Icon overlapping From field */}
+                  <div className="absolute -right-6 top-1/2 transform -translate-y-1/2 z-20">
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="rounded-full w-8 h-8 bg-white shadow-md hover:bg-muted hover:border-primary transition-colors"
+                      onClick={handleSwapLocations}
+                      title="Swap locations"
+                    >
+                      <ArrowLeftRight className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 {/* To */}
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <label className="text-sm font-medium text-foreground">To</label>
                   <div className="relative">
                     <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center z-10">
@@ -167,27 +164,42 @@ const HeroSection = () => {
           {/* Main Booking Card */}
           <Card className="p-4 bg-background shadow-sm rounded-xl border border-border">
             {/* From Field */}
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <div className="relative">
-                <Bus className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center z-10">
+                  <Search className="w-4 h-4 text-primary" />
+                </div>
                 <Input
                   value={fromLocation}
                   onChange={(e) => setFromLocation(e.target.value)}
-                  className="pl-12 h-12 border-border rounded-lg"
-                  placeholder="From"
+                  className="pl-14 h-14 border-border/50 bg-background/90 backdrop-blur-sm text-lg font-medium rounded-xl"
+                  placeholder="Departure City"
                 />
+              </div>
+              {/* Swap Icon overlapping From field */}
+              <div className="absolute right-5 top-full transform -translate-y-3 z-20">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full border-border/50 hover:bg-primary/10 hover:border-primary transition-all duration-200 w-10 h-10 shadow-md bg-white"
+                  onClick={handleSwapLocations}
+                >
+                  <ArrowLeftRight className="w-5 h-5" />
+                </Button>
               </div>
             </div>
 
             {/* To Field */}
-            <div className="mb-4">
+            <div className="mb-6 relative">
               <div className="relative">
-                <Bus className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-7 h-7 bg-primary/20 rounded-full flex items-center justify-center z-10">
+                  <MapPin className="w-4 h-4 text-primary" />
+                </div>
                 <Input
                   value={toLocation}
                   onChange={(e) => setToLocation(e.target.value)}
-                  className="pl-12 h-12 border-border rounded-lg"
-                  placeholder="To"
+                  className="pl-14 h-14 border-border/50 bg-background/90 backdrop-blur-sm text-lg font-medium rounded-xl"
+                  placeholder="Destination City"
                 />
               </div>
             </div>

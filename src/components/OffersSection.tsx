@@ -32,9 +32,9 @@ const OffersSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-chalosawari-light-gray">
+    <section className="pt-2 pb-2 bg-chalosawari-light-gray">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
+        <div className="text-center mb-4">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Exclusive Offers & Discounts
           </h2>
