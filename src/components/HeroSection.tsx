@@ -5,6 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeftRight, Calendar, MapPin, Search, Bus, Plane, PlaneTakeoff, Home, List, HelpCircle, User, Train } from "lucide-react";
 import HomeBanner from "@/assets/HomeBanner.webp";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const HeroSection = () => {
   const [fromLocation, setFromLocation] = useState("");
@@ -264,22 +265,22 @@ const HeroSection = () => {
         {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">
           <div className="flex justify-around py-2">
-            <div className="flex flex-col items-center space-y-1">
+            <Link to="/" className="flex flex-col items-center space-y-1">
               <Home className="w-5 h-5 text-primary" />
               <span className="text-xs text-primary font-medium">Home</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
+            </Link>
+            <Link to="/bookings" className="flex flex-col items-center space-y-1">
               <List className="w-5 h-5 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Bookings</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
+            </Link>
+            <Link to="/help" className="flex flex-col items-center space-y-1">
               <HelpCircle className="w-5 h-5 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Help</span>
-            </div>
-            <div className="flex flex-col items-center space-y-1">
+            </Link>
+            <Link to="/profile" className="flex flex-col items-center space-y-1">
               <User className="w-5 h-5 text-muted-foreground" />
               <span className="text-xs text-muted-foreground">Account</span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>
