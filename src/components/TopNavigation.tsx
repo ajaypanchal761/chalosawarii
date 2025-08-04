@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Globe, HelpCircle, User, Phone } from "lucide-react";
 import busLogo from "@/assets/BusLogo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const TopNavigation = () => {
+  const location = useLocation();
+  const isOnAuthPage = location.pathname === "/auth";
+
   return (
     <nav className="w-full bg-white shadow-sm border-b">
       <div className="container mx-auto px-4">
@@ -60,26 +63,30 @@ const TopNavigation = () => {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/auth">
-              <Button variant="ghost" className="text-foreground">
-                <User className="w-4 h-4 mr-2" />
-                Login/Signup
-              </Button>
-            </Link>
+            {!isOnAuthPage && (
+              <Link to="/auth">
+                <Button variant="ghost" className="text-foreground">
+                  <User className="w-4 h-4 mr-2" />
+                  Login/Signup
+                </Button>
+              </Link>
+            )}
             <Button className="bg-blue-600 text-white hover:bg-blue-700">
               Download App
             </Button>
           </div>
 
           {/* Mobile Login Button */}
-          <div className="md:hidden">
-            <Link to="/auth">
-              <Button variant="ghost" className="text-foreground">
-                <User className="w-5 h-5 mr-2" />
-                Login
-              </Button>
-            </Link>
-          </div>
+          {!isOnAuthPage && (
+            <div className="md:hidden">
+              <Link to="/auth">
+                <Button variant="ghost" className="text-foreground">
+                  <User className="w-5 h-5 mr-2" />
+                  Login
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>
