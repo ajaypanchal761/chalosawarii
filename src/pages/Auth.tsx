@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,18 +8,23 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Twitter, Instagram, Home, List, HelpCircle, ArrowLeft, X, ChevronDown } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import TopNavigation from "@/components/TopNavigation";
 import busLogo from "@/assets/BusLogo.png";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [showOtpField, setShowOtpField] = useState(false);
   const [showSignupOtpField, setShowSignupOtpField] = useState(false);
   const [countryCode, setCountryCode] = useState("+91");
+  
+  // Get return URL from location state
+  const returnUrl = location.state?.returnUrl || '/profile';
+  const bookingDetails = location.state?.bookingDetails;
 
   // Form states
   const [loginForm, setLoginForm] = useState({
@@ -55,7 +60,13 @@ const Auth = () => {
       // For demo purposes, we'll just navigate to profile
       // In a real app, you'd validate OTP here
       localStorage.setItem('isLoggedIn', 'true');
-      navigate('/profile');
+      
+      // Navigate to return URL if coming from payment page
+      if (returnUrl === '/payment' && bookingDetails) {
+        navigate('/payment', { state: { bookingDetails } });
+      } else {
+        navigate(returnUrl);
+      }
     } else if (!showOtpField) {
       handleSendOtp();
     }
@@ -76,7 +87,13 @@ const Auth = () => {
       // For demo purposes, we'll just navigate to profile
       // In a real app, you'd validate OTP and create account here
       localStorage.setItem('isLoggedIn', 'true');
-      navigate('/profile');
+      
+      // Navigate to return URL if coming from payment page
+      if (returnUrl === '/payment' && bookingDetails) {
+        navigate('/payment', { state: { bookingDetails } });
+      } else {
+        navigate(returnUrl);
+      }
     } else if (!showSignupOtpField) {
       handleSendSignupOtp();
     }

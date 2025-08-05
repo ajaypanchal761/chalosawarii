@@ -173,19 +173,6 @@ const Bookings = () => {
                 >
                   View Details
                 </Button>
-                {activeTab === "upcoming" && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1 text-red-600 border-red-200 hover:bg-red-50"
-                    onClick={() => {
-                      setSelectedBooking(booking);
-                      handleCancelBooking();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                )}
               </div>
             </Card>
           ))
@@ -208,7 +195,7 @@ const Bookings = () => {
                 size="icon"
                 onClick={() => setIsDetailModalOpen(false)}
               >
-                <X className="w-4 h-4" />
+               
               </Button>
             </DialogTitle>
           </DialogHeader>
@@ -293,18 +280,6 @@ const Bookings = () => {
                   <div><strong>Arrival:</strong> {selectedBooking.arrivalTerminal}</div>
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              {activeTab === "upcoming" && (
-                <div className="pt-4 border-t">
-                  <Button 
-                    className="w-full bg-red-600 text-white hover:bg-red-700"
-                    onClick={handleCancelBooking}
-                  >
-                    Cancel Booking
-                  </Button>
-                </div>
-              )}
             </div>
           )}
         </DialogContent>

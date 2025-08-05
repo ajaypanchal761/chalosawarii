@@ -196,9 +196,6 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button className="flex-1 bg-primary hover:bg-primary/90 text-lg py-3">
-               Book Now
-            </Button>
             <Button variant="outline" className="flex-1" onClick={onClose}>
               Close
             </Button>

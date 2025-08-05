@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
@@ -93,7 +94,11 @@ const sampleTravellers: Traveller[] = [
   },
 ];
 
-const TravellerCard = ({ traveller, onViewDetails }: { traveller: Traveller; onViewDetails: (traveller: Traveller) => void }) => {
+const TravellerCard = ({ traveller, onViewDetails, onBookNow }: { 
+  traveller: Traveller; 
+  onViewDetails: (traveller: Traveller) => void;
+  onBookNow: (traveller: Traveller) => void;
+}) => {
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
       case 'wifi':
@@ -189,6 +194,10 @@ const TravellerCard = ({ traveller, onViewDetails }: { traveller: Traveller; onV
               variant="default" 
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBookNow(traveller);
+              }}
             >
               Book Now
             </Button>
@@ -200,6 +209,7 @@ const TravellerCard = ({ traveller, onViewDetails }: { traveller: Traveller; onV
 };
 
 export const TravellerList = () => {
+  const navigate = useNavigate();
   const [selectedTraveller, setSelectedTraveller] = useState<Traveller | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -211,6 +221,53 @@ export const TravellerList = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedTraveller(null);
+  };
+
+  const handleBookNow = (traveller: Traveller) => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLoggedIn) {
+      // Create booking details object
+      const bookingDetails = {
+        vehicleType: 'traveller' as const,
+        operatorName: traveller.operatorName,
+        vehicleName: traveller.travellerName,
+        from: 'Bangalore', // This would come from search form
+        to: 'Chennai', // This would come from search form
+        date: '2024-01-15', // This would come from search form
+        time: '22:00', // This would come from traveller details
+        passengers: 1, // This would come from passenger selection
+        fare: traveller.fare,
+        seats: ['A1'], // This would come from seat selection
+        amenities: traveller.amenities
+      };
+      
+      // Navigate to payment page with booking details
+      navigate('/payment', { state: { bookingDetails } });
+    } else {
+      // Redirect to auth page with return URL and booking details
+      const bookingDetails = {
+        vehicleType: 'traveller' as const,
+        operatorName: traveller.operatorName,
+        vehicleName: traveller.travellerName,
+        from: 'Bangalore',
+        to: 'Chennai',
+        date: '2024-01-15',
+        time: '22:00',
+        passengers: 1,
+        fare: traveller.fare,
+        seats: ['A1'],
+        amenities: traveller.amenities
+      };
+      
+      navigate('/auth', { 
+        state: { 
+          returnUrl: '/payment',
+          bookingDetails: bookingDetails 
+        } 
+      });
+    }
   };
 
   return (
@@ -225,7 +282,7 @@ export const TravellerList = () => {
       </div>
       
       {sampleTravellers.map((traveller) => (
-        <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} />
+        <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
       ))}
 
       <TravellerDetailsModal 

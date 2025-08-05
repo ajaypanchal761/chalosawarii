@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
@@ -87,7 +88,11 @@ const sampleBuses: Bus[] = [
   },
 ];
 
-const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) => void }) => {
+const BusCard = ({ bus, onViewDetails, onBookNow }: { 
+  bus: Bus; 
+  onViewDetails: (bus: Bus) => void;
+  onBookNow: (bus: Bus) => void;
+}) => {
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
       case 'wifi':
@@ -173,6 +178,10 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
               variant="default" 
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBookNow(bus);
+              }}
             >
               Book Now
             </Button>
@@ -184,6 +193,7 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
 };
 
 export const BusList = () => {
+  const navigate = useNavigate();
   const [selectedBus, setSelectedBus] = useState<Bus | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -195,6 +205,53 @@ export const BusList = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedBus(null);
+  };
+
+  const handleBookNow = (bus: Bus) => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLoggedIn) {
+      // Create booking details object
+      const bookingDetails = {
+        vehicleType: 'bus' as const,
+        operatorName: bus.operatorName,
+        vehicleName: bus.busName,
+        from: 'Bangalore', // This would come from search form
+        to: 'Chennai', // This would come from search form
+        date: '2024-01-15', // This would come from search form
+        time: '22:00', // This would come from bus details
+        passengers: 1, // This would come from passenger selection
+        fare: bus.fare,
+        seats: ['A1'], // This would come from seat selection
+        amenities: bus.amenities
+      };
+      
+      // Navigate to payment page with booking details
+      navigate('/payment', { state: { bookingDetails } });
+    } else {
+      // Redirect to auth page with return URL and booking details
+      const bookingDetails = {
+        vehicleType: 'bus' as const,
+        operatorName: bus.operatorName,
+        vehicleName: bus.busName,
+        from: 'Bangalore',
+        to: 'Chennai',
+        date: '2024-01-15',
+        time: '22:00',
+        passengers: 1,
+        fare: bus.fare,
+        seats: ['A1'],
+        amenities: bus.amenities
+      };
+      
+      navigate('/auth', { 
+        state: { 
+          returnUrl: '/payment',
+          bookingDetails: bookingDetails 
+        } 
+      });
+    }
   };
 
   return (
@@ -209,7 +266,7 @@ export const BusList = () => {
       </div>
       
       {sampleBuses.map((bus) => (
-        <BusCard key={bus.id} bus={bus} onViewDetails={handleViewDetails} />
+        <BusCard key={bus.id} bus={bus} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
       ))}
 
       <BusDetailsModal 

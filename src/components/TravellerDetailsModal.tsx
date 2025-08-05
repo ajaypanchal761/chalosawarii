@@ -1,9 +1,11 @@
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui2/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogPortal, DialogOverlay } from '@/components/ui2/dialog';
 import { Button } from '@/components/ui2/button';
 import { Badge } from '@/components/ui2/badge';
 import { Separator } from '@/components/ui2/separator';
 import { Star, Wifi, Tv, Power, Car, Clock, MapPin, Users, Shield, CreditCard, Phone } from 'lucide-react';
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@/lib/utils";
 
 interface Traveller {
   id: string;
@@ -63,10 +65,16 @@ const TravellerDetailsModal = ({ traveller, isOpen, onClose }: TravellerDetailsM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Traveller Details</DialogTitle>
-        </DialogHeader>
+      <DialogPortal>
+        <DialogOverlay />
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-4xl translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg max-h-[90vh] overflow-y-auto"
+          )}
+        >
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold">Traveller Details</DialogTitle>
+          </DialogHeader>
 
         <div className="space-y-6">
           {/* Traveller Image and Basic Info */}
@@ -199,15 +207,13 @@ const TravellerDetailsModal = ({ traveller, isOpen, onClose }: TravellerDetailsM
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <Button className="flex-1 bg-primary hover:bg-primary/90 text-lg py-3">
-               Book Now
-            </Button>
             <Button variant="outline" className="flex-1" onClick={onClose}>
               Close
             </Button>
           </div>
         </div>
-      </DialogContent>
+        </DialogPrimitive.Content>
+      </DialogPortal>
     </Dialog>
   );
 };

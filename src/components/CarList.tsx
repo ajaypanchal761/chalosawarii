@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
@@ -93,7 +94,11 @@ const sampleCars: Car[] = [
   },
 ];
 
-const CarCard = ({ car, onViewDetails }: { car: Car; onViewDetails: (car: Car) => void }) => {
+const CarCard = ({ car, onViewDetails, onBookNow }: { 
+  car: Car; 
+  onViewDetails: (car: Car) => void;
+  onBookNow: (car: Car) => void;
+}) => {
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
       case 'wifi':
@@ -189,6 +194,10 @@ const CarCard = ({ car, onViewDetails }: { car: Car; onViewDetails: (car: Car) =
               variant="default" 
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                onBookNow(car);
+              }}
             >
               Book Now
             </Button>
@@ -200,6 +209,7 @@ const CarCard = ({ car, onViewDetails }: { car: Car; onViewDetails: (car: Car) =
 };
 
 export const CarList = () => {
+  const navigate = useNavigate();
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -211,6 +221,53 @@ export const CarList = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedCar(null);
+  };
+
+  const handleBookNow = (car: Car) => {
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLoggedIn) {
+      // Create booking details object
+      const bookingDetails = {
+        vehicleType: 'car' as const,
+        operatorName: car.operatorName,
+        vehicleName: car.carName,
+        from: 'Bangalore', // This would come from search form
+        to: 'Chennai', // This would come from search form
+        date: '2024-01-15', // This would come from search form
+        time: '22:00', // This would come from car details
+        passengers: 1, // This would come from passenger selection
+        fare: car.fare,
+        seats: ['Front'], // This would come from seat selection
+        amenities: car.amenities
+      };
+      
+      // Navigate to payment page with booking details
+      navigate('/payment', { state: { bookingDetails } });
+    } else {
+      // Redirect to auth page with return URL and booking details
+      const bookingDetails = {
+        vehicleType: 'car' as const,
+        operatorName: car.operatorName,
+        vehicleName: car.carName,
+        from: 'Bangalore',
+        to: 'Chennai',
+        date: '2024-01-15',
+        time: '22:00',
+        passengers: 1,
+        fare: car.fare,
+        seats: ['Front'],
+        amenities: car.amenities
+      };
+      
+      navigate('/auth', { 
+        state: { 
+          returnUrl: '/payment',
+          bookingDetails: bookingDetails 
+        } 
+      });
+    }
   };
 
   return (
@@ -225,7 +282,7 @@ export const CarList = () => {
       </div>
       
       {sampleCars.map((car) => (
-        <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} />
+        <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
       ))}
 
       <CarDetailsModal 
