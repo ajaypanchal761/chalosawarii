@@ -303,6 +303,96 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
     </div>
   );
 
+  // Desktop Sidebar Component
+  const DesktopSidebar = () => (
+    <Card className="p-6 h-fit sticky top-4 bg-white shadow-lg border-0 rounded-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+            <Filter className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Filters</h2>
+            <p className="text-sm text-gray-500">Refine your search</p>
+          </div>
+        </div>
+        {selectedFilters.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearAllFilters}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded-lg"
+          >
+            <X className="w-4 h-4 mr-1" />
+            Clear All
+          </Button>
+        )}
+      </div>
+
+      {/* Active Filters */}
+      {selectedFilters.length > 0 && (
+        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-blue-800">
+            {selectedFilters.length} filter(s) applied
+          </p>
+            <Badge variant="default" className="bg-blue-500 text-white">
+              {selectedFilters.length}
+            </Badge>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {selectedFilters.slice(0, 3).map((filterId) => {
+              const allOptions = [...departureTimeOptions, ...busTypeOptions, ...operatorOptions, ...amenityOptions];
+              const option = allOptions.find(opt => opt.id === filterId);
+              return (
+                <Badge 
+                  key={filterId} 
+                  variant="secondary" 
+                  className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50"
+                >
+                  {option?.label || filterId}
+                </Badge>
+              );
+            })}
+            {selectedFilters.length > 3 && (
+              <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200">
+                +{selectedFilters.length - 3} more
+              </Badge>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Filter Sections */}
+      <div className="space-y-2">
+        <FilterSection
+          title="DEPARTURE TIME"
+          options={departureTimeOptions}
+          sectionKey="departureTime"
+        />
+
+        <FilterSection
+          title="BUS TYPE"
+          options={busTypeOptions}
+          sectionKey="busType"
+        />
+
+        <FilterSection
+          title="OPERATORS"
+          options={operatorOptions}
+          sectionKey="operators"
+        />
+
+        <FilterSection
+          title="AMENITIES"
+          options={amenityOptions}
+          sectionKey="amenities"
+        />
+      </div>
+    </Card>
+  );
+
   if (!isOpen) {
     return (
       <div className="lg:hidden">
@@ -321,175 +411,183 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
   }
 
   return (
-    <div className="lg:hidden">
-      <MobileFilterBar />
-      
-      {showMobileFilters && (
-        <Card className="p-6 mb-6 bg-white shadow-lg border-0 rounded-xl mobile-filter-slide-in">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
-                <Filter className="w-6 h-6 text-white" />
+    <>
+      {/* Mobile Layout */}
+      <div className="lg:hidden">
+        <MobileFilterBar />
+        
+        {showMobileFilters && (
+          <Card className="p-6 mb-6 bg-white shadow-lg border-0 rounded-xl mobile-filter-slide-in">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                  <Filter className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800">Filters</h2>
+                  <p className="text-sm text-gray-500">Refine your search</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-gray-800">Filters</h2>
-                <p className="text-sm text-gray-500">Refine your search</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {getTotalActiveFilters() > 0 && (
+              <div className="flex items-center gap-2">
+                {getTotalActiveFilters() > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllFilters}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded-lg"
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Clear All
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={clearAllFilters}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded-lg"
+                  onClick={() => setShowMobileFilters(false)}
+                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-lg"
                 >
-                  <X className="w-4 h-4 mr-1" />
-                  Clear All
+                  <X className="w-5 h-5" />
                 </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowMobileFilters(false)}
-                className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 p-2 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Active Filters Summary */}
-          {getTotalActiveFilters() > 0 && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-blue-800">
-                  {getTotalActiveFilters()} filter(s) applied
-                </p>
-                <Badge variant="default" className="bg-blue-500 text-white">
-                  {getTotalActiveFilters()}
-                </Badge>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {selectedMobileFilters.specialPrice && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    Special Price
-                  </Badge>
-                )}
-                {selectedMobileFilters.ac && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    AC
-                  </Badge>
-                )}
-                {selectedMobileFilters.sleeper && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    Sleeper
-                  </Badge>
-                )}
-                {selectedMobileFilters.singleSeats && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    Single Seats
-                  </Badge>
-                )}
-                {selectedMobileFilters.seater && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    Seater
-                  </Badge>
-                )}
-                {sortOption && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                    {sortOptions.find(opt => opt.id === sortOption)?.label || 'Sort'}
-                  </Badge>
-                )}
-                {selectedFilters.slice(0, 2).map((filterId) => {
-                  const allOptions = [...departureTimeOptions, ...busTypeOptions, ...operatorOptions, ...amenityOptions];
-                  const option = allOptions.find(opt => opt.id === filterId);
-                  return (
-                    <Badge 
-                      key={filterId} 
-                      variant="secondary" 
-                      className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50"
-                    >
-                      {option?.label || filterId}
-                    </Badge>
-                  );
-                })}
-                {selectedFilters.length > 2 && (
-                  <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200">
-                    +{selectedFilters.length - 2} more
-                  </Badge>
-                )}
               </div>
             </div>
-          )}
 
-          {/* Sort Options */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-              <SortAsc className="w-4 h-4 text-blue-500" />
-              Sort Options
-            </h3>
-            <div className="space-y-2">
-              {sortOptions.map((option) => (
-                <div key={option.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150">
-                  <Checkbox
-                    id={option.id}
-                    checked={sortOption === option.id}
-                    onCheckedChange={() => handleSortChange(option.id)}
-                    className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                  />
-                  <Label
-                    htmlFor={option.id}
-                    className="text-sm text-gray-700 cursor-pointer flex-1 font-medium"
-                  >
-                    {option.label}
-                  </Label>
+            {/* Active Filters Summary */}
+            {getTotalActiveFilters() > 0 && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-medium text-blue-800">
+                    {getTotalActiveFilters()} filter(s) applied
+                  </p>
+                  <Badge variant="default" className="bg-blue-500 text-white">
+                    {getTotalActiveFilters()}
+                  </Badge>
                 </div>
-              ))}
+                <div className="flex flex-wrap gap-2">
+                  {selectedMobileFilters.specialPrice && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Special Price
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.ac && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      AC
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.sleeper && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Sleeper
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.singleSeats && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Single Seats
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.seater && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Seater
+                    </Badge>
+                  )}
+                  {sortOption && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      {sortOptions.find(opt => opt.id === sortOption)?.label || 'Sort'}
+                    </Badge>
+                  )}
+                  {selectedFilters.slice(0, 2).map((filterId) => {
+                    const allOptions = [...departureTimeOptions, ...busTypeOptions, ...operatorOptions, ...amenityOptions];
+                    const option = allOptions.find(opt => opt.id === filterId);
+                    return (
+                      <Badge 
+                        key={filterId} 
+                        variant="secondary" 
+                        className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50"
+                      >
+                        {option?.label || filterId}
+                      </Badge>
+                    );
+                  })}
+                  {selectedFilters.length > 2 && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200">
+                      +{selectedFilters.length - 2} more
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Sort Options */}
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <SortAsc className="w-4 h-4 text-blue-500" />
+                Sort Options
+              </h3>
+              <div className="space-y-2">
+                {sortOptions.map((option) => (
+                  <div key={option.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150">
+                    <Checkbox
+                      id={option.id}
+                      checked={sortOption === option.id}
+                      onCheckedChange={() => handleSortChange(option.id)}
+                      className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                    />
+                    <Label
+                      htmlFor={option.id}
+                      className="text-sm text-gray-700 cursor-pointer flex-1 font-medium"
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Filter Sections */}
-          <div className="space-y-2">
-            <FilterSection
-              title="DEPARTURE TIME"
-              options={departureTimeOptions}
-              sectionKey="departureTime"
-            />
+            {/* Filter Sections */}
+            <div className="space-y-2">
+              <FilterSection
+                title="DEPARTURE TIME"
+                options={departureTimeOptions}
+                sectionKey="departureTime"
+              />
 
-            <FilterSection
-              title="BUS TYPE"
-              options={busTypeOptions}
-              sectionKey="busType"
-            />
+              <FilterSection
+                title="BUS TYPE"
+                options={busTypeOptions}
+                sectionKey="busType"
+              />
 
-            <FilterSection
-              title="OPERATORS"
-              options={operatorOptions}
-              sectionKey="operators"
-            />
+              <FilterSection
+                title="OPERATORS"
+                options={operatorOptions}
+                sectionKey="operators"
+              />
 
-            <FilterSection
-              title="AMENITIES"
-              options={amenityOptions}
-              sectionKey="amenities"
-            />
-          </div>
+              <FilterSection
+                title="AMENITIES"
+                options={amenityOptions}
+                sectionKey="amenities"
+              />
+            </div>
 
-          {/* Mobile Apply Button */}
-          <div className="mt-8">
-            <Button
-              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
-              onClick={() => setShowMobileFilters(false)}
-            >
-              <Filter className="w-5 h-5 mr-2" />
-              Apply Filters ({getTotalActiveFilters()})
-            </Button>
-          </div>
-        </Card>
-      )}
-    </div>
+            {/* Mobile Apply Button */}
+            <div className="mt-8">
+              <Button
+                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-[1.02]"
+                onClick={() => setShowMobileFilters(false)}
+              >
+                <Filter className="w-5 h-5 mr-2" />
+                Apply Filters ({getTotalActiveFilters()})
+        </Button>
+      </div>
+    </Card>
+        )}
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:block">
+        <DesktopSidebar />
+      </div>
+    </>
   );
 };
 

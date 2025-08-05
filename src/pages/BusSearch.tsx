@@ -65,7 +65,7 @@ const BusSearch = () => {
             >
               <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain mb-2" />
               <span className={`text-sm font-semibold ${selectedType === 'car' ? 'text-white' : 'text-black'}`}>
-               <b>Car</b>
+                <b>Car</b>
               </span>
             </div>
             <div 
