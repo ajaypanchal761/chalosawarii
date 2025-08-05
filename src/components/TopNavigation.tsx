@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Globe, HelpCircle, User, Phone, Home } from "lucide-react";
+import { ChevronDown, Globe, HelpCircle, User, Phone, Home, List } from "lucide-react";
 import busLogo from "@/assets/BusLogo.png";
 import { Link, useLocation } from "react-router-dom";
 
@@ -32,74 +32,72 @@ const TopNavigation = () => {
         </div>
 
         {/* Main navigation */}
-        <div className="flex justify-between items-center py-2">
-                    <Link to="/" className="flex items-center ml-2 md:ml-4 hover:opacity-80 transition-opacity">
+        <div className="flex justify-between items-center py-1 md:py-1 py-3">
+          <Link to="/" className="flex items-center ml-2 md:ml-4 hover:opacity-80 transition-opacity">
             <div className="flex items-center space-x-1 md:space-x-2">
               {/* Logo Icon */}
-              <img src={busLogo} alt="Bus Logo" className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 object-contain" />
+              <img src={busLogo} alt="Bus Logo" className="w-12 h-12 md:w-14 md:h-14 lg:w-18 lg:h-18 object-contain" />
               {/* Logo Text */}
-              <div className="flex flex-col">
-                <div className="flex items-baseline">
-                  <span className="text-lg md:text-xl lg:text-2xl font-bold text-black">CHALO</span>
-                  <span className="text-lg md:text-xl lg:text-2xl font-bold text-blue-600 ml-1">SAWARI</span>
+                              <div className="flex flex-col">
+                  <div className="flex items-baseline">
+                    <span className="text-lg md:text-lg lg:text-xl font-bold text-black">CHALO</span>
+                    <span className="text-lg md:text-lg lg:text-xl font-bold text-blue-600 ml-1">SAWARI</span>
+                  </div>
+                  <span className="text-xs text-gray-600 hidden sm:block">Travel with Confidence</span>
                 </div>
-                <span className="text-xs text-gray-600 hidden sm:block">Travel with Confidence</span>
-              </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
-            <Button variant="ghost" className="font-medium">
-              My Bookings
-            </Button>
-            <Button variant="ghost" className="font-medium">
-              Track Vehicle
-            </Button>
-            <Button variant="ghost" className="font-medium">
-              Offers
-            </Button>
+            <Link to="/" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <Home className="w-5 h-5 text-primary" />
+              <span className="font-medium">Home</span>
+            </Link>
+            <Link to="/bookings" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <List className="w-5 h-5 text-muted-foreground" />
+              <span className="font-medium text-muted-foreground">Bookings</span>
+            </Link>
+            <Link to="/help" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <HelpCircle className="w-5 h-5 text-muted-foreground" />
+              <span className="font-medium text-muted-foreground">Help</span>
+            </Link>
+            <Link to="/profile" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <User className="w-5 h-5 text-muted-foreground" />
+              <span className="font-medium text-muted-foreground">Account</span>
+            </Link>
           </div>
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {isOnAuthPage ? (
-              <Link to="/">
-                <Button variant="ghost" className="text-foreground">
-                  <Home className="w-4 h-4 mr-2" />
-                  Home
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/auth">
-                <Button variant="ghost" className="text-foreground">
-                  <User className="w-4 h-4 mr-2" />
-                  Login/Signup
-                </Button>
-              </Link>
-            )}
             <Button className="bg-blue-600 text-white hover:bg-blue-700">
               Download App
             </Button>
           </div>
 
+          {/* Medium Screen Navigation (Tablets) */}
+          <div className="hidden md:flex lg:hidden items-center space-x-4">
+            <Link to="/" className="flex items-center space-x-1 px-2 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <Home className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Home</span>
+            </Link>
+            <Link to="/bookings" className="flex items-center space-x-1 px-2 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <List className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">Bookings</span>
+            </Link>
+            <Link to="/help" className="flex items-center space-x-1 px-2 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <HelpCircle className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">Help</span>
+            </Link>
+            <Link to="/profile" className="flex items-center space-x-1 px-2 py-2 rounded-md hover:bg-gray-100 transition-colors">
+              <User className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium text-muted-foreground">Account</span>
+            </Link>
+          </div>
+
           {/* Mobile Navigation */}
           <div className="md:hidden flex items-center space-x-2">
-            {isOnAuthPage ? (
-              <Link to="/">
-                <Button variant="ghost" className="text-foreground">
-                  <Home className="w-5 h-5 mr-2" />
-                  Home
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/auth">
-                <Button variant="ghost" className="text-foreground">
-                  <User className="w-5 h-5 mr-2" />
-                  Login
-                </Button>
-              </Link>
-            )}
+            {/* Mobile navigation content removed */}
           </div>
         </div>
       </div>

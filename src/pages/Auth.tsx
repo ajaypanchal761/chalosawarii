@@ -6,15 +6,86 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Twitter, Instagram, Home, List, HelpCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Twitter, Instagram, Home, List, HelpCircle, ArrowLeft, X, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import TopNavigation from "@/components/TopNavigation";
 import busLogo from "@/assets/BusLogo.png";
 
 const Auth = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
+  const [showOtpField, setShowOtpField] = useState(false);
+  const [showSignupOtpField, setShowSignupOtpField] = useState(false);
+  const [countryCode, setCountryCode] = useState("+91");
+
+  // Form states
+  const [loginForm, setLoginForm] = useState({
+    phone: "",
+    otp: ""
+  });
+
+  const [signupForm, setSignupForm] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    otp: ""
+  });
+
+  const handleSendOtp = () => {
+    if (loginForm.phone.trim()) {
+      setShowOtpField(true);
+      // Here you would typically make an API call to send OTP
+      console.log("Sending OTP to:", countryCode + loginForm.phone);
+    }
+  };
+
+  const handleSendSignupOtp = () => {
+    if (signupForm.phone.trim() && signupForm.firstName.trim() && signupForm.lastName.trim()) {
+      setShowSignupOtpField(true);
+      // Here you would typically make an API call to send OTP
+      console.log("Sending signup OTP to:", countryCode + signupForm.phone);
+    }
+  };
+
+  const handleLogin = () => {
+    if (showOtpField && loginForm.otp.trim()) {
+      // For demo purposes, we'll just navigate to profile
+      // In a real app, you'd validate OTP here
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/profile');
+    } else if (!showOtpField) {
+      handleSendOtp();
+    }
+  };
+
+  const handleBackToPhone = () => {
+    setShowOtpField(false);
+    setLoginForm({ ...loginForm, otp: "" });
+  };
+
+  const handleBackToSignupPhone = () => {
+    setShowSignupOtpField(false);
+    setSignupForm({ ...signupForm, otp: "" });
+  };
+
+  const handleSignup = () => {
+    if (showSignupOtpField && signupForm.otp.trim()) {
+      // For demo purposes, we'll just navigate to profile
+      // In a real app, you'd validate OTP and create account here
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/profile');
+    } else if (!showSignupOtpField) {
+      handleSendSignupOtp();
+    }
+  };
+
+  const handleGoogleSignIn = () => {
+    // Handle Google sign in
+    console.log("Google sign in clicked");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-blue-50">
@@ -23,26 +94,22 @@ const Auth = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center">
           <Card className="w-full max-w-md shadow-lg border border-gray-200">
-            <CardHeader className="text-center">
+            <CardHeader className="text-center pb-4">
               <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2">
                   <img src={busLogo} alt="Bus Logo" className="w-12 h-12 object-contain" />
                   <div className="flex flex-col">
-                                         <div className="flex items-baseline">
-                       <span className="text-xl font-bold text-black">CHALO</span>
-                       <span className="text-xl font-bold text-blue-600 ml-1">SAWARI</span>
-                     </div>
-                     <span className="text-xs text-gray-600">Travel with Confidence</span>
+                    <div className="flex items-baseline">
+                      <span className="text-xl font-bold text-black">CHALO</span>
+                      <span className="text-xl font-bold text-blue-600 ml-1">SAWARI</span>
+                    </div>
+                    <span className="text-xs text-gray-600">Travel with Confidence</span>
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-              <CardDescription>
-                Sign in to your account or create a new one
-              </CardDescription>
             </CardHeader>
             
-            <CardContent>
+            <CardContent className="pt-0">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">Login</TabsTrigger>
@@ -51,224 +118,290 @@ const Auth = () => {
                 
                 {/* Login Tab */}
                 <TabsContent value="login" className="space-y-4">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                  {!showOtpField ? (
+                    // Phone Number Input Screen
+                    <div className="space-y-6">
+                      {/* Header */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Login to get exciting offers</span>
+                      </div>
+
+                      {/* Main Question */}
+                      <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-800">What's your mobile number?</h2>
+                      </div>
+
+                      {/* Mobile Number Input */}
+                      <div className="space-y-2">
+                        <Label htmlFor="mobileNumber" className="text-sm font-medium">Mobile Number</Label>
+                        <div className="flex space-x-2">
+                          <Select value={countryCode} onValueChange={setCountryCode}>
+                            <SelectTrigger className="w-24">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="+91">+91</SelectItem>
+                              <SelectItem value="+1">+1</SelectItem>
+                              <SelectItem value="+44">+44</SelectItem>
+                              <SelectItem value="+61">+61</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Input
+                            id="mobileNumber"
+                            type="tel"
+                            placeholder="Mobile number"
+                            className="flex-1"
+                            value={loginForm.phone}
+                            onChange={(e) => setLoginForm({...loginForm, phone: e.target.value})}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Generate OTP Button */}
+                      <Button 
+                        className="w-full bg-gray-200 text-gray-700 hover:bg-gray-300 h-12 rounded-lg"
+                        onClick={handleSendOtp}
+                        disabled={!loginForm.phone.trim()}
+                      >
+                        Generate OTP
+                      </Button>
+
+                      {/* Separator */}
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="Enter your email"
-                          className="pl-10"
-                        />
+                        <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t border-gray-300" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-white px-2 text-gray-500">or</span>
+                        </div>
+                      </div>
+
+                      {/* Google Sign In */}
+                      <Button 
+                        variant="outline" 
+                        className="w-full h-12 rounded-lg border-gray-300"
+                        onClick={handleGoogleSignIn}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">G</div>
+                          <span>Sign in with Google</span>
+                        </div>
+                      </Button>
+
+                      {/* Footer */}
+                      <div className="text-center text-xs text-gray-600 space-y-1">
+                        <div>By logging in, I agree</div>
+                        <div className="space-x-2">
+                          <Button variant="link" className="text-xs p-0 h-auto text-blue-600">Terms & Conditions</Button>
+                          <Button variant="link" className="text-xs p-0 h-auto text-blue-600">Privacy Policy</Button>
+                        </div>
                       </div>
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="password"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
-                          className="pl-10 pr-10"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </Button>
+                  ) : (
+                    // OTP Input Screen
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleBackToPhone}
+                            className="p-1 h-auto"
+                          >
+                            <ArrowLeft className="w-4 h-4" />
+                          </Button>
+                          <Label htmlFor="otp" className="text-base">Enter OTP</Label>
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-4">
+                          We've sent a verification code to {countryCode} {loginForm.phone}
+                        </div>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                          <Input
+                            id="otp"
+                            type="text"
+                            placeholder="Enter 6-digit OTP"
+                            className="pl-10"
+                            value={loginForm.otp}
+                            onChange={(e) => setLoginForm({...loginForm, otp: e.target.value})}
+                            maxLength={6}
+                          />
+                        </div>
+                        <div className="text-center">
+                          <Button variant="link" className="text-sm p-0 h-auto">
+                            Didn't receive code? Resend
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox id="remember" />
-                        <Label htmlFor="remember" className="text-sm">Remember me</Label>
-                      </div>
-                      <Button variant="link" className="text-sm p-0 h-auto">
-                        Forgot password?
+                      
+                      <Button 
+                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                        onClick={handleLogin}
+                      >
+                        Verify & Sign In
                       </Button>
                     </div>
-                    
-                                         <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
-                       Sign In
-                     </Button>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <div className="text-center text-sm text-muted-foreground">
-                      Or continue with
-                    </div>
-                    <div className="grid grid-cols-3 gap-3">
-                      <Button variant="outline" className="w-full">
-                        <Facebook className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        <Twitter className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        <Instagram className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
+                  )}
                 </TabsContent>
                 
                 {/* Sign Up Tab */}
                 <TabsContent value="signup" className="space-y-4">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                  {!showSignupOtpField ? (
+                    // Signup Form Screen
+                    <div className="space-y-6">
+                      {/* Header */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Create account to get started</span>
+                      </div>
+
+                      {/* Main Question */}
+                      <div className="text-center">
+                        <h2 className="text-2xl font-bold text-gray-800">Create your account</h2>
+                      </div>
+
+                      {/* Name Fields */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName" className="text-sm font-medium">First Name</Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                            <Input
+                              id="firstName"
+                              placeholder="First name"
+                              className="pl-10"
+                              value={signupForm.firstName}
+                              onChange={(e) => setSignupForm({...signupForm, firstName: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName" className="text-sm font-medium">Last Name</Label>
+                          <div className="relative">
+                            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                            <Input
+                              id="lastName"
+                              placeholder="Last name"
+                              className="pl-10"
+                              value={signupForm.lastName}
+                              onChange={(e) => setSignupForm({...signupForm, lastName: e.target.value})}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mobile Number Input */}
                       <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <Label htmlFor="signupMobileNumber" className="text-sm font-medium">Mobile Number</Label>
+                        <div className="flex space-x-2">
+                          <Select value={countryCode} onValueChange={setCountryCode}>
+                            <SelectTrigger className="w-24">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="+91">+91</SelectItem>
+                              <SelectItem value="+1">+1</SelectItem>
+                              <SelectItem value="+44">+44</SelectItem>
+                              <SelectItem value="+61">+61</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <Input
-                            id="firstName"
-                            placeholder="First name"
-                            className="pl-10"
+                            id="signupMobileNumber"
+                            type="tel"
+                            placeholder="Mobile number"
+                            className="flex-1"
+                            value={signupForm.phone}
+                            onChange={(e) => setSignupForm({...signupForm, phone: e.target.value})}
                           />
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <div className="relative">
-                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                          <Input
-                            id="lastName"
-                            placeholder="Last name"
-                            className="pl-10"
-                          />
+
+                      {/* Generate OTP Button */}
+                      <Button 
+                        className="w-full bg-gray-200 text-gray-700 hover:bg-gray-300 h-12 rounded-lg"
+                        onClick={handleSendSignupOtp}
+                        disabled={!signupForm.phone.trim() || !signupForm.firstName.trim() || !signupForm.lastName.trim()}
+                      >
+                        Generate OTP
+                      </Button>
+
+                      {/* Separator */}
+                      <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                          <span className="w-full border-t border-gray-300" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                          <span className="bg-white px-2 text-gray-500">or</span>
+                        </div>
+                      </div>
+
+                      {/* Google Sign In */}
+                      <Button 
+                        variant="outline" 
+                        className="w-full h-12 rounded-lg border-gray-300"
+                        onClick={handleGoogleSignIn}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">G</div>
+                          <span>Sign up with Google</span>
+                        </div>
+                      </Button>
+
+                      {/* Footer */}
+                      <div className="text-center text-xs text-gray-600 space-y-1">
+                        <div>By creating an account, I agree</div>
+                        <div className="space-x-2">
+                          <Button variant="link" className="text-xs p-0 h-auto text-blue-600">Terms & Conditions</Button>
+                          <Button variant="link" className="text-xs p-0 h-auto text-blue-600">Privacy Policy</Button>
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="signupEmail">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="signupEmail"
-                          type="email"
-                          placeholder="Enter your email"
-                          className="pl-10"
-                        />
+                  ) : (
+                    // Signup OTP Input Screen
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleBackToSignupPhone}
+                            className="p-1 h-auto"
+                          >
+                            <ArrowLeft className="w-4 h-4" />
+                          </Button>
+                          <Label htmlFor="signupOtp" className="text-base">Enter OTP</Label>
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-4">
+                          We've sent a verification code to {countryCode} {signupForm.phone}
+                        </div>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                          <Input
+                            id="signupOtp"
+                            type="text"
+                            placeholder="Enter 6-digit OTP"
+                            className="pl-10"
+                            value={signupForm.otp}
+                            onChange={(e) => setSignupForm({...signupForm, otp: e.target.value})}
+                            maxLength={6}
+                          />
+                        </div>
+                        <div className="text-center">
+                          <Button variant="link" className="text-sm p-0 h-auto">
+                            Didn't receive code? Resend
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="Enter your phone number"
-                          className="pl-10"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="signupPassword">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="signupPassword"
-                          type={showPassword ? "text" : "password"}
-                          placeholder="Create a password"
-                          className="pl-10 pr-10"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Confirm Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                        <Input
-                          id="confirmPassword"
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Confirm your password"
-                          className="pl-10 pr-10"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        >
-                          {showConfirmPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="terms" />
-                      <Label htmlFor="terms" className="text-sm">
-                        I agree to the{" "}
-                        <Button variant="link" className="text-sm p-0 h-auto">
-                          Terms of Service
-                        </Button>{" "}
-                        and{" "}
-                        <Button variant="link" className="text-sm p-0 h-auto">
-                          Privacy Policy
-                        </Button>
-                      </Label>
-                    </div>
-                    
-                                         <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
-                       Create Account
-                     </Button>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="space-y-4">
-                    <div className="text-center text-sm text-muted-foreground">
-                      Or sign up with
-                    </div>
-                    <div className="grid grid-cols-3 gap-3">
-                      <Button variant="outline" className="w-full">
-                        <Facebook className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        <Twitter className="w-4 h-4" />
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        <Instagram className="w-4 h-4" />
+                      
+                      <Button 
+                        className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                        onClick={handleSignup}
+                      >
+                        Verify & Create Account
                       </Button>
                     </div>
-                  </div>
+                  )}
                 </TabsContent>
               </Tabs>
               

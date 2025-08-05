@@ -193,11 +193,7 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
             <p className="text-2xl font-bold text-foreground">₹ {bus.fare}</p>
           </div>
           
-          <div className="mb-3">
-            <Badge variant={bus.seatsLeft > 10 ? "secondary" : "destructive"} className="mb-2">
-              {bus.seatsLeft} Seats Left
-            </Badge>
-          </div>
+          
           
           <div className="flex gap-2">
             <Button 

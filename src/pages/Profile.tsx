@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,10 +22,15 @@ import {
   Camera,
   Edit3
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Profile = () => {
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+  
   const [userProfile, setUserProfile] = useState({
     name: "Ajay Panchal",
     email: "ajay@example.com",
@@ -44,6 +49,32 @@ const Profile = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
+
+  const handleLogin = () => {
+    navigate('/auth');
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('isLoggedIn');
+  };
+
+  // Check login state on component mount and when localStorage changes
+  useEffect(() => {
+    const checkLoginState = () => {
+      const loginState = localStorage.getItem('isLoggedIn') === 'true';
+      setIsLoggedIn(loginState);
+    };
+
+    checkLoginState();
+    
+    // Listen for storage changes (when login state changes from other tabs/windows)
+    window.addEventListener('storage', checkLoginState);
+    
+    return () => {
+      window.removeEventListener('storage', checkLoginState);
+    };
+  }, []);
 
   const handleSaveProfile = () => {
     setUserProfile({
@@ -377,201 +408,249 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-primary text-primary-foreground p-4">
-        <h1 className="text-xl font-semibold">My Profile</h1>
-      </div>
+      {!isLoggedIn ? (
+        // Login Screen
+        <div className="bg-white">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center space-y-8 max-w-md mx-auto px-4">
+              {/* Title */}
+              <h1 className="text-3xl font-bold text-black leading-tight">
+                Log in to manage<br />your bookings
+              </h1>
+              
+              {/* Login Button */}
+              <Button 
+                className="w-full bg-red-600 hover:bg-red-700 text-white text-lg font-semibold py-4 rounded-lg"
+                onClick={handleLogin}
+              >
+                Log in
+              </Button>
+              
+              {/* Sign Up Link */}
+              <p className="text-sm text-gray-600">
+                Don't have an account? <span className="underline cursor-pointer text-black" onClick={handleLogin}>Sign up</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Profile Management Screen
+        <>
+          {/* Header */}
+          <div className="bg-primary text-primary-foreground p-4">
+            <h1 className="text-xl font-semibold">My Profile</h1>
+          </div>
 
-      {/* Content */}
-      <div className="p-4 space-y-6 pb-20">
-        {/* Profile Card */}
-        <Card className="p-6 border border-border">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <Avatar className="w-16 h-16">
-                <img src={userProfile.avatar} alt={userProfile.name} />
-              </Avatar>
-              <Dialog open={isPhotoModalOpen} onOpenChange={setIsPhotoModalOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    size="sm" 
-                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground p-0"
-                  >
-                    <Camera className="w-3 h-3" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Change Profile Photo</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="text-center">
-                      <Avatar className="w-20 h-20 mx-auto mb-4">
-                        <img src={userProfile.avatar} alt={userProfile.name} />
-                      </Avatar>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Choose a new profile photo
-                      </p>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="photo-upload" className="cursor-pointer">
-                        <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary transition-colors">
-                          <Camera className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                          <p className="text-sm font-medium">Click to upload photo</p>
-                          <p className="text-xs text-muted-foreground">JPG, PNG up to 5MB</p>
+          {/* Content */}
+          <div className="p-4 space-y-6 pb-20">
+            {/* Profile Card */}
+            <Card className="p-6 border border-border">
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <Avatar className="w-16 h-16">
+                    <img src={userProfile.avatar} alt={userProfile.name} />
+                  </Avatar>
+                  <Dialog open={isPhotoModalOpen} onOpenChange={setIsPhotoModalOpen}>
+                    <DialogTrigger asChild>
+                      <Button 
+                        size="sm" 
+                        className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-primary-foreground p-0"
+                      >
+                        <Camera className="w-3 h-3" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Change Profile Photo</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="text-center">
+                          <Avatar className="w-20 h-20 mx-auto mb-4">
+                            <img src={userProfile.avatar} alt={userProfile.name} />
+                          </Avatar>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Choose a new profile photo
+                          </p>
                         </div>
-                      </Label>
-                      <Input
-                        id="photo-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoChange}
-                        className="hidden"
-                      />
+                        <div className="space-y-2">
+                          <Label htmlFor="photo-upload" className="cursor-pointer">
+                            <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary transition-colors">
+                              <Camera className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                              <p className="text-sm font-medium">Click to upload photo</p>
+                              <p className="text-xs text-muted-foreground">JPG, PNG up to 5MB</p>
+                            </div>
+                          </Label>
+                          <Input
+                            id="photo-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={handlePhotoChange}
+                            className="hidden"
+                          />
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-foreground">{userProfile.name}</h2>
+                  <div className="space-y-1 mt-2">
+                    <div className="flex items-center space-x-2">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">{userProfile.email}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Phone className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">{userProfile.phone}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">{userProfile.location}</span>
                     </div>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-foreground">{userProfile.name}</h2>
-              <div className="space-y-1 mt-2">
-                <div className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{userProfile.email}</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{userProfile.phone}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">{userProfile.location}</span>
-                </div>
+                <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <Edit3 className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Edit Profile</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input
+                          id="name"
+                          value={editProfile.name}
+                          onChange={(e) => setEditProfile({...editProfile, name: e.target.value})}
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={editProfile.email}
+                          onChange={(e) => setEditProfile({...editProfile, email: e.target.value})}
+                          placeholder="Enter your email"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input
+                          id="phone"
+                          value={editProfile.phone}
+                          onChange={(e) => setEditProfile({...editProfile, phone: e.target.value})}
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="location">Location</Label>
+                        <Input
+                          id="location"
+                          value={editProfile.location}
+                          onChange={(e) => setEditProfile({...editProfile, location: e.target.value})}
+                          placeholder="Enter your location"
+                        />
+                      </div>
+                      <div className="flex space-x-2 pt-4">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1"
+                          onClick={() => setIsEditModalOpen(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          className="flex-1"
+                          onClick={handleSaveProfile}
+                        >
+                          Save Changes
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </Card>
+
+            {/* Profile Options */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Account Settings</h3>
+              <div className="space-y-2">
+                {profileOptions.map((option) => (
+                  <Dialog key={option.id} open={activeModal === option.modal} onOpenChange={(open) => setActiveModal(open ? option.modal : null)}>
+                    <DialogTrigger asChild>
+                      <Card className="p-4 border border-border cursor-pointer hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                            <option.icon className="w-5 h-5 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-foreground">{option.title}</h4>
+                            <p className="text-sm text-muted-foreground">{option.description}</p>
+                          </div>
+                          <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                        </div>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>{option.title}</DialogTitle>
+                      </DialogHeader>
+                      {renderModalContent(option.modal)}
+                    </DialogContent>
+                  </Dialog>
+                ))}
               </div>
             </div>
-            <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Edit3 className="w-4 h-4 mr-1" />
-                  Edit
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Edit Profile</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      value={editProfile.name}
-                      onChange={(e) => setEditProfile({...editProfile, name: e.target.value})}
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={editProfile.email}
-                      onChange={(e) => setEditProfile({...editProfile, email: e.target.value})}
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={editProfile.phone}
-                      onChange={(e) => setEditProfile({...editProfile, phone: e.target.value})}
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={editProfile.location}
-                      onChange={(e) => setEditProfile({...editProfile, location: e.target.value})}
-                      placeholder="Enter your location"
-                    />
-                  </div>
-                  <div className="flex space-x-2 pt-4">
-                    <Button 
-                      variant="outline" 
-                      className="flex-1"
-                      onClick={() => setIsEditModalOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button 
-                      className="flex-1"
-                      onClick={handleSaveProfile}
-                    >
-                      Save Changes
-                    </Button>
-                  </div>
+
+            {/* Logout */}
+            <Card className="p-4 border border-border">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <LogOut className="w-5 h-5 text-red-600" />
                 </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </Card>
+                <div className="flex-1">
+                  <h4 className="font-medium text-foreground">Logout</h4>
+                  <p className="text-sm text-muted-foreground">Sign out of your account</p>
+                </div>
+                <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+            </Card>
 
-        {/* Profile Options */}
-        <div>
-          <h3 className="text-lg font-semibold text-foreground mb-4">Account Settings</h3>
-          <div className="space-y-2">
-            {profileOptions.map((option) => (
-              <Dialog key={option.id} open={activeModal === option.modal} onOpenChange={(open) => setActiveModal(open ? option.modal : null)}>
-                <DialogTrigger asChild>
-                  <Card className="p-4 border border-border cursor-pointer hover:bg-muted/50 transition-colors">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                        <option.icon className="w-5 h-5 text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-medium text-foreground">{option.title}</h4>
-                        <p className="text-sm text-muted-foreground">{option.description}</p>
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                    </div>
-                  </Card>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>{option.title}</DialogTitle>
-                  </DialogHeader>
-                  {renderModalContent(option.modal)}
-                </DialogContent>
-              </Dialog>
-            ))}
-          </div>
-        </div>
+            {/* Download App */}
+            <Card className="p-4 border border-border">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-medium text-foreground">Download App</h4>
+                  <p className="text-sm text-muted-foreground">Get the mobile app for better experience</p>
+                </div>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white" size="sm">
+                  Download
+                </Button>
+              </div>
+            </Card>
 
-        {/* Logout */}
-        <Card className="p-4 border border-border">
-          <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-              <LogOut className="w-5 h-5 text-red-600" />
+            {/* App Version */}
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">App Version 1.0.0</p>
             </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-foreground">Logout</h4>
-              <p className="text-sm text-muted-foreground">Sign out of your account</p>
-            </div>
-            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
-              Logout
-            </Button>
           </div>
-        </Card>
-
-        {/* App Version */}
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">App Version 1.0.0</p>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">

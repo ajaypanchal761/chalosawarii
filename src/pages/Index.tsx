@@ -2,7 +2,6 @@ import TopNavigation from "@/components/TopNavigation";
 import HeroSection from "@/components/HeroSection";
 import OffersSection from "@/components/OffersSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
-import PopularRoutes from "@/components/PopularRoutes";
 import BookingBenefits from "@/components/BookingBenefits";
 import HowToBook from "@/components/HowToBook";
 import PartnersSection from "@/components/PartnersSection";
@@ -18,7 +17,6 @@ const Index = () => {
       <HeroSection />
       <OffersSection />
       <WhyChooseUs />
-      <PopularRoutes />
       <BookingBenefits />
       <HowToBook />
       <PartnersSection />     
