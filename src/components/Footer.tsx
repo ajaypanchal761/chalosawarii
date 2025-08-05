@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import busLogo from "@/assets/BusLogo.png";
 
 const Footer = () => {
@@ -20,6 +21,10 @@ const Footer = () => {
     {
       title: "Top Routes",
       links: ["Delhi to Mumbai", "Bangalore to Chennai", "Hyderabad to Pune", "Mumbai to Goa", "Chennai to Coimbatore"]
+    },
+    {
+      title: "For Drivers",
+      links: ["Driver Login", "Partner with Us", "Driver Support", "Vehicle Registration"]
     }
   ];
 
@@ -81,9 +86,17 @@ const Footer = () => {
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <Button variant="link" className="text-white/80 hover:text-white p-0 h-auto font-normal">
-                      {link}
-                    </Button>
+                    {link === "Driver Login" ? (
+                      <Link to="/driver-auth">
+                        <Button variant="link" className="text-white/80 hover:text-white p-0 h-auto font-normal">
+                          {link}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button variant="link" className="text-white/80 hover:text-white p-0 h-auto font-normal">
+                        {link}
+                      </Button>
+                    )}
                   </li>
                 ))}
               </ul>

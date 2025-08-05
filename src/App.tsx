@@ -11,6 +11,11 @@ import Profile from "./pages/Profile";
 import BusSearch from "./pages/BusSearch";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
+import DriverAuth from "./driver/pages/DriverAuth";
+import DriverHome from "./driver/pages/DriverHome";
+import DriverRequests from "./driver/pages/DriverRequests";
+import DriverMyVehicle from "./driver/pages/DriverMyVehicle";
+import DriverProfile from "./driver/pages/DriverProfile";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +33,14 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/bus-search" element={<BusSearch />} />
           <Route path="/payment" element={<Payment />} />
+          
+          {/* Driver Module Routes */}
+          <Route path="/driver-auth" element={<DriverAuth />} />
+          <Route path="/driver" element={<DriverHome />} />
+          <Route path="/driver/requests" element={<DriverRequests />} />
+          <Route path="/driver/myvehicle" element={<DriverMyVehicle />} />
+          <Route path="/driver/profile" element={<DriverProfile />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
