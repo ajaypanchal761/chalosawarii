@@ -2,17 +2,14 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
-import { Star, Wifi, Tv, Power, Car, Eye } from 'lucide-react';
-import bus1 from '@/assets/bus1.jpg';
-import bus2 from '@/assets/bus2.jpg';
-import bus3 from '@/assets/bus3.jpg';
-import BusDetailsModal from './BusDetailsModal';
+import { Star, Wifi, Tv, Power, Car, Eye, Users, MapPin } from 'lucide-react';
+import CarDetailsModal from './CarDetailsModal';
 
-interface Bus {
+interface Car {
   id: string;
   operatorName: string;
-  busName: string;
-  busType: string;
+  carName: string;
+  carType: string;
   duration: string;
   rating: number;
   reviewCount: number;
@@ -21,73 +18,78 @@ interface Bus {
   amenities: string[];
   image: string;
   isAc: boolean;
-  isSleeper: boolean;
+  isPremium: boolean;
+  maxPassengers: number;
 }
 
-const sampleBuses: Bus[] = [
+const sampleCars: Car[] = [
   {
     id: '1',
-    operatorName: 'Redbus Travels',
-    busName: 'Mercedes Multi-Axle',
-    busType: 'AC Seater / Sleeper (2+1)',
-    duration: '9h 45m',
-    rating: 4.2,
-    reviewCount: 156,
-    fare: 850,
-    seatsLeft: 12,
-    amenities: ['wifi', 'tv', 'power', 'blanket'],
-    image: bus1,
+    operatorName: 'Sawariya Cabs',
+    carName: 'Suzuki Ertiga',
+    carType: 'Premium MPV',
+    duration: '8h 30m',
+    rating: 4.3,
+    reviewCount: 189,
+    fare: 1200,
+    seatsLeft: 6,
+    amenities: ['wifi', 'power', 'ac'],
+    image: '/src/assets/Car1.webp',
     isAc: true,
-    isSleeper: true,
+    isPremium: true,
+    maxPassengers: 6,
   },
   {
     id: '2',
-    operatorName: 'SRS Travels',
-    busName: 'Volvo Multi-Axle',
-    busType: 'AC Sleeper (2+1)',
-    duration: '9h 45m',
-    rating: 4.5,
-    reviewCount: 298,
-    fare: 920,
-    seatsLeft: 8,
-    amenities: ['wifi', 'tv', 'power'],
-    image: bus2,
+    operatorName: 'Tirupati Travels',
+    carName: 'Toyota Innova',
+    carType: 'Luxury MPV',
+    duration: '8h 15m',
+    rating: 4.6,
+    reviewCount: 245,
+    fare: 1500,
+    seatsLeft: 7,
+    amenities: ['wifi', 'tv', 'power', 'ac'],
+    image: '/src/assets/Car2.png',
     isAc: true,
-    isSleeper: true,
+    isPremium: true,
+    maxPassengers: 7,
   },
   {
     id: '3',
-    operatorName: 'KPN Travels',
-    busName: 'Bharat Benz',
-    busType: 'AC Seater (2+2)',
-    duration: '9h 15m',
-    rating: 3.8,
-    reviewCount: 89,
-    fare: 650,
-    seatsLeft: 18,
-    amenities: ['wifi', 'power'],
-    image: bus3,
+    operatorName: 'Vrindavan Cabs',
+    carName: 'Maruti Swift',
+    carType: 'Economy Hatchback',
+    duration: '8h 45m',
+    rating: 3.9,
+    reviewCount: 112,
+    fare: 800,
+    seatsLeft: 4,
+    amenities: ['ac', 'power'],
+    image: '/src/assets/Car3.png',
     isAc: true,
-    isSleeper: false,
+    isPremium: false,
+    maxPassengers: 4,
   },
   {
     id: '4',
-    operatorName: 'Orange Travels',
-    busName: 'Scania Multi-Axle',
-    busType: 'AC Sleeper (2+1)',
-    duration: '9h 15m',
-    rating: 4.1,
-    reviewCount: 204,
-    fare: 780,
-    seatsLeft: 6,
-    amenities: ['wifi', 'tv', 'power', 'blanket'],
-    image: bus1,
+    operatorName: 'Home Travels',
+    carName: 'Honda City',
+    carType: 'Sedan',
+    duration: '8h 20m',
+    rating: 4.2,
+    reviewCount: 167,
+    fare: 1100,
+    seatsLeft: 4,
+    amenities: ['wifi', 'power', 'ac'],
+    image: '/src/assets/Car4.webp',
     isAc: true,
-    isSleeper: true,
+    isPremium: false,
+    maxPassengers: 4,
   },
 ];
 
-const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) => void }) => {
+const CarCard = ({ car, onViewDetails }: { car: Car; onViewDetails: (car: Car) => void }) => {
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
       case 'wifi':
@@ -96,8 +98,8 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
         return <Tv className="w-4 h-4" />;
       case 'power':
         return <Power className="w-4 h-4" />;
-      case 'blanket':
-        return <div className="w-4 h-4 bg-muted rounded flex items-center justify-center text-xs">B</div>;
+      case 'ac':
+        return <div className="w-4 h-4 bg-blue-100 rounded flex items-center justify-center text-xs text-blue-600 font-bold">AC</div>;
       default:
         return <Car className="w-4 h-4" />;
     }
@@ -105,43 +107,53 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
 
   return (
     <Card className="p-4 mb-4 border border-border hover:shadow-lg transition-shadow cursor-pointer" 
-          onClick={() => onViewDetails(bus)}>
+          onClick={() => onViewDetails(car)}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
         {/* Vehicle Image - Hidden on mobile, visible on desktop */}
         <div className="hidden lg:block lg:col-span-2">
           <img
-            src={bus.image}
-            alt={bus.busName}
+            src={car.image}
+            alt={car.carName}
             className="w-full h-20 object-cover rounded-md border border-border"
           />
         </div>
 
-        {/* Bus Info */}
+        {/* Car Info */}
         <div className="lg:col-span-6">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-semibold text-foreground">{bus.operatorName}</h3>
+            <h3 className="font-semibold text-foreground">{car.operatorName}</h3>
             <div className="flex items-center gap-1 text-sm">
               <Star className="w-4 h-4 fill-warning text-warning" />
-              <span className="font-medium">{bus.rating}</span>
-              <span className="text-muted-foreground">({bus.reviewCount})</span>
+              <span className="font-medium">{car.rating}</span>
+              <span className="text-muted-foreground">({car.reviewCount})</span>
             </div>
           </div>
           
-          <p className="text-sm text-muted-foreground mb-2">{bus.busName}</p>
-          <p className="text-sm font-medium text-foreground mb-2">{bus.busType}</p>
-          <p className="text-sm text-muted-foreground mb-2">Duration: {bus.duration}</p>
+          <p className="text-sm text-muted-foreground mb-2">{car.carName}</p>
+          <p className="text-sm font-medium text-foreground mb-2">{car.carType}</p>
+          <p className="text-sm text-muted-foreground mb-2">Duration: {car.duration}</p>
+          
+          <div className="flex items-center gap-4 mb-2">
+            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+              <Users className="w-4 h-4" />
+              <span>Max {car.maxPassengers} passengers</span>
+            </div>
+            {car.isPremium && (
+              <Badge className="bg-yellow-100 text-yellow-800">Premium</Badge>
+            )}
+          </div>
           
           {/* Vehicle Image on Mobile */}
           <div className="lg:hidden mb-3">
             <img
-              src={bus.image}
-              alt={bus.busName}
+              src={car.image}
+              alt={car.carName}
               className="w-full h-32 object-cover rounded-md border border-border"
             />
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {bus.amenities.map((amenity, index) => (
+            {car.amenities.map((amenity, index) => (
               <div key={index} className="flex items-center text-muted-foreground">
                 {renderAmenityIcon(amenity)}
               </div>
@@ -153,7 +165,7 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
         <div className="lg:col-span-4">
           <div className="mb-4 text-right">
             <p className="text-sm text-muted-foreground">Starts from</p>
-            <p className="text-2xl font-bold text-foreground">₹ {bus.fare}</p>
+            <p className="text-2xl font-bold text-foreground">₹ {car.fare}</p>
           </div>
           
           <div className="flex flex-col gap-3">
@@ -163,7 +175,7 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
               className="w-full border-2 hover:bg-muted/50 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
-                onViewDetails(bus);
+                onViewDetails(car);
               }}
             >
               <Eye className="w-4 h-4 mr-2" />
@@ -183,37 +195,37 @@ const BusCard = ({ bus, onViewDetails }: { bus: Bus; onViewDetails: (bus: Bus) =
   );
 };
 
-export const BusList = () => {
-  const [selectedBus, setSelectedBus] = useState<Bus | null>(null);
+export const CarList = () => {
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleViewDetails = (bus: Bus) => {
-    setSelectedBus(bus);
+  const handleViewDetails = (car: Car) => {
+    setSelectedCar(car);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedBus(null);
+    setSelectedCar(null);
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {sampleBuses.length} buses found
+          {sampleCars.length} cars found
         </h2>
         <div className="text-sm text-muted-foreground">
-          Showing buses from Bangalore to Chennai
+          Showing cars from Bangalore to Chennai
         </div>
       </div>
       
-      {sampleBuses.map((bus) => (
-        <BusCard key={bus.id} bus={bus} onViewDetails={handleViewDetails} />
+      {sampleCars.map((car) => (
+        <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} />
       ))}
 
-      <BusDetailsModal 
-        bus={selectedBus}
+      <CarDetailsModal 
+        car={selectedCar}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
       />
@@ -221,4 +233,4 @@ export const BusList = () => {
   );
 };
 
-export default BusList; 
+export default CarList; 

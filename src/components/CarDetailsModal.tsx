@@ -4,15 +4,12 @@ import { Button } from '@/components/ui2/button';
 import { Badge } from '@/components/ui2/badge';
 import { Separator } from '@/components/ui2/separator';
 import { Star, Wifi, Tv, Power, Car, Clock, MapPin, Users, Shield, CreditCard, Phone } from 'lucide-react';
-import BusLogo from '@/assets/BusLogo.png';
-import CarBar from '@/assets/CarBar.png';
-import BusBar from '@/assets/BusBar.png';
 
-interface Bus {
+interface Car {
   id: string;
   operatorName: string;
-  busName: string;
-  busType: string;
+  carName: string;
+  carType: string;
   duration: string;
   rating: number;
   reviewCount: number;
@@ -21,17 +18,18 @@ interface Bus {
   amenities: string[];
   image: string;
   isAc: boolean;
-  isSleeper: boolean;
+  isPremium: boolean;
+  maxPassengers: number;
 }
 
-interface BusDetailsModalProps {
-  bus: Bus | null;
+interface CarDetailsModalProps {
+  car: Car | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
-  if (!bus) return null;
+const CarDetailsModal = ({ car, isOpen, onClose }: CarDetailsModalProps) => {
+  if (!car) return null;
 
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
@@ -41,8 +39,8 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
         return <Tv className="w-5 h-5" />;
       case 'power':
         return <Power className="w-5 h-5" />;
-      case 'blanket':
-        return <div className="w-5 h-5 bg-muted rounded flex items-center justify-center text-xs">B</div>;
+      case 'ac':
+        return <div className="w-5 h-5 bg-blue-100 rounded flex items-center justify-center text-xs text-blue-600 font-bold">AC</div>;
       default:
         return <Car className="w-5 h-5" />;
     }
@@ -56,8 +54,8 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
         return 'Entertainment System';
       case 'power':
         return 'Power Outlets';
-      case 'blanket':
-        return 'Blankets Provided';
+      case 'ac':
+        return 'Air Conditioning';
       default:
         return amenity;
     }
@@ -67,65 +65,57 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Bus Details</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">Car Details</DialogTitle>
         </DialogHeader>
 
-        {/* Logo Grid Section */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={BusLogo} alt="Bus Logo" className="h-16 w-auto object-contain" />
-            </div>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain" />
-            </div>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={BusBar} alt="Bus Bar" className="h-16 w-auto object-contain" />
-            </div>
-          </div>
-        </div>
-
         <div className="space-y-6">
-          {/* Bus Image and Basic Info */}
+          {/* Car Image and Basic Info */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Bus Image */}
+            {/* Car Image */}
             <div className="space-y-4">
               <div className="relative">
                 <img
-                  src={bus.image}
-                  alt={bus.busName}
+                  src={car.image}
+                  alt={car.carName}
                   className="w-full h-64 object-cover rounded-lg border border-border"
                 />
                 <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
-                  {bus.isAc ? 'AC' : 'Non-AC'}
+                  {car.isAc ? 'AC' : 'Non-AC'}
                 </Badge>
-                <Badge className="absolute top-4 right-4 bg-secondary text-secondary-foreground">
-                  {bus.isSleeper ? 'Sleeper' : 'Seater'}
-                </Badge>
+                {car.isPremium && (
+                  <Badge className="absolute top-4 right-4 bg-yellow-500 text-white">
+                    Premium
+                  </Badge>
+                )}
               </div>
               
               {/* Operator Info */}
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">{bus.operatorName}</h3>
-                <p className="text-muted-foreground">{bus.busName}</p>
+                <h3 className="text-lg font-semibold">{car.operatorName}</h3>
+                <p className="text-muted-foreground">{car.carName}</p>
                 <div className="flex items-center gap-2">
                   <Star className="w-4 h-4 fill-warning text-warning" />
-                  <span className="font-medium">{bus.rating}</span>
-                  <span className="text-muted-foreground">({bus.reviewCount} reviews)</span>
+                  <span className="font-medium">{car.rating}</span>
+                  <span className="text-muted-foreground">({car.reviewCount} reviews)</span>
                 </div>
               </div>
             </div>
 
-            {/* Bus Details */}
+            {/* Car Details */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Bus Details</h3>
+              <h3 className="text-lg font-semibold">Car Details</h3>
               
               {/* Duration */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-muted-foreground" />
                   <span className="text-muted-foreground">Duration:</span>
-                  <span className="font-medium">{bus.duration}</span>
+                  <span className="font-medium">{car.duration}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-muted-foreground" />
+                  <span className="text-muted-foreground">Max Passengers:</span>
+                  <span className="font-medium">{car.maxPassengers}</span>
                 </div>
               </div>
 
@@ -136,19 +126,19 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
                 <h4 className="font-semibold">Pricing</h4>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Starting from</span>
-                  <span className="text-3xl font-bold text-primary">₹{bus.fare}</span>
+                  <span className="text-3xl font-bold text-primary">₹{car.fare}</span>
                 </div>
-                <Badge variant={bus.seatsLeft > 10 ? "secondary" : "destructive"}>
-                  {bus.seatsLeft} Seats Left
+                <Badge variant={car.seatsLeft > 3 ? "secondary" : "destructive"}>
+                  {car.seatsLeft} Seats Left
                 </Badge>
               </div>
 
               <Separator />
 
-              {/* Bus Type */}
+              {/* Car Type */}
               <div className="space-y-2">
-                <h4 className="font-semibold">Bus Type</h4>
-                <p className="text-muted-foreground">{bus.busType}</p>
+                <h4 className="font-semibold">Car Type</h4>
+                <p className="text-muted-foreground">{car.carType}</p>
               </div>
             </div>
           </div>
@@ -159,7 +149,7 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Amenities</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {bus.amenities.map((amenity, index) => (
+              {car.amenities.map((amenity, index) => (
                 <div key={index} className="flex items-center gap-3 p-3 border border-border rounded-lg">
                   {renderAmenityIcon(amenity)}
                   <span className="text-sm font-medium">{getAmenityLabel(amenity)}</span>
@@ -178,7 +168,7 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
                 <Shield className="w-5 h-5 text-green-600" />
                 <div>
                   <p className="font-medium">Safe Travel</p>
-                  <p className="text-sm text-muted-foreground">Sanitized buses & masks provided</p>
+                  <p className="text-sm text-muted-foreground">Sanitized cars & masks provided</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 border border-border rounded-lg">
@@ -222,4 +212,4 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
   );
 };
 
-export default BusDetailsModal; 
+export default CarDetailsModal; 
