@@ -1,4 +1,7 @@
 import { Card } from "@/components/ui/card";
+import Vrindavan from "@/assets/vrindavan.png";
+import Sawariya from "@/assets/Sawariya.png";
+import Tirupati from "@/assets/Tirupati.png";
 
 const OffersSection = () => {
   return (
@@ -16,7 +19,7 @@ const OffersSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <Card className="p-6 border-2 border-primary/20 bg-white shadow-card">
             <img 
-              src="/src/assets/vrindavan.png" 
+              src={Vrindavan} 
               alt="Vrindavan" 
               className="w-full h-auto max-w-md mx-auto"
             />
@@ -24,7 +27,7 @@ const OffersSection = () => {
           
           <Card className="p-6 border-2 border-primary/20 bg-white shadow-card">
             <img 
-              src="/src/assets/Sawariya.png" 
+              src={Sawariya} 
               alt="Sawariya" 
               className="w-full h-auto max-w-md mx-auto"
             />
@@ -32,7 +35,7 @@ const OffersSection = () => {
           
           <Card className="p-6 border-2 border-primary/20 bg-white shadow-card">
             <img 
-              src="/src/assets/Tirupati.png" 
+              src={Tirupati} 
               alt="Tirupati" 
               className="w-full h-auto max-w-md mx-auto"
             />
