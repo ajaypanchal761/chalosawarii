@@ -70,20 +70,7 @@ const BusDetailsModal = ({ bus, isOpen, onClose }: BusDetailsModalProps) => {
           <DialogTitle className="text-2xl font-bold">Bus Details</DialogTitle>
         </DialogHeader>
 
-        {/* Logo Grid Section */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={BusLogo} alt="Bus Logo" className="h-16 w-auto object-contain" />
-            </div>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain" />
-            </div>
-            <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-              <img src={BusBar} alt="Bus Bar" className="h-16 w-auto object-contain" />
-            </div>
-          </div>
-        </div>
+       
 
         <div className="space-y-6">
           {/* Bus Image and Basic Info */}

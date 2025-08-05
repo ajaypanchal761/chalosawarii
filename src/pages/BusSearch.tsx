@@ -35,41 +35,51 @@ const BusSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <TopNavigation />
+      
       {/* Logo Grid Section */}
-      <div className="bg-white py-6 border-b border-gray-200">
+      <div className="bg-white py-6 border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-3 divide-x divide-gray-300">
+          <div className="grid grid-cols-3 divide-x divide-gray-300 rounded-xl overflow-hidden shadow-lg">
             <div 
-              className={`flex items-center justify-center p-4 rounded-l-lg border border-gray-200 cursor-pointer transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-300 ${
                 selectedType === 'bus' 
-                  ? 'bg-blue-50 border-blue-300 shadow-md' 
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg transform scale-105' 
+                  : 'bg-white hover:bg-gray-50'
               }`}
               onClick={() => handleLogoClick('bus')}
             >
-              <img src={BusBar} alt="Bus Logo" className="h-16 w-auto object-contain" />
+              <img src={BusBar} alt="Bus Logo" className="h-16 w-auto object-contain mb-2" />
+              <span className={`text-sm font-semibold ${selectedType === 'bus' ? 'text-white' : 'text-black'}`}>
+                <b>Bus</b>
+              </span>
             </div>
             <div 
-              className={`flex items-center justify-center p-4 border-t border-b border-gray-200 cursor-pointer transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-300 ${
                 selectedType === 'car' 
-                  ? 'bg-blue-50 border-blue-300 shadow-md' 
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg transform scale-105' 
+                  : 'bg-white hover:bg-gray-50'
               }`}
               onClick={() => handleLogoClick('car')}
             >
-              <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain" />
+              <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain mb-2" />
+              <span className={`text-sm font-semibold ${selectedType === 'car' ? 'text-white' : 'text-black'}`}>
+               <b>Car</b>
+              </span>
             </div>
             <div 
-              className={`flex items-center justify-center p-4 rounded-r-lg border border-gray-200 cursor-pointer transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center p-4 cursor-pointer transition-all duration-300 ${
                 selectedType === 'traveller' 
-                  ? 'bg-blue-50 border-blue-300 shadow-md' 
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg transform scale-105' 
+                  : 'bg-white hover:bg-gray-50'
               }`}
               onClick={() => handleLogoClick('traveller')}
             >
-              <img src={TravellerLogo} alt="Traveller" className="h-16 w-auto object-contain" />
+              <img src={TravellerLogo} alt="Traveller" className="h-16 w-auto object-contain mb-2" />
+              <span className={`text-sm font-semibold ${selectedType === 'traveller' ? 'text-white' : 'text-black'}`}>
+                <b>Traveller</b>
+              </span>
             </div>
           </div>
         </div>
@@ -77,23 +87,42 @@ const BusSearch = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Filter Sidebar */}
-          <div className="lg:col-span-1">
+        {/* Mobile Layout */}
+        {isMobile ? (
+          <div className="space-y-4">
+            {/* Filter Sidebar for Mobile - Redbus.in style */}
             <FilterSidebar 
               isOpen={isFilterOpen} 
               onToggle={toggleFilter}
             />
+            
+            {/* List Content for Mobile */}
+            <div className="bg-white rounded-xl shadow-lg p-4">
+              {renderList()}
+            </div>
           </div>
+        ) : (
+          /* Desktop Layout */
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            {/* Filter Sidebar */}
+            <div className="lg:col-span-1">
+              <FilterSidebar 
+                isOpen={isFilterOpen} 
+                onToggle={toggleFilter}
+              />
+            </div>
 
-          {/* List Content */}
-          <div className="lg:col-span-3">
-            {renderList()}
+            {/* List Content */}
+            <div className="lg:col-span-3">
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                {renderList()}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default BusSearch; 
+export default BusSearch;
