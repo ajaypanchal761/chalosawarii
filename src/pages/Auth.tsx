@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Twitter, Instagram } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone, Facebook, Twitter, Instagram, Home, List, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import TopNavigation from "@/components/TopNavigation";
 import busLogo from "@/assets/BusLogo.png";
@@ -299,6 +299,28 @@ const Auth = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">
+        <div className="flex justify-around py-2">
+          <Link to="/" className="flex flex-col items-center space-y-1">
+            <Home className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Home</span>
+          </Link>
+          <Link to="/bookings" className="flex flex-col items-center space-y-1">
+            <List className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Bookings</span>
+          </Link>
+          <Link to="/help" className="flex flex-col items-center space-y-1">
+            <HelpCircle className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Help</span>
+          </Link>
+          <Link to="/auth" className="flex flex-col items-center space-y-1">
+            <User className="w-5 h-5 text-primary" />
+            <span className="text-xs text-primary font-medium">Account</span>
+          </Link>
         </div>
       </div>
     </div>

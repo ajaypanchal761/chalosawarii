@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Globe, HelpCircle, User, Phone } from "lucide-react";
+import { ChevronDown, Globe, HelpCircle, User, Phone, Home } from "lucide-react";
 import busLogo from "@/assets/BusLogo.png";
 import { Link, useLocation } from "react-router-dom";
 
@@ -63,7 +63,14 @@ const TopNavigation = () => {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {!isOnAuthPage && (
+            {isOnAuthPage ? (
+              <Link to="/">
+                <Button variant="ghost" className="text-foreground">
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Button>
+              </Link>
+            ) : (
               <Link to="/auth">
                 <Button variant="ghost" className="text-foreground">
                   <User className="w-4 h-4 mr-2" />
@@ -76,17 +83,24 @@ const TopNavigation = () => {
             </Button>
           </div>
 
-          {/* Mobile Login Button */}
-          {!isOnAuthPage && (
-            <div className="md:hidden">
+          {/* Mobile Login/Home Button */}
+          <div className="md:hidden">
+            {isOnAuthPage ? (
+              <Link to="/">
+                <Button variant="ghost" className="text-foreground">
+                  <Home className="w-5 h-5 mr-2" />
+                  Home
+                </Button>
+              </Link>
+            ) : (
               <Link to="/auth">
                 <Button variant="ghost" className="text-foreground">
                   <User className="w-5 h-5 mr-2" />
                   Login
                 </Button>
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </nav>
