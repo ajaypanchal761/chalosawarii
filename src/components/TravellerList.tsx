@@ -4,6 +4,10 @@ import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
 import { Star, Wifi, Tv, Power, Car, Eye, Users, MapPin } from 'lucide-react';
 import TravellerDetailsModal from './TravellerDetailsModal';
+import Traveller1 from '@/assets/Traveller1.png';
+import Traveller2 from '@/assets/Traveller2.webp';
+import Traveller3 from '@/assets/Traveller3.webp';
+import Traveller4 from '@/assets/Traveller4.png';
 
 interface Traveller {
   id: string;
@@ -34,7 +38,7 @@ const sampleTravellers: Traveller[] = [
     fare: 1800,
     seatsLeft: 12,
     amenities: ['wifi', 'power', 'ac', 'tv'],
-    image: '/src/assets/Traveller1.png',
+    image: Traveller1,
     isAc: true,
     isPremium: true,
     maxPassengers: 12,
@@ -50,7 +54,7 @@ const sampleTravellers: Traveller[] = [
     fare: 2200,
     seatsLeft: 15,
     amenities: ['wifi', 'tv', 'power', 'ac'],
-    image: '/src/assets/Traveller2.webp',
+    image: Traveller2,
     isAc: true,
     isPremium: true,
     maxPassengers: 15,
@@ -66,7 +70,7 @@ const sampleTravellers: Traveller[] = [
     fare: 1400,
     seatsLeft: 10,
     amenities: ['ac', 'power'],
-    image: '/src/assets/Traveller3.webp',
+    image: Traveller3,
     isAc: true,
     isPremium: false,
     maxPassengers: 10,
@@ -82,7 +86,7 @@ const sampleTravellers: Traveller[] = [
     fare: 2000,
     seatsLeft: 13,
     amenities: ['wifi', 'power', 'ac', 'tv'],
-    image: '/src/assets/Traveller4.png',
+    image: Traveller4,
     isAc: true,
     isPremium: true,
     maxPassengers: 13,

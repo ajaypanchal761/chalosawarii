@@ -4,6 +4,10 @@ import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
 import { Star, Wifi, Tv, Power, Car, Eye, Users, MapPin } from 'lucide-react';
 import CarDetailsModal from './CarDetailsModal';
+import Car1 from '@/assets/Car1.webp';
+import Car2 from '@/assets/Car2.png';
+import Car3 from '@/assets/Car3.png';
+import Car4 from '@/assets/Car4.webp';
 
 interface Car {
   id: string;
@@ -34,7 +38,7 @@ const sampleCars: Car[] = [
     fare: 1200,
     seatsLeft: 6,
     amenities: ['wifi', 'power', 'ac'],
-    image: '/src/assets/Car1.webp',
+    image: Car1,
     isAc: true,
     isPremium: true,
     maxPassengers: 6,
@@ -50,7 +54,7 @@ const sampleCars: Car[] = [
     fare: 1500,
     seatsLeft: 7,
     amenities: ['wifi', 'tv', 'power', 'ac'],
-    image: '/src/assets/Car2.png',
+    image: Car2,
     isAc: true,
     isPremium: true,
     maxPassengers: 7,
@@ -66,7 +70,7 @@ const sampleCars: Car[] = [
     fare: 800,
     seatsLeft: 4,
     amenities: ['ac', 'power'],
-    image: '/src/assets/Car3.png',
+    image: Car3,
     isAc: true,
     isPremium: false,
     maxPassengers: 4,
@@ -82,7 +86,7 @@ const sampleCars: Car[] = [
     fare: 1100,
     seatsLeft: 4,
     amenities: ['wifi', 'power', 'ac'],
-    image: '/src/assets/Car4.webp',
+    image: Car4,
     isAc: true,
     isPremium: false,
     maxPassengers: 4,
