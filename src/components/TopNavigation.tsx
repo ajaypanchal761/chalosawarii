@@ -83,8 +83,8 @@ const TopNavigation = () => {
             </Button>
           </div>
 
-          {/* Mobile Login/Home Button */}
-          <div className="md:hidden">
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center space-x-2">
             {isOnAuthPage ? (
               <Link to="/">
                 <Button variant="ghost" className="text-foreground">

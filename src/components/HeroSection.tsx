@@ -5,9 +5,10 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeftRight, Calendar, MapPin, Search, Bus, Plane, PlaneTakeoff, Home, List, HelpCircle, User, Train } from "lucide-react";
 import HomeBanner from "@/assets/HomeBanner.webp";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const [departureDate, setDepartureDate] = useState("2025-08-04");
@@ -25,6 +26,14 @@ const HeroSection = () => {
 
   const handleSearch = () => {
     console.log("Searching for:", { fromLocation, toLocation, departureDate });
+    // Navigate to bus search page with search parameters
+    navigate('/bus-search', { 
+      state: { 
+        from: fromLocation, 
+        to: toLocation, 
+        date: departureDate 
+      } 
+    });
   };
 
   const handleDateSelect = (date: string) => {
@@ -280,6 +289,10 @@ const HeroSection = () => {
             <Link to="/" className="flex flex-col items-center space-y-1">
               <Home className="w-5 h-5 text-primary" />
               <span className="text-xs text-primary font-medium">Home</span>
+            </Link>
+            <Link to="/bus-search" className="flex flex-col items-center space-y-1">
+              <Search className="w-5 h-5 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Search</span>
             </Link>
             <Link to="/bookings" className="flex flex-col items-center space-y-1">
               <List className="w-5 h-5 text-muted-foreground" />
