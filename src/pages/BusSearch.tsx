@@ -50,7 +50,13 @@ const BusSearch = () => {
               }`}
               onClick={() => handleLogoClick('bus')}
             >
-              <img src={BusBar} alt="Bus Logo" className="h-16 w-auto object-contain mb-2" />
+              <img 
+                src={BusBar} 
+                alt="Bus Logo" 
+                className={`h-16 w-auto object-contain mb-2 transition-all duration-300 ${
+                  selectedType === 'bus' ? 'brightness-0 invert' : ''
+                }`}
+              />
               <span className={`text-sm font-semibold ${selectedType === 'bus' ? 'text-white' : 'text-black'}`}>
                 <b>Bus</b>
               </span>
@@ -63,7 +69,13 @@ const BusSearch = () => {
               }`}
               onClick={() => handleLogoClick('car')}
             >
-              <img src={CarBar} alt="Car Bar" className="h-16 w-auto object-contain mb-2" />
+              <img 
+                src={CarBar} 
+                alt="Car Bar" 
+                className={`h-16 w-auto object-contain mb-2 transition-all duration-300 ${
+                  selectedType === 'car' ? 'brightness-0 invert' : ''
+                }`}
+              />
               <span className={`text-sm font-semibold ${selectedType === 'car' ? 'text-white' : 'text-black'}`}>
                 <b>Car</b>
               </span>
@@ -76,7 +88,13 @@ const BusSearch = () => {
               }`}
               onClick={() => handleLogoClick('traveller')}
             >
-              <img src={TravellerLogo} alt="Traveller" className="h-16 w-auto object-contain mb-2" />
+              <img 
+                src={TravellerLogo} 
+                alt="Traveller" 
+                className={`h-16 w-auto object-contain mb-2 transition-all duration-300 ${
+                  selectedType === 'traveller' ? 'brightness-0 invert' : ''
+                }`}
+              />
               <span className={`text-sm font-semibold ${selectedType === 'traveller' ? 'text-white' : 'text-black'}`}>
                 <b>Traveller</b>
               </span>
