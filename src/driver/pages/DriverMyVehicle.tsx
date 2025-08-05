@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DriverTopNavigation from "@/driver/components/DriverTopNavigation";
-import { Home, MessageSquare, Car, User, Plus, Edit, Trash2, MapPin, Calendar, Fuel, Settings, CheckCircle, AlertCircle, Search, Filter, Upload, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Home, MessageSquare, Car, User, Plus, Edit, Trash2, MapPin, Calendar, Fuel, Settings, CheckCircle, AlertCircle, Search, Filter, Upload, ChevronLeft, ChevronRight, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,8 @@ const DriverMyVehicle = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("myvehicle");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterType, setFilterType] = useState("all");
@@ -59,7 +61,7 @@ const DriverMyVehicle = () => {
       nextService: "2024-04-15",
       totalRides: 156,
       rating: 4.8,
-      images: ["/src/assets/Car1.webp", "/src/assets/Car2.png"]
+      images: ["/Car1.webp", "/Car2.png"]
     },
     {
       id: "2",
@@ -76,17 +78,42 @@ const DriverMyVehicle = () => {
       nextService: "2024-05-20",
       totalRides: 89,
       rating: 4.6,
-      images: ["/src/assets/Car2.png", "/src/assets/Car3.png"]
+      images: ["/Car2.png", "/Car3.png"]
     }
   ]);
 
   useEffect(() => {
-    const driverLoggedIn = localStorage.getItem('isDriverLoggedIn');
-    if (!driverLoggedIn) {
-      navigate('/driver-auth');
-    } else {
-      setIsLoggedIn(true);
-    }
+    const initializeDriverModule = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Check if driver is logged in
+        const driverLoggedIn = localStorage.getItem('isDriverLoggedIn');
+        if (!driverLoggedIn) {
+          navigate('/driver-auth');
+          return;
+        }
+        
+        setIsLoggedIn(true);
+        
+        // Simulate loading time for better UX
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+      } catch (err) {
+        console.error('Error initializing driver module:', err);
+        setError('Failed to load driver module. Please try refreshing the page.');
+        toast({
+          title: "Error",
+          description: "Failed to load driver module. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeDriverModule();
   }, [navigate]);
 
   const handleTabChange = (tab: string) => {
@@ -148,7 +175,7 @@ const DriverMyVehicle = () => {
       nextService: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       totalRides: 0,
       rating: 0,
-      images: vehicleData.images || ["/src/assets/Car1.webp"]
+      images: vehicleData.images || ["/Car1.webp"]
     };
     
     setVehicles(prev => [...prev, newVehicle]);
@@ -233,6 +260,34 @@ const DriverMyVehicle = () => {
     const matchesType = filterType === "all" || vehicle.type === filterType;
     return matchesSearch && matchesStatus && matchesType;
   });
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600">Loading driver module...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-6">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return null;
@@ -463,6 +518,10 @@ const DriverMyVehicle = () => {
                                src={image} 
                                alt={`${vehicle.name} - Image ${index + 1}`}
                                className="w-full h-48 object-cover flex-shrink-0"
+                               onError={(e) => {
+                                 const target = e.target as HTMLImageElement;
+                                 target.src = '/placeholder.svg';
+                               }}
                              />
                            ))}
                          </div>
@@ -681,6 +740,10 @@ const DriverMyVehicle = () => {
                            src={image} 
                            alt={`${viewingVehicle.name} - Image ${index + 1}`}
                            className="w-full h-80 object-cover flex-shrink-0"
+                           onError={(e) => {
+                             const target = e.target as HTMLImageElement;
+                             target.src = '/placeholder.svg';
+                           }}
                          />
                        ))}
                      </div>
@@ -878,10 +941,10 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
     color: '',
     fuelType: '',
     capacity: 4,
-    images: ['/src/assets/Car1.webp'] // Default image
+    images: ['/Car1.webp'] // Default image
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>(['/src/assets/Car1.webp']);
+  const [previewUrls, setPreviewUrls] = useState<string[]>(['/Car1.webp']);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -1056,14 +1119,14 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
                 <span>Add Images</span>
               </Button>
               {previewUrls.length > 1 && (
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => {
-                    setSelectedImages([]);
-                    setPreviewUrls(['/src/assets/Car1.webp']);
-                    setFormData(prev => ({ ...prev, images: ['/src/assets/Car1.webp'] }));
-                  }}
+                                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => {
+                      setSelectedImages([]);
+                      setPreviewUrls(['/Car1.webp']);
+                      setFormData(prev => ({ ...prev, images: ['/Car1.webp'] }));
+                    }}
                   className="text-red-600 border-red-600 hover:bg-red-50"
                 >
                   Reset All
