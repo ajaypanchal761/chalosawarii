@@ -20,7 +20,6 @@ const Index = () => {
       <BookingBenefits />
       <HowToBook />
       <PartnersSection />     
-      <AppDownloadSection />
       <Footer />
     </div>
   );
