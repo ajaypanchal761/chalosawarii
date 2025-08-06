@@ -495,58 +495,58 @@ const AdminBookingManagement = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+                <Calendar className="w-4 h-4 md:w-6 md:h-6 text-blue-600" />
               </div>
-              <div className="ml-3 md:ml-4">
-                <p className="text-xs md:text-sm font-medium text-gray-600">Total Bookings</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.total}</p>
+              <div className="ml-2 md:ml-4 min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Total Bookings</p>
+                <p className="text-base md:text-2xl font-bold text-gray-900">{stats.total}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+                <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-600" />
               </div>
-              <div className="ml-3 md:ml-4">
-                <p className="text-xs md:text-sm font-medium text-gray-600">Active Trips</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.active}</p>
+              <div className="ml-2 md:ml-4 min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Active Trips</p>
+                <p className="text-base md:text-2xl font-bold text-gray-900">{stats.active}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+                <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-green-600" />
               </div>
-              <div className="ml-3 md:ml-4">
-                <p className="text-xs md:text-sm font-medium text-gray-600">Paid Amount</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{formatCurrency(stats.paidAmount)}</p>
+              <div className="ml-2 md:ml-4 min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Paid Amount</p>
+                <p className="text-base md:text-2xl font-bold text-gray-900">{formatCurrency(stats.paidAmount)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" />
+                <Clock className="w-4 h-4 md:w-6 md:h-6 text-yellow-600" />
               </div>
-              <div className="ml-3 md:ml-4">
-                <p className="text-xs md:text-sm font-medium text-gray-600">Pending Amount</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{formatCurrency(stats.pendingAmount)}</p>
+              <div className="ml-2 md:ml-4 min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Pending Amount</p>
+                <p className="text-base md:text-2xl font-bold text-gray-900">{formatCurrency(stats.pendingAmount)}</p>
               </div>
             </div>
           </CardContent>
@@ -554,44 +554,44 @@ const AdminBookingManagement = () => {
       </div>
 
       {/* Additional Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">Completed Trips</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{stats.completed}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Completed Trips</p>
+                <p className="text-base md:text-xl font-bold text-gray-900">{stats.completed}</p>
               </div>
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
+              <div className="p-2 bg-purple-100 rounded-lg ml-2">
+                <TrendingUp className="w-4 h-4 md:w-6 md:h-6 text-purple-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-4 md:p-6">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">Ongoing Bookings</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{stats.ongoing}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Ongoing Bookings</p>
+                <p className="text-base md:text-xl font-bold text-gray-900">{stats.ongoing}</p>
               </div>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
+              <div className="p-2 bg-blue-100 rounded-lg ml-2">
+                <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="p-4 md:p-6">
+        <Card className="sm:col-span-2 lg:col-span-1">
+          <CardContent className="p-3 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-medium text-gray-600 truncate">Total Revenue</p>
+                <p className="text-base md:text-xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
               </div>
-              <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+              <div className="p-2 bg-green-100 rounded-lg ml-2">
+                <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-green-600" />
               </div>
             </div>
           </CardContent>
@@ -601,22 +601,22 @@ const AdminBookingManagement = () => {
       {/* Filters and Search */}
       <Card className="mb-4 md:mb-6">
         <CardContent className="p-4 md:p-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
-                  placeholder="Search bookings..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+          <div className="space-y-4">
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search bookings by number, customer, driver, or route..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Filters */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -630,7 +630,7 @@ const AdminBookingManagement = () => {
               </Select>
 
               <Select value={paymentFilter} onValueChange={setPaymentFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Payment status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -643,7 +643,7 @@ const AdminBookingManagement = () => {
               </Select>
 
               <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full sm:col-span-2 lg:col-span-1">
                   <SelectValue placeholder="Filter by date" />
                 </SelectTrigger>
                 <SelectContent>
@@ -670,109 +670,139 @@ const AdminBookingManagement = () => {
               <p className="mt-2 text-gray-600">Loading bookings...</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 gap-4 md:gap-6">
               {filteredBookings.map((booking) => (
                 <Card key={booking.id} className="hover:shadow-lg transition-shadow">
                   <CardContent className="p-4 md:p-6">
-                    {/* Top Row */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2 md:space-x-3">
-                        <h3 className="text-lg md:text-xl font-bold text-gray-900">{booking.bookingNumber}</h3>
-                        {getStatusBadge(booking.status)}
+                    {/* Top Row - Mobile Optimized */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 md:space-x-3">
+                        <h3 className="text-base md:text-xl font-bold text-gray-900">{booking.bookingNumber}</h3>
+                        <div className="flex flex-wrap gap-1 sm:gap-2">
+                          {getStatusBadge(booking.status)}
+                          {getPaymentStatusBadge(booking.paymentStatus)}
+                        </div>
                       </div>
-                      <div className="text-right">
+                      <div className="text-left sm:text-right">
                         <p className="text-lg md:text-xl font-bold text-gray-900">{formatCurrency(booking.amount)}</p>
                       </div>
                     </div>
 
-                    {/* Middle Section - Details */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center space-x-2">
-                        <User className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">Customer: {booking.customerName}</span>
+                    {/* Middle Section - Details - Mobile Optimized */}
+                    <div className="space-y-3 mb-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="flex items-center space-x-2">
+                          <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-gray-500">Customer</p>
+                            <p className="text-sm font-medium text-gray-900 truncate">{booking.customerName}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-gray-500">Driver</p>
+                            <p className="text-sm font-medium text-gray-900 truncate">{booking.driverName}</p>
+                          </div>
+                        </div>
                       </div>
+                      
                       <div className="flex items-center space-x-2">
-                        <User className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">Driver: {booking.driverName}</span>
+                        <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs text-gray-500">Route</p>
+                          <p className="text-sm font-medium text-gray-900">{booking.from} → {booking.to}</p>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">Route: {booking.from} → {booking.to}</span>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="flex items-center space-x-2">
+                          <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-gray-500">Date</p>
+                            <p className="text-sm font-medium text-gray-900">{formatDate(booking.departureDate)}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-gray-500">Time</p>
+                            <p className="text-sm font-medium text-gray-900">{booking.departureTime}</p>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">Date: {formatDate(booking.departureDate)}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-gray-400" />
-                        <span className="text-xs md:text-sm text-gray-600">Time: {booking.departureTime}</span>
-                      </div>
+                      
                       <div className="flex items-center space-x-2">
                         {getVehicleIcon(booking.vehicleType)}
-                        <span className="text-xs md:text-sm text-gray-600">Vehicle: {booking.vehicleModel}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs text-gray-500">Vehicle</p>
+                          <p className="text-sm font-medium text-gray-900">{booking.vehicleModel}</p>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Payment Status */}
-                    <div className="mb-4">
-                      {getPaymentStatusBadge(booking.paymentStatus)}
-                    </div>
-
-                    {/* Bottom Section - Actions */}
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleBookingAction('view', booking.id)}
-                        className="flex-1"
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Details
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleBookingAction('edit', booking.id)}
-                        className="flex-1"
-                      >
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit
-                      </Button>
-                    </div>
-
-                    {/* Additional Actions */}
-                    <div className="flex flex-col sm:flex-row gap-2 mt-2">
-                      {booking.status !== 'cancelled' && booking.status !== 'completed' && booking.paymentStatus !== 'paid' && (
+                    {/* Bottom Section - Actions - Mobile Optimized */}
+                    <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-2">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleBookingAction('cancel', booking.id)}
-                          className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          onClick={() => handleBookingAction('view', booking.id)}
+                          className="w-full"
                         >
-                          <Ban className="w-4 h-4 mr-2" />
-                          Cancel
+                          <Eye className="w-4 h-4 mr-1 sm:mr-2" />
+                          <span className="hidden sm:inline">View</span>
+                          <span className="sm:hidden">View</span>
                         </Button>
-                      )}
-                      {booking.status === 'cancelled' && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleBookingAction('revert', booking.id)}
-                          className="flex-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                          onClick={() => handleBookingAction('edit', booking.id)}
+                          className="w-full"
                         >
-                          <RotateCcw className="w-4 h-4 mr-2" />
-                          Revert
+                          <Edit className="w-4 h-4 mr-1 sm:mr-2" />
+                          <span className="hidden sm:inline">Edit</span>
+                          <span className="sm:hidden">Edit</span>
                         </Button>
-                      )}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleBookingAction('delete', booking.id)}
-                        className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </Button>
+                      </div>
+
+                      {/* Additional Actions */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {booking.status !== 'cancelled' && booking.status !== 'completed' && booking.paymentStatus !== 'paid' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBookingAction('cancel', booking.id)}
+                            className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                          >
+                            <Ban className="w-4 h-4 mr-1 sm:mr-2" />
+                            <span className="hidden sm:inline">Cancel</span>
+                            <span className="sm:hidden">Cancel</span>
+                          </Button>
+                        )}
+                        {booking.status === 'cancelled' && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBookingAction('revert', booking.id)}
+                            className="w-full text-green-600 hover:text-green-700 hover:bg-green-50"
+                          >
+                            <RotateCcw className="w-4 h-4 mr-1 sm:mr-2" />
+                            <span className="hidden sm:inline">Revert</span>
+                            <span className="sm:hidden">Revert</span>
+                          </Button>
+                        )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleBookingAction('delete', booking.id)}
+                          className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4 mr-1 sm:mr-2" />
+                          <span className="hidden sm:inline">Delete</span>
+                          <span className="sm:hidden">Delete</span>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
