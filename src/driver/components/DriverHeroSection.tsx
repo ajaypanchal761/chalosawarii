@@ -30,7 +30,7 @@ const DriverHeroSection = () => {
         <div className="relative z-10 container mx-auto px-4">
           <div className="text-center mb-8">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">
-              DRIVER <span className="text-blue-600">DASHBOARD</span>
+              OWNER DRIVER <span className="text-blue-600">DASHBOARD</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Manage your rides, track earnings, and grow your business with our comprehensive driver platform
@@ -88,9 +88,7 @@ const DriverHeroSection = () => {
       <div className="block md:hidden flex-1 flex flex-col">
         {/* Mobile Header */}
         <div className="p-4 text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            DRIVER <span className="text-blue-600">DASHBOARD</span>
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2 ml-2"> OWNER DRIVER <span className="text-blue-600">DASHBOARD</span></h1>
           <p className="text-gray-600 text-sm">
             Manage your rides and earnings
           </p>

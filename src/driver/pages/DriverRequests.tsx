@@ -109,11 +109,7 @@ const DriverRequests = () => {
     }
   };
 
-  const handlePriceAdjustment = (requestId: string, newPrice: number) => {
-    setRequests(prev => prev.map(req => 
-      req.id === requestId ? { ...req, adjustedPrice: newPrice } : req
-    ));
-  };
+
 
   const handleAcceptRequest = (requestId: string) => {
     setRequests(prev => prev.map(req => 
@@ -185,8 +181,8 @@ const DriverRequests = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Driver Module</h1>
-              <p className="text-blue-100">Ride Requests</p>
+              <h1 className="text-2xl font-bold">Owner Driver Module</h1>
+              <p className="text-blue-100">Vehicle Requests</p>
             </div>
           </div>
         </div>
@@ -303,78 +299,49 @@ const DriverRequests = () => {
                     </div>
                   </div>
 
-                  {/* Trip Details */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-gray-500" />
-                      <span>{request.duration}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">Distance:</span>
-                      <span>{request.distance}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">Passengers:</span>
-                      <span>{request.passengers}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Phone className="w-4 h-4 text-gray-500" />
-                      <span>{request.customerPhone}</span>
-                      <div className="flex space-x-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleCallCustomer(request.customerPhone)}
-                          className="h-6 w-6 p-0"
-                        >
-                          <Phone className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleSendMessage(request.customerPhone)}
-                          className="h-6 w-6 p-0"
-                        >
-                          <MessageSquare className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                                                        {/* Trip Details */}
+                   <div className="space-y-3 text-sm">
+                     <div className="flex items-center space-x-2">
+                       <MapPin className="w-4 h-4 text-gray-500" />
+                       <span className="font-medium">Distance:</span>
+                       <span>{request.distance}</span>
+                     </div>
+                     <div className="flex items-center space-x-2">
+                       <UserIcon className="w-4 h-4 text-gray-500" />
+                       <span className="font-medium">Vehicle Count:</span>
+                       <span>{request.passengers}</span>
+                     </div>
+                     <div className="flex items-center space-x-2">
+                       <Car className="w-4 h-4 text-gray-500" />
+                       <span className="font-medium">Vehicle Type:</span>
+                       <span>{request.vehicleType}</span>
+                     </div>
+                     <div className="flex items-center space-x-2">
+                       <Phone className="w-4 h-4 text-gray-500" />
+                       <span className="font-medium">Contact:</span>
+                       <span>{request.customerPhone}</span>
+                     </div>
+                     <div className="flex space-x-1">
+                       <Button
+                         size="sm"
+                         variant="outline"
+                         onClick={() => handleCallCustomer(request.customerPhone)}
+                         className="h-6 w-6 p-0"
+                       >
+                         <Phone className="w-3 h-3" />
+                       </Button>
+                       <Button
+                         size="sm"
+                         variant="outline"
+                         onClick={() => handleSendMessage(request.customerPhone)}
+                         className="h-6 w-6 p-0"
+                       >
+                         <MessageSquare className="w-3 h-3" />
+                       </Button>
+                     </div>
+                   </div>
 
-                  <Separator />
-
-                  {/* Price Adjustment */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Sliders className="w-4 h-4 text-blue-600" />
-                        <span className="font-medium">Price Adjustment</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm text-gray-500 line-through">₹{request.originalPrice}</div>
-                        <div className="text-lg font-bold text-green-600">₹{request.adjustedPrice}</div>
-                      </div>
-                    </div>
-                    
-                    <Slider
-                      value={[((request.adjustedPrice - request.originalPrice) / request.originalPrice) * 100]}
-                      onValueChange={(value) => {
-                        const percentage = value[0];
-                        const newPrice = request.originalPrice + (request.originalPrice * percentage / 100);
-                        handlePriceAdjustment(request.id, Math.round(newPrice));
-                      }}
-                      max={10}
-                      min={-10}
-                      step={1}
-                      className="w-full"
-                    />
-                    
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>-10%</span>
-                      <span>Original</span>
-                      <span>+10%</span>
-                    </div>
-                  </div>
+                  
 
                   {/* Action Buttons */}
                   <div className="flex space-x-3">

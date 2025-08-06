@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DriverTopNavigation from "@/driver/components/DriverTopNavigation";
-import { Home, MessageSquare, Car, User, Plus, Edit, Trash2, MapPin, Calendar, Fuel, Settings, CheckCircle, AlertCircle, Search, Filter, Upload, ChevronLeft, ChevronRight, X, Loader2 } from "lucide-react";
+import { Home, MessageSquare, Car, User, Plus, Edit, Trash2, MapPin, Calendar, Fuel, Settings, CheckCircle, AlertCircle, Search, Filter, Upload, ChevronLeft, ChevronRight, X, Loader2, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { toast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
@@ -29,6 +30,8 @@ interface Vehicle {
   totalRides: number;
   rating: number;
   images: string[]; // Changed from single image to array of images
+  basePrice: number;
+  adjustedPrice: number;
 }
 
 const DriverMyVehicle = () => {
@@ -61,7 +64,9 @@ const DriverMyVehicle = () => {
       nextService: "2024-04-15",
       totalRides: 156,
       rating: 4.8,
-      images: ["/Car1.webp", "/Car2.png"]
+      images: ["/Car1.webp", "/Car2.png"],
+      basePrice: 1200,
+      adjustedPrice: 1200
     },
     {
       id: "2",
@@ -78,7 +83,9 @@ const DriverMyVehicle = () => {
       nextService: "2024-05-20",
       totalRides: 89,
       rating: 4.6,
-      images: ["/Car2.png", "/Car3.png"]
+      images: ["/Car2.png", "/Car3.png"],
+      basePrice: 1500,
+      adjustedPrice: 1500
     }
   ]);
 
@@ -175,7 +182,9 @@ const DriverMyVehicle = () => {
       nextService: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       totalRides: 0,
       rating: 0,
-      images: vehicleData.images || ["/Car1.webp"]
+      images: vehicleData.images || ["/Car1.webp"],
+      basePrice: vehicleData.basePrice || 1000,
+      adjustedPrice: vehicleData.adjustedPrice || 1000
     };
     
     setVehicles(prev => [...prev, newVehicle]);
@@ -252,6 +261,12 @@ const DriverMyVehicle = () => {
     setDetailImageIndex(newIndex);
   };
 
+  const handlePriceAdjustment = (vehicleId: string, newPrice: number) => {
+    setVehicles(prev => prev.map(v => 
+      v.id === vehicleId ? { ...v, adjustedPrice: newPrice } : v
+    ));
+  };
+
   // Filter vehicles
   const filteredVehicles = vehicles.filter(vehicle => {
     const matchesSearch = vehicle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -302,7 +317,7 @@ const DriverMyVehicle = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Driver Module</h1>
+              <h1 className="text-2xl font-bold"> Owner Driver</h1>
               <p className="text-blue-100">My Vehicles</p>
             </div>
             <Button 
@@ -629,6 +644,39 @@ const DriverMyVehicle = () => {
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">Next Service:</span>
                         <span className="font-medium">{vehicle.nextService}</span>
+                      </div>
+                    </div>
+
+                    {/* Price Adjustment */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Sliders className="w-4 h-4 text-blue-600" />
+                          <span className="font-medium text-sm">Price Adjustment</span>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-gray-500 line-through">₹{vehicle.basePrice}</div>
+                          <div className="text-sm font-bold text-green-600">₹{vehicle.adjustedPrice}</div>
+                        </div>
+                      </div>
+                      
+                      <Slider
+                        value={[((vehicle.adjustedPrice - vehicle.basePrice) / vehicle.basePrice) * 100]}
+                        onValueChange={(value) => {
+                          const percentage = value[0];
+                          const newPrice = vehicle.basePrice + (vehicle.basePrice * percentage / 100);
+                          handlePriceAdjustment(vehicle.id, Math.round(newPrice));
+                        }}
+                        max={10}
+                        min={-10}
+                        step={1}
+                        className="w-full"
+                      />
+                      
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>-10%</span>
+                        <span>Original</span>
+                        <span>+10%</span>
                       </div>
                     </div>
 

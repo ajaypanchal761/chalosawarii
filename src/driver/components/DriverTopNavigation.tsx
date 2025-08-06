@@ -12,7 +12,7 @@ const DriverTopNavigation = () => {
           <div className="flex items-center space-x-4 text-muted-foreground">
             <span className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              Driver Support: 8904-455-456
+              Owner Driver Support: 8904-455-456
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -40,7 +40,7 @@ const DriverTopNavigation = () => {
                   <span className="text-lg md:text-lg lg:text-xl font-bold text-black">CHALO</span>
                   <span className="text-lg md:text-lg lg:text-xl font-bold text-blue-600 ml-1">SAWARI</span>
                 </div>
-                <span className="text-xs text-gray-600 hidden sm:block">Driver Portal</span>
+                <span className="text-xs text-gray-600 hidden sm:block">Owner Driver Portal</span>
               </div>
             </div>
           </Link>

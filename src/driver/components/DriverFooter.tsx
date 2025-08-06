@@ -7,16 +7,16 @@ import busLogo from "@/assets/BusLogo.png";
 const DriverFooter = () => {
   const driverFooterSections = [
     {
-      title: "Driver Services",
+      title: "Owner Driver Services",
       links: ["Vehicle Registration", "Earnings Dashboard", "Trip History", "Performance Analytics", "Insurance Coverage"]
     },
     {
       title: "Support",
-      links: ["Driver Help Center", "24/7 Support", "Safety Guidelines", "Terms & Conditions", "Privacy Policy"]
+      links: ["Help Center", "24/7 Support", "Safety Guidelines", "Terms & Conditions", "Privacy Policy"]
     },
     {
       title: "Resources",
-      links: ["Driver Training", "Vehicle Maintenance", "Route Optimization", "Customer Tips", "App Tutorials"]
+      links: ["Owner Driver Training", "Vehicle Maintenance", "Route Optimization", "Customer Tips", "App Tutorials"]
     }
   ];
 
@@ -31,8 +31,8 @@ const DriverFooter = () => {
             <div className="flex items-center space-x-3 mb-4">
               <img src={busLogo} alt="Bus Logo" className="h-10 w-auto filter brightness-0 invert" />
               <div>
-                <h4 className="font-bold text-lg">Driver Portal</h4>
-                <p className="text-sm text-blue-400">Professional Driver Platform</p>
+                <h4 className="font-bold text-lg">Owner Driver Portal</h4>
+                <p className="text-sm text-blue-400">Professional Owner Driver Platform</p>
               </div>
             </div>
             <p className="text-white/80 mb-4">
@@ -90,7 +90,7 @@ const DriverFooter = () => {
               </div>
               <div>
                 <div className="text-2xl font-bold text-blue-400">50K+</div>
-                <div className="text-sm text-white/60">Active Drivers</div>
+                <div className="text-sm text-white/60">Active Owner Drivers</div>
               </div>
             </div>
             <div className="flex flex-col items-center space-y-2">
@@ -130,11 +130,11 @@ const DriverFooter = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <Phone className="w-5 h-5 text-blue-400" />
-              <span className="text-white/80">Driver Support: 8904-455-456</span>
+              <span className="text-white/80">Support: 8904-455-456</span>
             </div>
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <Mail className="w-5 h-5 text-blue-400" />
-              <span className="text-white/80">drivers@chalosawari.com</span>
+              <span className="text-white/80">ownerdrivers@chalosawari.com</span>
             </div>
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <MapPin className="w-5 h-5 text-blue-400" />
@@ -148,7 +148,7 @@ const DriverFooter = () => {
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center text-white/60 text-sm">
-            <p>&copy; 2025 Chalo Sawari Driver Portal. All rights reserved.</p>
+            <p>&copy; 2025 Chalo Sawari Owner Driver Portal. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Button variant="link" className="text-white/60 hover:text-white p-0 h-auto font-normal text-sm">
                 Driver Terms

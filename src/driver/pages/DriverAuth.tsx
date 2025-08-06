@@ -10,6 +10,7 @@ import TopNavigation from "@/components/TopNavigation";
 import busLogo from "@/assets/BusLogo.png";
 import { toast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import DriverTopNavigation from "../components/DriverTopNavigation";
 
 const DriverAuth = () => {
   const navigate = useNavigate();
@@ -165,7 +166,7 @@ const DriverAuth = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-blue-50">
-      <TopNavigation />
+      <DriverTopNavigation />
       
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-center">
@@ -179,12 +180,12 @@ const DriverAuth = () => {
                       <span className="text-xl font-bold text-black">CHALO</span>
                       <span className="text-xl font-bold text-blue-600 ml-1">SAWARI</span>
                     </div>
-                    <span className="text-xs text-gray-600">Driver Module</span>
+                    <span className="text-xs text-gray-600"> Owner Driver Module</span>
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-800">Driver Login</CardTitle>
-              <CardDescription>Access your driver dashboard</CardDescription>
+              <CardTitle className="text-2xl font-bold text-gray-800">Owner Driver Login</CardTitle>
+              <CardDescription>Access your Dashboard</CardDescription>
             </CardHeader>
             
             <CardContent className="pt-0">
@@ -201,7 +202,7 @@ const DriverAuth = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="+91">+91</SelectItem>
-                          <SelectItem value="+1">+1</SelectItem>
+                          <SelectItem value="+1">+92</SelectItem>
                           <SelectItem value="+44">+44</SelectItem>
                           <SelectItem value="+61">+61</SelectItem>
                         </SelectContent>
@@ -360,12 +361,6 @@ const DriverAuth = () => {
                   </Button>
                 </div>
               )}
-              
-              <div className="mt-6 text-center text-sm text-muted-foreground">
-                <Link to="/" className="text-blue-600 hover:underline">
-                  ← Back to User Portal
-                </Link>
-              </div>
             </CardContent>
           </Card>
         </div>

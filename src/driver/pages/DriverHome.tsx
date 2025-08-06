@@ -61,10 +61,10 @@ const DriverHome = () => {
                 <Car className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Driver Module</h1>
+                <h1 className="text-2xl font-bold">Owner Driver Module</h1>
                 <p className="text-blue-100 flex items-center">
                   <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                  Welcome back, Driver!
+                  Welcome back, Owner Driver!
                 </p>
               </div>
             </div>
