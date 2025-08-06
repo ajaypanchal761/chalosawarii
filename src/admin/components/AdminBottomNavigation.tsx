@@ -54,7 +54,35 @@ const AdminBottomNavigation = () => {
   };
 
   const isActive = (href: string) => {
-    return location.pathname === href || location.pathname.startsWith(href + '/');
+    const currentPath = location.pathname;
+    
+    // For exact matches
+    if (currentPath === href) {
+      return true;
+    }
+    
+    // For sub-routes, only match if it's a direct sub-route
+    if (href === "/admin") {
+      // Home should only be active for /admin exactly
+      return currentPath === "/admin";
+    }
+    
+    if (href === "/admin/bookings") {
+      // Booking should be active for /admin/bookings and its direct sub-routes
+      return currentPath.startsWith("/admin/bookings");
+    }
+    
+    if (href === "/admin/vehicles") {
+      // Price should be active for /admin/vehicles and its direct sub-routes
+      return currentPath.startsWith("/admin/vehicles");
+    }
+    
+    if (href === "/admin/profile") {
+      // Profile should be active for /admin/profile and its direct sub-routes
+      return currentPath.startsWith("/admin/profile");
+    }
+    
+    return false;
   };
 
   return (
