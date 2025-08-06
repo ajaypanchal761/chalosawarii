@@ -1,8 +1,18 @@
 # Vercel Deployment Guide
 
-## Driver Module Fixes Applied
+## Security and Environment Variables Fixes Applied
 
-### 1. Vercel Configuration
+### 1. Removed Hardcoded API Keys
+- Removed hardcoded Stripe API keys from `AdminSettings.tsx`
+- Replaced with environment variables using `import.meta.env.VITE_API_KEY`
+- Updated API key generation to use demo keys instead of Stripe format
+
+### 2. Environment Variables Setup
+- Created `env.example` file with all required environment variables
+- Updated `.gitignore` to exclude `.env` files from version control
+- Added environment variables documentation to README.md
+
+### 3. Vercel Configuration
 - Added `vercel.json` with proper SPA routing configuration
 - Configured build settings for Vite framework
 
@@ -36,9 +46,16 @@
    - Build command: `npm run build`
    - Output directory: `dist`
 
-3. **Environment Variables** (if needed)
-   - Add any required environment variables in Vercel dashboard
-   - No environment variables are currently required for the driver module
+3. **Environment Variables Setup**
+   - Go to your Vercel project dashboard
+   - Navigate to Settings > Environment Variables
+   - Add the following environment variables:
+     - `VITE_API_KEY`: Your API key for the application
+     - `VITE_STRIPE_PUBLISHABLE_KEY`: Your Stripe publishable key
+     - `VITE_STRIPE_SECRET_KEY`: Your Stripe secret key
+     - `VITE_RAZORPAY_KEY_ID`: Your Razorpay key ID
+     - `VITE_RAZORPAY_KEY_SECRET`: Your Razorpay secret key
+   - Redeploy the application after adding environment variables
 
 ## Testing the Driver Module
 

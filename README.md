@@ -48,8 +48,28 @@ A modern, responsive web application for booking Bus, Car, and Traveller service
    bun dev
    ```
 
-4. **Open your browser**
+4. **Set up environment variables**
+   ```bash
+   cp env.example .env
+   # Edit .env with your actual API keys and configuration
+   ```
+
+5. **Open your browser**
    Navigate to `http://localhost:5173`
+
+## 🔧 Environment Variables
+
+This project uses environment variables for configuration. Copy `env.example` to `.env` and fill in your values:
+
+### Required Environment Variables
+- `VITE_API_KEY`: Your API key for the application
+- `VITE_STRIPE_PUBLISHABLE_KEY`: Stripe publishable key for payments
+- `VITE_STRIPE_SECRET_KEY`: Stripe secret key for payments
+- `VITE_RAZORPAY_KEY_ID`: Razorpay key ID for payments
+- `VITE_RAZORPAY_KEY_SECRET`: Razorpay secret key for payments
+
+### Security Note
+⚠️ **Never commit your `.env` file to version control**. The `.env` file is already added to `.gitignore` to prevent accidental commits.
 
 ## 🏗️ Project Structure
 

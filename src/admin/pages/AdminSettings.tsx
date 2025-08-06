@@ -76,7 +76,7 @@ const AdminSettings = () => {
     
     // API Settings
     enableApi: true,
-    apiKey: "sk_live_1234567890abcdefghijklmnopqrstuvwxyz",
+    apiKey: import.meta.env.VITE_API_KEY || "demo_api_key_for_development",
     rateLimit: 1000,
     enableWebhooks: false,
     webhookUrl: "",
@@ -136,7 +136,7 @@ const AdminSettings = () => {
   };
 
   const generateApiKey = () => {
-    const newKey = 'sk_live_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    const newKey = 'demo_api_key_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     setSettings(prev => ({ ...prev, apiKey: newKey }));
     toast({
       title: "🔄 API Key Generated",
@@ -199,7 +199,7 @@ const AdminSettings = () => {
         systemAlerts: true,
         marketingEmails: false,
         enableApi: true,
-        apiKey: "sk_live_1234567890abcdefghijklmnopqrstuvwxyz",
+        apiKey: import.meta.env.VITE_API_KEY || "demo_api_key_for_development",
         rateLimit: 1000,
         enableWebhooks: false,
         webhookUrl: "",
