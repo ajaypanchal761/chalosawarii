@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
-import { Star, Wifi, Tv, Power, Car, Eye, Users, MapPin } from 'lucide-react';
+import { Star, Wifi, Tv, Power, Car, Eye, Users, Shield, Armchair } from 'lucide-react';
 import TravellerDetailsModal from './TravellerDetailsModal';
 import Traveller1 from '@/assets/Traveller1.png';
 import Traveller2 from '@/assets/Traveller2.webp';
@@ -23,8 +23,18 @@ interface Traveller {
   amenities: string[];
   image: string;
   isAc: boolean;
-  isPremium: boolean;
-  maxPassengers: number;
+  totalSeats: number;
+  isBooked?: boolean; // New property
+  bookedDate?: string; // Optional
+}
+
+interface TravellerListProps {
+  searchParams?: {
+    from?: string;
+    to?: string;
+    date?: string;
+    time?: string;
+  };
 }
 
 const sampleTravellers: Traveller[] = [
@@ -41,8 +51,8 @@ const sampleTravellers: Traveller[] = [
     amenities: ['wifi', 'power', 'ac', 'tv'],
     image: Traveller1,
     isAc: true,
-    isPremium: true,
-    maxPassengers: 12,
+    totalSeats: 12,
+    isBooked: false,
   },
   {
     id: '2',
@@ -57,8 +67,9 @@ const sampleTravellers: Traveller[] = [
     amenities: ['wifi', 'tv', 'power', 'ac'],
     image: Traveller2,
     isAc: true,
-    isPremium: true,
-    maxPassengers: 15,
+    totalSeats: 15,
+    isBooked: true,
+    bookedDate: '2025-08-04',
   },
   {
     id: '3',
@@ -73,8 +84,8 @@ const sampleTravellers: Traveller[] = [
     amenities: ['ac', 'power'],
     image: Traveller3,
     isAc: true,
-    isPremium: false,
-    maxPassengers: 10,
+    totalSeats: 10,
+    isBooked: false,
   },
   {
     id: '4',
@@ -89,8 +100,9 @@ const sampleTravellers: Traveller[] = [
     amenities: ['wifi', 'power', 'ac', 'tv'],
     image: Traveller4,
     isAc: true,
-    isPremium: true,
-    maxPassengers: 13,
+    totalSeats: 13,
+    isBooked: true,
+    bookedDate: '2025-08-04',
   },
 ];
 
@@ -115,8 +127,14 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
   };
 
   return (
-    <Card className="p-4 mb-4 border border-border hover:shadow-lg transition-shadow cursor-pointer" 
-          onClick={() => onViewDetails(traveller)}>
+    <Card className={`p-4 mb-4 border border-border hover:shadow-lg transition-shadow ${
+      traveller.isBooked ? 'bg-red-50 border-red-200 cursor-not-allowed' : 'cursor-pointer'
+    }`} 
+          onClick={() => {
+            if (!traveller.isBooked) {
+              onViewDetails(traveller);
+            }
+          }}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
         {/* Vehicle Image - Hidden on mobile, visible on desktop */}
         <div className="hidden lg:block lg:col-span-2">
@@ -136,10 +154,17 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
               <span className="font-medium">{traveller.rating}</span>
               <span className="text-muted-foreground">({traveller.reviewCount})</span>
             </div>
+            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${traveller.isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+              {traveller.isBooked ? 'Already Booked' : 'Available'}
+            </span>
           </div>
           
           <p className="text-sm text-muted-foreground mb-2">{traveller.travellerName}</p>
           <p className="text-sm font-medium text-foreground mb-2">{traveller.travellerType}</p>
+          <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
+            <Armchair className="w-4 h-4 mr-1" />
+            {traveller.totalSeats} Seater
+          </p>
           <p className="text-sm text-muted-foreground mb-2">Duration: {traveller.duration}</p>
           
           <div className="flex items-center gap-4 mb-2">
@@ -186,6 +211,7 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
                 e.stopPropagation();
                 onViewDetails(traveller);
               }}
+              disabled={traveller.isBooked}
             >
               <Eye className="w-4 h-4 mr-2" />
               View Details
@@ -193,13 +219,20 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
             <Button 
               variant="default" 
               size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              disabled={traveller.isBooked}
+              className={`w-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 ${
+                traveller.isBooked 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-primary hover:bg-primary/90 text-white'
+              }`}
               onClick={(e) => {
                 e.stopPropagation();
-                onBookNow(traveller);
+                if (!traveller.isBooked) {
+                  onBookNow(traveller);
+                }
               }}
             >
-              Book Now
+              {traveller.isBooked ? 'Already Booked' : 'Book Now'}
             </Button>
           </div>
         </div>
@@ -208,7 +241,7 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
   );
 };
 
-export const TravellerList = () => {
+export const TravellerList = ({ searchParams }: TravellerListProps) => {
   const navigate = useNavigate();
   const [selectedTraveller, setSelectedTraveller] = useState<Traveller | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,63 +261,73 @@ export const TravellerList = () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
     if (isLoggedIn) {
-      // Create booking details object
-      const bookingDetails = {
-        vehicleType: 'traveller' as const,
-        operatorName: traveller.operatorName,
-        vehicleName: traveller.travellerName,
-        from: 'Bangalore', // This would come from search form
-        to: 'Chennai', // This would come from search form
-        date: '2024-01-15', // This would come from search form
-        time: '22:00', // This would come from traveller details
-        passengers: 1, // This would come from passenger selection
-        fare: traveller.fare,
-        seats: ['A1'], // This would come from seat selection
-        amenities: traveller.amenities
-      };
+      // Show booking confirmation message
+      alert(`Booking Confirmed!
       
-      // Navigate to payment page with booking details
-      navigate('/payment', { state: { bookingDetails } });
+Vehicle: ${traveller.travellerName}
+Operator: ${traveller.operatorName}
+From: Bangalore to Chennai
+Date: 2024-01-15
+Time: 22:00
+Passengers: 1
+Total Fare: ₹${traveller.fare}
+Seats: A1
+
+Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
     } else {
-      // Redirect to auth page with return URL and booking details
-      const bookingDetails = {
-        vehicleType: 'traveller' as const,
-        operatorName: traveller.operatorName,
-        vehicleName: traveller.travellerName,
-        from: 'Bangalore',
-        to: 'Chennai',
-        date: '2024-01-15',
-        time: '22:00',
-        passengers: 1,
-        fare: traveller.fare,
-        seats: ['A1'],
-        amenities: traveller.amenities
-      };
-      
+      // Redirect to auth page
       navigate('/auth', { 
         state: { 
-          returnUrl: '/payment',
-          bookingDetails: bookingDetails 
+          returnUrl: '/bookings'
         } 
       });
     }
   };
 
+  // Filter travellers based on search date
+  const filteredTravellers = sampleTravellers.map(traveller => {
+    if (searchParams?.date && traveller.bookedDate === searchParams.date) {
+      return { ...traveller, isBooked: true };
+    }
+    return traveller;
+  });
+  const availableTravellers = filteredTravellers.filter(traveller => !traveller.isBooked);
+  const bookedTravellers = filteredTravellers.filter(traveller => traveller.isBooked);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {sampleTravellers.length} travellers found
+          {filteredTravellers.length} travellers found
         </h2>
         <div className="text-sm text-muted-foreground">
           Showing travellers from Bangalore to Chennai
         </div>
       </div>
-      
-      {sampleTravellers.map((traveller) => (
-        <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
-      ))}
-
+      {/* Available Travellers */}
+      {availableTravellers.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-green-700 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            Available Travellers ({availableTravellers.length})
+          </h3>
+          {availableTravellers.map((traveller) => (
+            <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
+          ))}
+        </div>
+      )}
+      {/* Booked Travellers */}
+      {bookedTravellers.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+            Already Booked ({bookedTravellers.length})
+          </h3>
+          {bookedTravellers.map((traveller) => (
+            <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
+          ))}
+        </div>
+      )}
       <TravellerDetailsModal 
         traveller={selectedTraveller}
         isOpen={isModalOpen}

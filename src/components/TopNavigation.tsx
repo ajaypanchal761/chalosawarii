@@ -8,14 +8,14 @@ const TopNavigation = () => {
   const isOnAuthPage = location.pathname === "/auth";
 
   return (
-    <nav className="w-full bg-white shadow-sm border-b">
+    <nav className="sticky top-0 z-50 w-full bg-white shadow-sm border-b">
       <div className="container mx-auto px-4">
         {/* Top bar with contact info */}
         <div className="hidden md:flex justify-between items-center py-2 text-sm border-b">
           <div className="flex items-center space-x-4 text-muted-foreground">
             <span className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              Customer Care: 8904-455-455
+              Customer Care: +91 7974838260
             </span>
           </div>
           <div className="flex items-center space-x-4">
@@ -33,18 +33,19 @@ const TopNavigation = () => {
 
         {/* Main navigation */}
         <div className="flex justify-between items-center py-1 md:py-1 py-3">
+          {/* Mobile Logo + Text */}
           <Link to="/" className="flex items-center ml-2 md:ml-4 hover:opacity-80 transition-opacity">
             <div className="flex items-center space-x-1 md:space-x-2">
               {/* Logo Icon */}
-              <img src={busLogo} alt="Bus Logo" className="w-12 h-12 md:w-14 md:h-14 lg:w-18 lg:h-18 object-contain" />
-              {/* Logo Text */}
-                              <div className="flex flex-col">
-                  <div className="flex items-baseline">
-                    <span className="text-lg md:text-lg lg:text-xl font-bold text-black">CHALO</span>
-                    <span className="text-lg md:text-lg lg:text-xl font-bold text-blue-600 ml-1">SAWARI</span>
-                  </div>
-                  <span className="text-xs text-gray-600 hidden sm:block">Travel with Confidence</span>
+              <img src={busLogo} alt="Bus Logo" className="w-16 h-16 object-contain md:w-14 md:h-14 lg:w-18 lg:h-18" />
+              {/* Mobile: Show text next to logo, Desktop: as before */}
+              <div className="flex flex-col">
+                <div className="flex items-baseline">
+                  <span className="text-xl font-bold text-black md:text-lg lg:text-xl md:font-bold">CHALO</span>
+                  <span className="text-xl font-bold text-blue-600 ml-1 md:text-lg lg:text-xl md:font-bold">SAWARI</span>
                 </div>
+                <span className="text-xs text-gray-600 hidden sm:block md:block">Travel with Confidence</span>
+              </div>
             </div>
           </Link>
 

@@ -711,29 +711,6 @@ const DriverMyVehicle = () => {
             </Card>
           )))}
         </div>
-
-        {/* Quick Actions */}
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col">
-              <Calendar className="w-6 h-6 mb-2" />
-              <span className="text-sm">Schedule Service</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <MapPin className="w-6 h-6 mb-2" />
-              <span className="text-sm">Track Vehicle</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <Settings className="w-6 h-6 mb-2" />
-              <span className="text-sm">Vehicle Settings</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col">
-              <Car className="w-6 h-6 mb-2" />
-              <span className="text-sm">Add Vehicle</span>
-            </Button>
-          </div>
-        </div>
       </div>
 
       {/* Add Vehicle Dialog */}

@@ -353,26 +353,6 @@ const DriverProfile = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
-          <Button variant="outline" className="h-16 md:h-20 flex-col p-3">
-            <Shield className="w-5 h-5 md:w-6 md:h-6 mb-1 md:mb-2" />
-            <span className="text-xs md:text-sm">Safety</span>
-          </Button>
-          <Button variant="outline" className="h-16 md:h-20 flex-col p-3">
-            <HelpCircle className="w-5 h-5 md:w-6 md:h-6 mb-1 md:mb-2" />
-            <span className="text-xs md:text-sm">Help & Support</span>
-          </Button>
-          <Button variant="outline" className="h-16 md:h-20 flex-col p-3">
-            <Settings className="w-5 h-5 md:w-6 md:h-6 mb-1 md:mb-2" />
-            <span className="text-xs md:text-sm">Preferences</span>
-          </Button>
-          <Button variant="outline" className="h-16 md:h-20 flex-col p-3">
-            <CreditCard className="w-5 h-5 md:w-6 md:h-6 mb-1 md:mb-2" />
-            <span className="text-xs md:text-sm">Payment</span>
-          </Button>
-        </div>
       </div>
 
       {/* Edit Profile Dialog */}

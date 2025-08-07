@@ -150,7 +150,7 @@ bun run preview
 
 ## 📞 Contact & Support
 
-- **Customer Care**: 8904-455-455
+- **Customer Care**: +91 7974838260
 - **Email**: support@chalosawari.com
 - **Location**: Indore, India
 - **Website**: [chalosawari.com](https://chalosawari.com)

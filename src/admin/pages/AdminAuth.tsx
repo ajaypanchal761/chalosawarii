@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Shield, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Shield, Loader2, Mail, Lock, ArrowRight } from "lucide-react";
 import busLogo from "@/assets/BusLogo.png";
 import { toast } from "@/hooks/use-toast";
 
@@ -94,55 +94,72 @@ const AdminAuth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <img src={busLogo} alt="Bus Logo" className="w-16 h-16" />
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full blur-lg opacity-30 animate-pulse"></div>
+              <img src={busLogo} alt="Bus Logo" className="relative w-20 h-20 drop-shadow-lg" />
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            <span className="text-black">CHALO</span>
-            <span className="text-blue-600">SAWARI</span>
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">
+            <span className="text-gray-800">CHALO</span>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">SAWARI</span>
           </h1>
-          <p className="text-gray-600">Admin Portal</p>
+          <p className="text-gray-600 font-medium">Admin Portal</p>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
         </div>
 
         {/* Login Card */}
-        <Card className="shadow-xl border-0">
-          <CardHeader className="text-center pb-4">
-            <div className="flex justify-center mb-4">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Shield className="w-8 h-8 text-blue-600" />
+        <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm rounded-2xl">
+          <CardHeader className="text-center pb-6 pt-8">
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
+                <Shield className="w-8 h-8 text-white" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-gray-900">
-              Admin Login
+            <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+              Welcome Back
             </CardTitle>
             <p className="text-gray-600 text-sm">
-              Enter your credentials to access the admin panel
+              Sign in to access the admin dashboard
             </p>
           </CardHeader>
           
-          <CardContent>
+          <CardContent className="px-8 pb-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
                   Email Address
                 </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@chalosawari.com"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  className={`h-12 ${errors.email ? "border-red-500" : ""}`}
-                  disabled={isLoading}
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="admin@chalosawari.com"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className={`h-14 pl-12 pr-4 text-base border-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ${
+                      errors.email ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "border-gray-200"
+                    }`}
+                    disabled={isLoading}
+                  />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                </div>
                 {errors.email && (
-                  <Alert variant="destructive" className="py-2">
-                    <AlertDescription className="text-sm">
+                  <Alert variant="destructive" className="py-3 border-red-200 bg-red-50">
+                    <AlertDescription className="text-sm font-medium">
                       {errors.email}
                     </AlertDescription>
                   </Alert>
@@ -151,7 +168,8 @@ const AdminAuth = () => {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="password" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
                   Password
                 </Label>
                 <div className="relative">
@@ -161,21 +179,24 @@ const AdminAuth = () => {
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={(e) => handleInputChange("password", e.target.value)}
-                    className={`h-12 pr-12 ${errors.password ? "border-red-500" : ""}`}
+                    className={`h-14 pl-12 pr-12 text-base border-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ${
+                      errors.password ? "border-red-500 focus:border-red-500 focus:ring-red-200" : "border-gray-200"
+                    }`}
                     disabled={isLoading}
                   />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
                     disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 {errors.password && (
-                  <Alert variant="destructive" className="py-2">
-                    <AlertDescription className="text-sm">
+                  <Alert variant="destructive" className="py-3 border-red-200 bg-red-50">
+                    <AlertDescription className="text-sm font-medium">
                       {errors.password}
                     </AlertDescription>
                   </Alert>
@@ -183,36 +204,46 @@ const AdminAuth = () => {
               </div>
 
               {/* Demo Credentials Alert */}
-              <Alert className="bg-blue-50 border-blue-200">
-                <AlertDescription className="text-sm text-blue-800">
-                  <strong>Demo Credentials:</strong><br />
-                  Email: admin@chalosawari.com<br />
-                  Password: admin123
+              <Alert className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 rounded-xl">
+                <AlertDescription className="text-sm text-blue-800 font-medium">
+                  <div className="flex items-start gap-3">
+                    <div className="p-1 bg-blue-100 rounded-full mt-0.5">
+                      <Shield className="w-3 h-3 text-blue-600" />
+                    </div>
+                    <div>
+                      <strong>Demo Credentials:</strong><br />
+                      Email: admin@chalosawari.com<br />
+                      Password: admin123
+                    </div>
+                  </div>
                 </AlertDescription>
               </Alert>
 
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 mr-3 animate-spin" />
                     Signing In...
                   </>
                 ) : (
-                  "Sign In to Admin Panel"
+                  <>
+                    Sign In to Admin Panel
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </>
                 )}
               </Button>
             </form>
 
             {/* Additional Info */}
-            <div className="mt-6 text-center">
+            <div className="mt-8 text-center">
               <p className="text-sm text-gray-600">
                 Having trouble? Contact{" "}
-                <a href="mailto:support@chalosawari.com" className="text-blue-600 hover:underline">
+                <a href="mailto:support@chalosawari.com" className="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors duration-200">
                   support@chalosawari.com
                 </a>
               </p>
@@ -222,7 +253,7 @@ const AdminAuth = () => {
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 font-medium">
             © 2024 Chalo Sawari. All rights reserved.
           </p>
         </div>

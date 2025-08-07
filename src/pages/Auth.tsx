@@ -24,7 +24,6 @@ const Auth = () => {
   
   // Get return URL from location state
   const returnUrl = location.state?.returnUrl || '/profile';
-  const bookingDetails = location.state?.bookingDetails;
 
   // Form states
   const [loginForm, setLoginForm] = useState({
@@ -61,12 +60,8 @@ const Auth = () => {
       // In a real app, you'd validate OTP here
       localStorage.setItem('isLoggedIn', 'true');
       
-      // Navigate to return URL if coming from payment page
-      if (returnUrl === '/payment' && bookingDetails) {
-        navigate('/payment', { state: { bookingDetails } });
-      } else {
-        navigate(returnUrl);
-      }
+      // Navigate to return URL
+      navigate(returnUrl);
     } else if (!showOtpField) {
       handleSendOtp();
     }
@@ -88,12 +83,8 @@ const Auth = () => {
       // In a real app, you'd validate OTP and create account here
       localStorage.setItem('isLoggedIn', 'true');
       
-      // Navigate to return URL if coming from payment page
-      if (returnUrl === '/payment' && bookingDetails) {
-        navigate('/payment', { state: { bookingDetails } });
-      } else {
-        navigate(returnUrl);
-      }
+      // Navigate to return URL
+      navigate(returnUrl);
     } else if (!showSignupOtpField) {
       handleSendSignupOtp();
     }

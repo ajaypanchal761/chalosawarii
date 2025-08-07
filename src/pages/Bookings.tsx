@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { List, Clock, MapPin, Calendar, User, Home, HelpCircle, X, Bus, CreditCard, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import TopNavigation from "@/components/TopNavigation";
 
 const Bookings = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
@@ -98,14 +99,16 @@ const Bookings = () => {
   const currentBookings = activeTab === "upcoming" ? upcomingBookings : pastBookings;
 
   return (
+   
     <div className="min-h-screen bg-background">
+       <TopNavigation/>
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-4">
         <h1 className="text-xl font-semibold">My Bookings</h1>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex border-b border-border">
+      <div className="sticky top-0 z-40 flex border-b border-border bg-background">
         <button
           className={`flex-1 py-3 text-sm font-medium ${
             activeTab === "upcoming"

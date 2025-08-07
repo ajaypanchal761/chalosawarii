@@ -6,6 +6,10 @@ import { ArrowLeftRight, Calendar, MapPin, Search, Bus, Plane, PlaneTakeoff, Hom
 import HomeBanner from "@/assets/Home3.png";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import CarImg from "@/assets/Car2.png";
+import BusImg from "@/assets/BusBar.png";
+import TravellerImg from "@/assets/Traveller.png";
+import React from "react";
 
 // Marquee Component
 const Marquee = ({ text }: { text: string }) => {
@@ -21,6 +25,17 @@ const Marquee = ({ text }: { text: string }) => {
   );
 };
 
+const LoadingAnimation = () => (
+  <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
+    <div className="flex space-x-8 animate-pulse">
+      <img src={CarImg} alt="Car" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '0ms'}} />
+      <img src={BusImg} alt="Bus" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '200ms'}} />
+      <img src={TravellerImg} alt="Traveller" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '400ms'}} />
+    </div>
+    <div className="mt-6 text-xl font-semibold text-primary">Searching best Vehicle for you...</div>
+  </div>
+);
+
 const HeroSection = () => {
   const navigate = useNavigate();
   const [fromLocation, setFromLocation] = useState("");
@@ -31,6 +46,7 @@ const HeroSection = () => {
   const [selectedDate, setSelectedDate] = useState("04");
   const [activeService, setActiveService] = useState("oneWay");
   const [womenBooking, setWomenBooking] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSwapLocations = () => {
     const temp = fromLocation;
@@ -39,16 +55,26 @@ const HeroSection = () => {
   };
 
   const handleSearch = () => {
-    console.log("Searching for:", { fromLocation, toLocation, departureDate });
-    // Navigate to bus search page with search parameters
-    navigate('/bus-search', { 
-      state: { 
-        from: fromLocation, 
-        to: toLocation, 
-        date: departureDate 
-      } 
-    });
+    setLoading(true);
   };
+
+  // Show loading for 2 seconds, then navigate
+  React.useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+        navigate('/bus-search', {
+          state: {
+            from: fromLocation,
+            to: toLocation,
+            date: departureDate,
+            time: pickupTime
+          }
+        });
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date);
@@ -59,18 +85,19 @@ const HeroSection = () => {
 
   return (
     <section  className="relative min-h-[600px] flex flex-col bg-white">
+      {loading && <LoadingAnimation />}
       {/* Marquee at the top - touching navigation */}
-      <Marquee text="बस, कार, ट्रैवलर - शादी, बारात, टूर, पिकनिक, और हर ट्रैवल की जरूरत – अब सिर्फ एक क्लिक में बुक करें।" />
+      <Marquee text="Better Travel at Lower Prices - Bus, Car & Traveller Rentals  Contact Us ,  कम दाम में आरामदायक यात्रा - +91 79 7483 8260 " />
       
       {/* Desktop Hero Content */}
-      <div className="hidden md:block relative min-h-[580px] flex items-center justify-center bg-cover bg-center"
+      <div className="hidden md:block relative min-h-[580px] flex items-center justify-center bg-cover bg-center contrast-125"
         style={{ backgroundImage: `url(${HomeBanner})` }}>
         <div className="absolute inset-0 bg-black/20"></div>
         
         <div className="relative z-10 container mx-auto px-4 -ml-20">
           <div className="text-right mb-8">
             <h1 className="text-5x1 md:text-7xl font-bold text-black mt-6 mr-44">
-              CHALO <span className="text-blue-700">SAWARI</span>
+              CHALO <span className="text-blue-600">SAWARI</span>
             </h1>
           </div>
 

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, MessageCircle, Phone, Mail, User, Home, List, HelpCircle, ChevronDown, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import TopNavigation from "@/components/TopNavigation";
 
 const Help = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -54,7 +55,7 @@ const Help = () => {
       description: "Speak with our customer care",
       action: "Call Now",
       actionHandler: () => {
-        window.location.href = "tel:+91-1800-123-4567";
+        window.location.href = "tel:+917974838260";
       }
     },
     {
@@ -64,7 +65,7 @@ const Help = () => {
       description: "Send us an email",
       action: "Send Email",
       actionHandler: () => {
-        window.location.href = "mailto:support@busticket.com?subject=Support Request";
+        window.location.href = "mailto:chalosawariofficial@gmail.com?subject=Support Request";
       }
     }
   ];
@@ -84,6 +85,7 @@ const Help = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <TopNavigation/>
       {/* Header */}
       <div className="bg-primary text-primary-foreground p-4">
         <h1 className="text-xl font-semibold">Help & Support</h1>
@@ -220,7 +222,7 @@ const Help = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => window.location.href = "tel:+91-1800-911-0000"}
+                    onClick={() => window.location.href = "tel:+917974838260"}
                   >
                     Call Now
                   </Button>
@@ -233,7 +235,7 @@ const Help = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => window.open("https://wa.me/919876543210", "_blank")}
+                    onClick={() => window.open("https://wa.me/917974838260", "_blank")}
                   >
                     Chat Now
                   </Button>

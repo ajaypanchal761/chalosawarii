@@ -9,7 +9,7 @@ import Bookings from "./pages/Bookings";
 import Help from "./pages/Help";
 import Profile from "./pages/Profile";
 import BusSearch from "./pages/BusSearch";
-import Payment from "./pages/Payment";
+
 import NotFound from "./pages/NotFound";
 import DriverAuth from "./driver/pages/DriverAuth";
 import DriverHome from "./driver/pages/DriverHome";
@@ -45,7 +45,7 @@ const App = () => (
           <Route path="/help" element={<Help />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/bus-search" element={<BusSearch />} />
-          <Route path="/payment" element={<Payment />} />
+
           
           {/* Driver Module Routes */}
           <Route path="/driver-auth" element={<DriverAuth />} />

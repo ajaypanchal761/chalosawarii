@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
-import { Star, Wifi, Tv, Power, Car, Eye, Users, MapPin } from 'lucide-react';
-import CarDetailsModal from './CarDetailsModal';
+import { Star, Wifi, Tv, Power, Car, Eye, Users, Shield, Armchair } from 'lucide-react';
 import Car1 from '@/assets/Car1.webp';
 import Car2 from '@/assets/Car2.png';
 import Car3 from '@/assets/Car3.png';
 import Car4 from '@/assets/Car4.webp';
+import CarDetailsModal from './CarDetailsModal';
 
 interface Car {
   id: string;
@@ -23,8 +23,18 @@ interface Car {
   amenities: string[];
   image: string;
   isAc: boolean;
-  isPremium: boolean;
-  maxPassengers: number;
+  totalSeats: number;
+  isBooked?: boolean; // New property
+  bookedDate?: string; // Optional
+}
+
+interface CarListProps {
+  searchParams?: {
+    from?: string;
+    to?: string;
+    date?: string;
+    time?: string;
+  };
 }
 
 const sampleCars: Car[] = [
@@ -41,8 +51,8 @@ const sampleCars: Car[] = [
     amenities: ['wifi', 'power', 'ac'],
     image: Car1,
     isAc: true,
-    isPremium: true,
-    maxPassengers: 6,
+    totalSeats: 6,
+    isBooked: false,
   },
   {
     id: '2',
@@ -57,8 +67,9 @@ const sampleCars: Car[] = [
     amenities: ['wifi', 'tv', 'power', 'ac'],
     image: Car2,
     isAc: true,
-    isPremium: true,
-    maxPassengers: 7,
+    totalSeats: 7,
+    isBooked: true,
+    bookedDate: '2025-08-04',
   },
   {
     id: '3',
@@ -73,8 +84,8 @@ const sampleCars: Car[] = [
     amenities: ['ac', 'power'],
     image: Car3,
     isAc: true,
-    isPremium: false,
-    maxPassengers: 4,
+    totalSeats: 4,
+    isBooked: false,
   },
   {
     id: '4',
@@ -89,8 +100,9 @@ const sampleCars: Car[] = [
     amenities: ['wifi', 'power', 'ac'],
     image: Car4,
     isAc: true,
-    isPremium: false,
-    maxPassengers: 4,
+    totalSeats: 4,
+    isBooked: true,
+    bookedDate: '2025-08-04',
   },
 ];
 
@@ -115,8 +127,14 @@ const CarCard = ({ car, onViewDetails, onBookNow }: {
   };
 
   return (
-    <Card className="p-4 mb-4 border border-border hover:shadow-lg transition-shadow cursor-pointer" 
-          onClick={() => onViewDetails(car)}>
+    <Card className={`p-4 mb-4 border border-border hover:shadow-lg transition-shadow ${
+      car.isBooked ? 'bg-red-50 border-red-200 cursor-not-allowed' : 'cursor-pointer'
+    }`} 
+          onClick={() => {
+            if (!car.isBooked) {
+              onViewDetails(car);
+            }
+          }}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
         {/* Vehicle Image - Hidden on mobile, visible on desktop */}
         <div className="hidden lg:block lg:col-span-2">
@@ -136,10 +154,17 @@ const CarCard = ({ car, onViewDetails, onBookNow }: {
               <span className="font-medium">{car.rating}</span>
               <span className="text-muted-foreground">({car.reviewCount})</span>
             </div>
+            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${car.isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+              {car.isBooked ? 'Already Booked' : 'Available'}
+            </span>
           </div>
           
           <p className="text-sm text-muted-foreground mb-2">{car.carName}</p>
           <p className="text-sm font-medium text-foreground mb-2">{car.carType}</p>
+          <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
+            <Armchair className="w-4 h-4 mr-1" />
+            {car.totalSeats} Seater
+          </p>
           <p className="text-sm text-muted-foreground mb-2">Duration: {car.duration}</p>
           
           <div className="flex items-center gap-4 mb-2">
@@ -186,6 +211,7 @@ const CarCard = ({ car, onViewDetails, onBookNow }: {
                 e.stopPropagation();
                 onViewDetails(car);
               }}
+              disabled={car.isBooked}
             >
               <Eye className="w-4 h-4 mr-2" />
               View Details
@@ -193,13 +219,20 @@ const CarCard = ({ car, onViewDetails, onBookNow }: {
             <Button 
               variant="default" 
               size="lg"
-              className="w-full bg-primary hover:bg-primary/90 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+              disabled={car.isBooked}
+              className={`w-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 ${
+                car.isBooked 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-primary hover:bg-primary/90 text-white'
+              }`}
               onClick={(e) => {
                 e.stopPropagation();
-                onBookNow(car);
+                if (!car.isBooked) {
+                  onBookNow(car);
+                }
               }}
             >
-              Book Now
+              {car.isBooked ? 'Already Booked' : 'Book Now'}
             </Button>
           </div>
         </div>
@@ -208,7 +241,7 @@ const CarCard = ({ car, onViewDetails, onBookNow }: {
   );
 };
 
-export const CarList = () => {
+export const CarList = ({ searchParams }: CarListProps) => {
   const navigate = useNavigate();
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -228,63 +261,73 @@ export const CarList = () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
     if (isLoggedIn) {
-      // Create booking details object
-      const bookingDetails = {
-        vehicleType: 'car' as const,
-        operatorName: car.operatorName,
-        vehicleName: car.carName,
-        from: 'Bangalore', // This would come from search form
-        to: 'Chennai', // This would come from search form
-        date: '2024-01-15', // This would come from search form
-        time: '22:00', // This would come from car details
-        passengers: 1, // This would come from passenger selection
-        fare: car.fare,
-        seats: ['Front'], // This would come from seat selection
-        amenities: car.amenities
-      };
+      // Show booking confirmation message
+      alert(`Booking Confirmed!
       
-      // Navigate to payment page with booking details
-      navigate('/payment', { state: { bookingDetails } });
+Vehicle: ${car.carName}
+Operator: ${car.operatorName}
+From: Bangalore to Chennai
+Date: 2024-01-15
+Time: 22:00
+Passengers: 1
+Total Fare: ₹${car.fare}
+Seats: Front
+
+Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
     } else {
-      // Redirect to auth page with return URL and booking details
-      const bookingDetails = {
-        vehicleType: 'car' as const,
-        operatorName: car.operatorName,
-        vehicleName: car.carName,
-        from: 'Bangalore',
-        to: 'Chennai',
-        date: '2024-01-15',
-        time: '22:00',
-        passengers: 1,
-        fare: car.fare,
-        seats: ['Front'],
-        amenities: car.amenities
-      };
-      
+      // Redirect to auth page
       navigate('/auth', { 
         state: { 
-          returnUrl: '/payment',
-          bookingDetails: bookingDetails 
+          returnUrl: '/bookings'
         } 
       });
     }
   };
 
+  // Filter cars based on search date
+  const filteredCars = sampleCars.map(car => {
+    if (searchParams?.date && car.bookedDate === searchParams.date) {
+      return { ...car, isBooked: true };
+    }
+    return car;
+  });
+  const availableCars = filteredCars.filter(car => !car.isBooked);
+  const bookedCars = filteredCars.filter(car => car.isBooked);
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {sampleCars.length} cars found
+          {filteredCars.length} cars found
         </h2>
         <div className="text-sm text-muted-foreground">
           Showing cars from Bangalore to Chennai
         </div>
       </div>
-      
-      {sampleCars.map((car) => (
-        <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
-      ))}
-
+      {/* Available Cars */}
+      {availableCars.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-green-700 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            Available Cars ({availableCars.length})
+          </h3>
+          {availableCars.map((car) => (
+            <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
+          ))}
+        </div>
+      )}
+      {/* Booked Cars */}
+      {bookedCars.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+            Already Booked ({bookedCars.length})
+          </h3>
+          {bookedCars.map((car) => (
+            <CarCard key={car.id} car={car} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
+          ))}
+        </div>
+      )}
       <CarDetailsModal 
         car={selectedCar}
         isOpen={isModalOpen}

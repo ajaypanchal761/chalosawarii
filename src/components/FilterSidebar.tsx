@@ -20,10 +20,9 @@ interface FilterSidebarProps {
 
 export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) => {
   const [expandedSections, setExpandedSections] = useState({
-    departureTime: true,
+    price: true,
     busType: true,
     operators: true,
-    amenities: false,
     busPartner: false,
   });
 
@@ -41,12 +40,11 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
 
   const [sortOption, setSortOption] = useState<string>('');
 
-  const departureTimeOptions: FilterOption[] = [
-    { id: 'early-morning', label: 'Early Morning (4 AM - 8 AM)', count: 5 },
-    { id: 'morning', label: 'Morning (8 AM - 12 PM)', count: 12 },
-    { id: 'afternoon', label: 'Afternoon (12 PM - 6 PM)', count: 8 },
-    { id: 'evening', label: 'Evening (6 PM - 10 PM)', count: 15 },
-    { id: 'night', label: 'Night (10 PM - 4 AM)', count: 18 },
+  const priceOptions: FilterOption[] = [
+    { id: 'lt-500', label: 'Below ₹500', count: 7 },
+    { id: '500-1000', label: '₹500 - ₹1000', count: 15 },
+    { id: '1000-1500', label: '₹1000 - ₹1500', count: 10 },
+    { id: 'gt-1500', label: 'Above ₹1500', count: 5 },
   ];
 
   const busTypeOptions: FilterOption[] = [
@@ -64,15 +62,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
     { id: 'orange-travels', label: 'Orange Travels', count: 5 },
     { id: 'kallada-travels', label: 'Kallada Travels', count: 3 },
     { id: 'parveen-travels', label: 'Parveen Travels', count: 2 },
-  ];
-
-  const amenityOptions: FilterOption[] = [
-    { id: 'wifi', label: 'WiFi', count: 15 },
-    { id: 'charging-point', label: 'Charging Point', count: 22 },
-    { id: 'entertainment', label: 'Entertainment', count: 12 },
-    { id: 'blankets', label: 'Blankets', count: 8 },
-    { id: 'pillow', label: 'Pillow', count: 6 },
-    { id: 'water-bottle', label: 'Water Bottle', count: 10 },
   ];
 
   const sortOptions = [
@@ -230,20 +219,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           <ChevronDown className="w-3 h-3" />
         </button>
 
-        {/* Special Price Button */}
-        <button 
-          onClick={() => handleMobileFilterToggle('specialPrice')}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            selectedMobileFilters.specialPrice
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <Tag className="w-4 h-4" />
-          <span className="text-sm font-medium">Special price</span>
-          <span className="text-xs text-current">(18)</span>
-        </button>
-
         {/* AC Button */}
         <button 
           onClick={() => handleMobileFilterToggle('ac')}
@@ -270,34 +245,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           <Bed className="w-4 h-4" />
           <span className="text-sm font-medium">SLEEPER</span>
           <span className="text-xs text-current">(17)</span>
-        </button>
-
-        {/* Single Seats Button */}
-        <button 
-          onClick={() => handleMobileFilterToggle('singleSeats')}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            selectedMobileFilters.singleSeats
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <Armchair className="w-4 h-4" />
-          <span className="text-sm font-medium">Single Seats</span>
-          <span className="text-xs text-current">(18)</span>
-        </button>
-
-        {/* Seater Button */}
-        <button 
-          onClick={() => handleMobileFilterToggle('seater')}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            selectedMobileFilters.seater
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <Car className="w-4 h-4" />
-          <span className="text-sm font-medium">SEATER</span>
-          <span className="text-xs text-current">(12)</span>
         </button>
       </div>
     </div>
@@ -343,7 +290,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           </div>
           <div className="flex flex-wrap gap-2">
             {selectedFilters.slice(0, 3).map((filterId) => {
-              const allOptions = [...departureTimeOptions, ...busTypeOptions, ...operatorOptions, ...amenityOptions];
+              const allOptions = [...priceOptions, ...busTypeOptions, ...operatorOptions];
               const option = allOptions.find(opt => opt.id === filterId);
               return (
                 <Badge 
@@ -367,9 +314,9 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
       {/* Filter Sections */}
       <div className="space-y-2">
         <FilterSection
-          title="DEPARTURE TIME"
-          options={departureTimeOptions}
-          sectionKey="departureTime"
+          title="PRICE"
+          options={priceOptions}
+          sectionKey="price"
         />
 
         <FilterSection
@@ -382,12 +329,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           title="OPERATORS"
           options={operatorOptions}
           sectionKey="operators"
-        />
-
-        <FilterSection
-          title="AMENITIES"
-          options={amenityOptions}
-          sectionKey="amenities"
         />
       </div>
     </Card>
@@ -495,7 +436,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
                     </Badge>
                   )}
                   {selectedFilters.slice(0, 2).map((filterId) => {
-                    const allOptions = [...departureTimeOptions, ...busTypeOptions, ...operatorOptions, ...amenityOptions];
+                    const allOptions = [...priceOptions, ...busTypeOptions, ...operatorOptions];
                     const option = allOptions.find(opt => opt.id === filterId);
                     return (
                       <Badge 
@@ -545,9 +486,9 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
             {/* Filter Sections */}
             <div className="space-y-2">
               <FilterSection
-                title="DEPARTURE TIME"
-                options={departureTimeOptions}
-                sectionKey="departureTime"
+                title="PRICE"
+                options={priceOptions}
+                sectionKey="price"
               />
 
               <FilterSection
@@ -560,12 +501,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
                 title="OPERATORS"
                 options={operatorOptions}
                 sectionKey="operators"
-              />
-
-              <FilterSection
-                title="AMENITIES"
-                options={amenityOptions}
-                sectionKey="amenities"
               />
             </div>
 

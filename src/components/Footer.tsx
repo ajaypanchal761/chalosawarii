@@ -22,10 +22,6 @@ const Footer = () => {
       title: "Top Routes",
       links: ["Delhi to Mumbai", "Bangalore to Chennai", "Hyderabad to Pune", "Mumbai to Goa", "Chennai to Coimbatore"]
     },
-    {
-      title: "For Drivers",
-      links: ["Driver Login", "Partner with Us", "Driver Support", "Vehicle Registration"]
-    }
   ];
 
   return (
@@ -87,7 +83,7 @@ const Footer = () => {
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     {link === "Driver Login" ? (
-                      <Link to="/driver-auth">
+                      <Link to="">
                         <Button variant="link" className="text-white/80 hover:text-white p-0 h-auto font-normal">
                           {link}
                         </Button>
@@ -111,11 +107,11 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <Phone className="w-5 h-5 text-blue-400" />
-              <span className="text-white/80">Customer Care: 8904-455-455</span>
+              <span className="text-white/80">Customer Care: +91 7974838260</span>
             </div>
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <Mail className="w-5 h-5 text-blue-400" />
-                              <span className="text-white/80">support@chalosawari.com</span>
+                              <span className="text-white/80"><a href="mailto:chalosawariofficial@gmail.com">chalosawariofficial@gmail.com</a></span>
             </div>
             <div className="flex items-center justify-center md:justify-start space-x-3">
               <MapPin className="w-5 h-5 text-blue-400" />
