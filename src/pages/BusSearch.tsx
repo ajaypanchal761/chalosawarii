@@ -49,28 +49,12 @@ const BusSearch = () => {
       
       {/* Logo Grid Section */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 py-4 border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-1">
+        <div className="container mx-auto px-1 ">
           {/* Mobile: horizontal scroll, Desktop: grid */}
           <div className="flex lg:grid lg:grid-cols-3 gap-2 lg:gap-0 overflow-x-auto scrollbar-hide rounded-2xl shadow-xl bg-white divide-x-0 lg:divide-x lg:overflow-visible">
-            {/* Bus Logo */}
-            <div 
-              className={`flex flex-col items-center justify-center p-3 min-w-[110px] cursor-pointer transition-all duration-300 ${
-                selectedType === 'bus' 
-                  ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-xl transform scale-105' 
-                  : 'bg-white hover:bg-blue-50 hover:shadow-md'
-              }`}
-              onClick={() => handleLogoClick('bus')}
-            >
-              <img src={selectedType === 'bus' ? BusHover : BusBar} alt="Bus Logo" 
-                className={` h-16 w-auto object-contain transition-all duration-300  ${
-                  selectedType === 'bus' ? 'drop-shadow-lg' : ''
-                }`}
-              />
-              <span className={`text-sm font-bold mt-1 ${selectedType === 'bus' ? 'text-white' : 'text-gray-800'}`}>Bus</span>
-            </div>
             {/* Car Logo */}
             <div 
-              className={`flex flex-col items-center justify-center p-3 min-w-[110px] cursor-pointer transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center p-3 min-w-[130px] cursor-pointer transition-all duration-300 ${
                 selectedType === 'car' 
                   ? 'bg-gradient-to-br from-green-500 to-green-700 text-white shadow-xl transform scale-105' 
                   : 'bg-white hover:bg-green-50 hover:shadow-md'
@@ -86,9 +70,25 @@ const BusSearch = () => {
               />
               <span className={`text-sm font-bold mt-1 ${selectedType === 'car' ? 'text-white' : 'text-gray-800'}`}>Car</span>
             </div>
+             {/* Bus Logo */}
+             <div 
+              className={`flex flex-col items-center justify-center p-3 min-w-[120px] cursor-pointer transition-all duration-300 ${
+                selectedType === 'bus' 
+                  ? 'bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-xl transform scale-105' 
+                  : 'bg-white hover:bg-blue-50 hover:shadow-md'
+              }`}
+              onClick={() => handleLogoClick('bus')}
+            >
+              <img src={selectedType === 'bus' ? BusHover : BusBar} alt="Bus Logo" 
+                className={` h-16 w-auto object-contain transition-all duration-300  ${
+                  selectedType === 'bus' ? 'drop-shadow-lg' : ''
+                }`}
+              />
+              <span className={`text-sm font-bold mt-1 ${selectedType === 'bus' ? 'text-white' : 'text-gray-800'}`}>Bus</span>
+            </div>
             {/* Traveller Logo */}
             <div 
-              className={`flex flex-col items-center justify-center p-3 min-w-[110px] cursor-pointer transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center p-3 min-w-[130px] cursor-pointer transition-all duration-300 ${
                 selectedType === 'traveller' 
                   ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl transform scale-105' 
                   : 'bg-white hover:bg-purple-50 hover:shadow-md'
@@ -118,6 +118,7 @@ const BusSearch = () => {
               <FilterSidebar 
                 isOpen={isFilterOpen} 
                 onToggle={toggleFilter}
+                selectedType={selectedType}
               />
             </div>
             {/* List Content for Mobile */}
@@ -133,6 +134,7 @@ const BusSearch = () => {
               <FilterSidebar 
                 isOpen={isFilterOpen} 
                 onToggle={toggleFilter}
+                selectedType={selectedType}
               />
             </div>
             {/* List Content */}

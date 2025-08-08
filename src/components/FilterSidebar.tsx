@@ -16,13 +16,14 @@ interface FilterOption {
 interface FilterSidebarProps {
   isOpen?: boolean;
   onToggle?: () => void;
+  selectedType?: 'bus' | 'car' | 'traveller';
 }
 
-export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) => {
+export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }: FilterSidebarProps) => {
   const [expandedSections, setExpandedSections] = useState({
-    price: true,
-    busType: true,
-    operators: true,
+    price: false,
+    busType: false,
+    operators: false,
     busPartner: false,
   });
 
@@ -33,44 +34,76 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
   const [selectedMobileFilters, setSelectedMobileFilters] = useState({
     specialPrice: false,
     ac: false,
+    nonAc: false,
     sleeper: false,
     singleSeats: false,
     seater: false,
+    sedan: false,
+    suv: false,
+    hatchback: false,
+    miniTraveller: false,
+    standardTraveller: false,
+    luxuryTraveller: false,
   });
 
   const [sortOption, setSortOption] = useState<string>('');
 
   const priceOptions: FilterOption[] = [
-    { id: 'lt-500', label: 'Below ₹500', count: 7 },
-    { id: '500-1000', label: '₹500 - ₹1000', count: 15 },
-    { id: '1000-1500', label: '₹1000 - ₹1500', count: 10 },
-    { id: 'gt-1500', label: 'Above ₹1500', count: 5 },
-  ];
-
-  const busTypeOptions: FilterOption[] = [
-    { id: 'ac', label: 'AC', count: 25 },
-    { id: 'non-ac', label: 'Non AC', count: 12 },
-    { id: 'sleeper', label: 'Sleeper', count: 18 },
-    { id: 'seater', label: 'Seater', count: 20 },
-    { id: 'semi-sleeper', label: 'Semi Sleeper', count: 8 },
-  ];
-
-  const operatorOptions: FilterOption[] = [
-    { id: 'redbus-travels', label: 'Redbus Travels', count: 8 },
-    { id: 'srs-travels', label: 'SRS Travels', count: 6 },
-    { id: 'kpn-travels', label: 'KPN Travels', count: 4 },
-    { id: 'orange-travels', label: 'Orange Travels', count: 5 },
-    { id: 'kallada-travels', label: 'Kallada Travels', count: 3 },
-    { id: 'parveen-travels', label: 'Parveen Travels', count: 2 },
-  ];
-
-  const sortOptions = [
     { id: 'price-low', label: 'Price: Low to High' },
     { id: 'price-high', label: 'Price: High to Low' },
     { id: 'departure-early', label: 'Departure: Early to Late' },
     { id: 'departure-late', label: 'Departure: Late to Early' },
     { id: 'rating', label: 'Rating: High to Low' },
   ];
+
+  const busTypeOptions: FilterOption[] = [
+    { id: 'ac', label: 'AC' },
+    { id: 'non-ac', label: 'Non AC' },
+    { id: 'sleeper', label: 'Sleeper' },
+    { id: 'semi-sleeper', label: 'Semi Sleeper' },
+  ];
+
+  const operatorOptions: FilterOption[] = [
+    { id: 'redbus-travels', label: 'Redbus Travels' },
+    { id: 'srs-travels', label: 'SRS Travels' },
+    { id: 'kpn-travels', label: 'KPN Travels' },
+    { id: 'orange-travels', label: 'Orange Travels' },
+    { id: 'kallada-travels', label: 'Kallada Travels' },
+    { id: 'parveen-travels', label: 'Parveen Travels' },
+  ];
+
+  const carTypeOptions: FilterOption[] = [
+    { id: 'sedan', label: 'Sedan' },
+    { id: 'suv', label: 'SUV' },
+    { id: 'hatchback', label: 'Hatchback' },
+    { id: 'luxury', label: 'Creata' },
+    { id: 'economy', label: 'Enova' },
+  ];
+
+  const carOperatorOptions: FilterOption[] = [
+    { id: 'uber', label: 'Uber' },
+    { id: 'ola', label: 'Ola' },
+    { id: 'zoomcar', label: 'Zoomcar' },
+    { id: 'revv', label: 'Revv' },
+    { id: 'myles', label: 'Myles' },
+  ];
+
+  const travellerTypeOptions: FilterOption[] = [
+    { id: 'mini-traveller', label: 'Mini Traveller' },
+    { id: 'standard-traveller', label: 'Standard Traveller' },
+    { id: 'luxury-traveller', label: 'Luxury Traveller' },
+    { id: 'premium-traveller', label: 'Premium Traveller' },
+  ];
+
+  const travellerOperatorOptions: FilterOption[] = [
+    { id: 'traveller-express', label: 'Traveller Express' },
+    { id: 'comfort-travels', label: 'Comfort Travels' },
+    { id: 'premium-transport', label: 'Premium Transport' },
+    { id: 'luxury-rides', label: 'Luxury Rides' },
+    { id: 'elite-travels', label: 'Elite Travels' },
+  ];
+
+
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
@@ -92,9 +125,16 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
     setSelectedMobileFilters({
       specialPrice: false,
       ac: false,
+      nonAc: false,
       sleeper: false,
       singleSeats: false,
       seater: false,
+      sedan: false,
+      suv: false,
+      hatchback: false,
+      miniTraveller: false,
+      standardTraveller: false,
+      luxuryTraveller: false,
     });
     setSortOption('');
   };
@@ -199,53 +239,130 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           )}
           <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${showMobileFilters ? 'rotate-180' : ''}`} />
         </button>
+        {selectedType === 'car' ? (
+          <>
+            {/* Sedan Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('sedan')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.sedan
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">Sedan</span>
+            </button>
 
-        {/* Sort Button */}
-        <button 
-          onClick={() => setShowMobileFilters(!showMobileFilters)}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            sortOption
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <SortAsc className="w-4 h-4" />
-          <span className="text-sm font-medium">Sort</span>
-          {sortOption && (
-            <Badge className="ml-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-              1
-            </Badge>
-          )}
-          <ChevronDown className="w-3 h-3" />
-        </button>
+            {/* SUV Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('suv')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.suv
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">SUV</span>
+            </button>
 
-        {/* AC Button */}
-        <button 
-          onClick={() => handleMobileFilterToggle('ac')}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            selectedMobileFilters.ac
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <Snowflake className="w-4 h-4" />
-          <span className="text-sm font-medium">AC</span>
-          <span className="text-xs text-current">(25)</span>
-        </button>
+            {/* Hatchback Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('hatchback')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.hatchback
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">Hatchback</span>
+            </button>
+          </>
+        ) : selectedType === 'traveller' ? (
+          <>
+            {/* 26 Seater Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('miniTraveller')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.miniTraveller
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">26 Seater</span>
+            </button>
 
-        {/* Sleeper Button */}
-        <button 
-          onClick={() => handleMobileFilterToggle('sleeper')}
-          className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-            selectedMobileFilters.sleeper
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-          }`}
-        >
-          <Bed className="w-4 h-4" />
-          <span className="text-sm font-medium">SLEEPER</span>
-          <span className="text-xs text-current">(17)</span>
-        </button>
+            {/* 17 Seater Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('standardTraveller')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.standardTraveller
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">17 Seater</span>
+            </button>
+
+            {/* 13 Seater Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('luxuryTraveller')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.luxuryTraveller
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">13 Seater</span>
+            </button>
+          </>
+        ) : (
+          <>
+            {/* AC Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('ac')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.ac
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Snowflake className="w-4 h-4" />
+              <span className="text-sm font-medium">AC</span>
+            </button>
+
+            {/* Non-AC Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('nonAc')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.nonAc
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">Non-AC</span>
+            </button>
+
+            {/* Sleeper Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('sleeper')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.sleeper
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Bed className="w-4 h-4" />
+              <span className="text-sm font-medium">SLEEPER</span>
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -290,7 +407,11 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
           </div>
           <div className="flex flex-wrap gap-2">
             {selectedFilters.slice(0, 3).map((filterId) => {
-              const allOptions = [...priceOptions, ...busTypeOptions, ...operatorOptions];
+              const allOptions = selectedType === 'car' 
+                ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
+                : selectedType === 'traveller'
+                ? [...priceOptions, ...travellerTypeOptions, ...travellerOperatorOptions]
+                : [...priceOptions, ...busTypeOptions, ...operatorOptions];
               const option = allOptions.find(opt => opt.id === filterId);
               return (
                 <Badge 
@@ -313,23 +434,67 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
 
       {/* Filter Sections */}
       <div className="space-y-2">
-        <FilterSection
-          title="PRICE"
-          options={priceOptions}
-          sectionKey="price"
-        />
+        {selectedType === 'car' ? (
+          <>
+            <FilterSection
+              title="CAR TYPE"
+              options={carTypeOptions}
+              sectionKey="busType"
+            />
 
-        <FilterSection
-          title="BUS TYPE"
-          options={busTypeOptions}
-          sectionKey="busType"
-        />
+            <FilterSection
+              title="OPERATORS"
+              options={carOperatorOptions}
+              sectionKey="operators"
+            />
 
-        <FilterSection
-          title="OPERATORS"
-          options={operatorOptions}
-          sectionKey="operators"
-        />
+            <FilterSection
+              title="PRICE"
+              options={priceOptions}
+              sectionKey="price"
+            />
+          </>
+        ) : selectedType === 'traveller' ? (
+          <>
+            <FilterSection
+              title="TRAVELLER TYPE"
+              options={travellerTypeOptions}
+              sectionKey="busType"
+            />
+
+            <FilterSection
+              title="OPERATORS"
+              options={travellerOperatorOptions}
+              sectionKey="operators"
+            />
+
+            <FilterSection
+              title="PRICE"
+              options={priceOptions}
+              sectionKey="price"
+            />
+          </>
+        ) : (
+          <>
+            <FilterSection
+              title="BUS TYPE"
+              options={busTypeOptions}
+              sectionKey="busType"
+            />
+
+            <FilterSection
+              title="OPERATORS"
+              options={operatorOptions}
+              sectionKey="operators"
+            />
+
+            <FilterSection
+              title="PRICE"
+              options={priceOptions}
+              sectionKey="price"
+            />
+          </>
+        )}
       </div>
     </Card>
   );
@@ -430,13 +595,47 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
                       Seater
                     </Badge>
                   )}
+                  {selectedMobileFilters.sedan && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Sedan
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.suv && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      SUV
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.hatchback && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Hatchback
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.miniTraveller && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      26 Seater
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.standardTraveller && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      17 Seater
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.luxuryTraveller && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      13 Seater
+                    </Badge>
+                  )}
                   {sortOption && (
                     <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                      {sortOptions.find(opt => opt.id === sortOption)?.label || 'Sort'}
+                      {priceOptions.find(opt => opt.id === sortOption)?.label || 'Sort'}
                     </Badge>
                   )}
                   {selectedFilters.slice(0, 2).map((filterId) => {
-                    const allOptions = [...priceOptions, ...busTypeOptions, ...operatorOptions];
+                    const allOptions = selectedType === 'car' 
+                      ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
+                      : selectedType === 'traveller'
+                      ? [...priceOptions, ...travellerTypeOptions, ...travellerOperatorOptions]
+                      : [...priceOptions, ...busTypeOptions, ...operatorOptions];
                     const option = allOptions.find(opt => opt.id === filterId);
                     return (
                       <Badge 
@@ -457,51 +656,71 @@ export const FilterSidebar = ({ isOpen = true, onToggle }: FilterSidebarProps) =
               </div>
             )}
 
-            {/* Sort Options */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <SortAsc className="w-4 h-4 text-blue-500" />
-                Sort Options
-              </h3>
-              <div className="space-y-2">
-                {sortOptions.map((option) => (
-                  <div key={option.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150">
-                    <Checkbox
-                      id={option.id}
-                      checked={sortOption === option.id}
-                      onCheckedChange={() => handleSortChange(option.id)}
-                      className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                    />
-                    <Label
-                      htmlFor={option.id}
-                      className="text-sm text-gray-700 cursor-pointer flex-1 font-medium"
-                    >
-                      {option.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
+
 
             {/* Filter Sections */}
             <div className="space-y-2">
-              <FilterSection
-                title="PRICE"
-                options={priceOptions}
-                sectionKey="price"
-              />
+              {selectedType === 'car' ? (
+                <>
+                  <FilterSection
+                    title="CAR TYPE"
+                    options={carTypeOptions}
+                    sectionKey="busType"
+                  />
 
-              <FilterSection
-                title="BUS TYPE"
-                options={busTypeOptions}
-                sectionKey="busType"
-              />
+                  <FilterSection
+                    title="OPERATORS"
+                    options={carOperatorOptions}
+                    sectionKey="operators"
+                  />
 
-              <FilterSection
-                title="OPERATORS"
-                options={operatorOptions}
-                sectionKey="operators"
-              />
+                  <FilterSection
+                    title="PRICE"
+                    options={priceOptions}
+                    sectionKey="price"
+                  />
+                </>
+              ) : selectedType === 'traveller' ? (
+                <>
+                  <FilterSection
+                    title="TRAVELLER TYPE"
+                    options={travellerTypeOptions}
+                    sectionKey="busType"
+                  />
+
+                  <FilterSection
+                    title="OPERATORS"
+                    options={travellerOperatorOptions}
+                    sectionKey="operators"
+                  />
+
+                  <FilterSection
+                    title="PRICE"
+                    options={priceOptions}
+                    sectionKey="price"
+                  />
+                </>
+              ) : (
+                <>
+                  <FilterSection
+                    title="BUS TYPE"
+                    options={busTypeOptions}
+                    sectionKey="busType"
+                  />
+
+                  <FilterSection
+                    title="OPERATORS"
+                    options={operatorOptions}
+                    sectionKey="operators"
+                  />
+
+                  <FilterSection
+                    title="PRICE"
+                    options={priceOptions}
+                    sectionKey="price"
+                  />
+                </>
+              )}
             </div>
 
             {/* Mobile Apply Button */}

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useCountAnimation } from "@/hooks/use-count-animation";
 import { 
   Users, 
   Car, 
@@ -68,6 +69,63 @@ const AdminDashboard = () => {
     activeTrips: 0,
     pendingVerifications: 0,
     supportTickets: 0
+  });
+
+  // Counting animations for all stats
+  const animatedTotalUsers = useCountAnimation({ 
+    end: stats.totalUsers, 
+    delay: 500, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedTotalDrivers = useCountAnimation({ 
+    end: stats.totalDrivers, 
+    delay: 600, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedTotalVehicles = useCountAnimation({ 
+    end: stats.totalVehicles, 
+    delay: 700, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedTotalBookings = useCountAnimation({ 
+    end: stats.totalBookings, 
+    delay: 800, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedTotalRevenue = useCountAnimation({ 
+    end: stats.totalRevenue, 
+    delay: 900, 
+    duration: 2000,
+    enabled: !isLoading 
+  });
+  
+  const animatedActiveTrips = useCountAnimation({ 
+    end: stats.activeTrips, 
+    delay: 1000, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedPendingVerifications = useCountAnimation({ 
+    end: stats.pendingVerifications, 
+    delay: 1100, 
+    duration: 1500,
+    enabled: !isLoading 
+  });
+  
+  const animatedSupportTickets = useCountAnimation({ 
+    end: stats.supportTickets, 
+    delay: 1200, 
+    duration: 1500,
+    enabled: !isLoading 
   });
 
   const [recentActivities] = useState<RecentActivity[]>([
@@ -190,9 +248,9 @@ const AdminDashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center animate-fade-in">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading admin dashboard...</p>
+          <p className="text-gray-600 animate-pulse">Loading admin dashboard...</p>
         </div>
       </div>
     );
@@ -204,123 +262,139 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      {/* Header */}
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-        <p className="text-sm md:text-base text-gray-600">Welcome back! Here's what's happening with your business today.</p>
+      {/* Header with slide-in animation */}
+      <div className="mb-6 md:mb-8 animate-slide-in-from-top">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 animate-fade-in-up">Admin Dashboard</h1>
+        <p className="text-sm md:text-base text-gray-600 animate-fade-in-up animation-delay-200">Welcome back! Here's what's happening with your business today.</p>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards with staggered animations */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-100 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
+              <div className="p-2 bg-blue-100 rounded-lg animate-bounce-slow">
                 <Users className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
               </div>
               <div className="ml-3 md:ml-4">
                 <p className="text-xs md:text-sm font-medium text-gray-600">Total Users</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
+                <p className="text-lg md:text-2xl font-bold text-gray-900 animate-count-up">
+                  {animatedTotalUsers.toLocaleString()}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-200 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
+              <div className="p-2 bg-green-100 rounded-lg animate-bounce-slow animation-delay-100">
                 <Car className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>
               <div className="ml-3 md:ml-4">
                 <p className="text-xs md:text-sm font-medium text-gray-600">Total Drivers</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalDrivers}</p>
+                <p className="text-lg md:text-2xl font-bold text-gray-900 animate-count-up">
+                  {animatedTotalDrivers.toLocaleString()}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-300 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
+              <div className="p-2 bg-purple-100 rounded-lg animate-bounce-slow animation-delay-200">
                 <Bus className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
               </div>
               <div className="ml-3 md:ml-4">
                 <p className="text-xs md:text-sm font-medium text-gray-600">Total Vehicles</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalVehicles}</p>
+                <p className="text-lg md:text-2xl font-bold text-gray-900 animate-count-up">
+                  {animatedTotalVehicles.toLocaleString()}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-400 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center">
-              <div className="p-2 bg-orange-100 rounded-lg">
+              <div className="p-2 bg-orange-100 rounded-lg animate-bounce-slow animation-delay-300">
                 <Calendar className="w-5 h-5 md:w-6 md:h-6 text-orange-600" />
               </div>
               <div className="ml-3 md:ml-4">
                 <p className="text-xs md:text-sm font-medium text-gray-600">Total Bookings</p>
-                <p className="text-lg md:text-2xl font-bold text-gray-900">{stats.totalBookings}</p>
+                <p className="text-lg md:text-2xl font-bold text-gray-900 animate-count-up">
+                  {animatedTotalBookings.toLocaleString()}
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Additional Stats */}
+      {/* Additional Stats with slide-in animations */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-        <Card>
+        <Card className="animate-slide-in-from-left animation-delay-500 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{formatCurrency(stats.totalRevenue)}</p>
+                <p className="text-lg md:text-xl font-bold text-gray-900 animate-count-up">
+                  {formatCurrency(animatedTotalRevenue)}
+                </p>
               </div>
-              <div className="p-2 bg-green-100 rounded-lg">
+              <div className="p-2 bg-green-100 rounded-lg animate-pulse">
                 <DollarSign className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-slide-in-from-left animation-delay-600 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm font-medium text-gray-600">Active Trips</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{stats.activeTrips}</p>
+                <p className="text-lg md:text-xl font-bold text-gray-900 animate-count-up">
+                  {animatedActiveTrips.toLocaleString()}
+                </p>
               </div>
-              <div className="p-2 bg-blue-100 rounded-lg">
+              <div className="p-2 bg-blue-100 rounded-lg animate-pulse animation-delay-100">
                 <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-slide-in-from-left animation-delay-700 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm font-medium text-gray-600">Pending Verifications</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{stats.pendingVerifications}</p>
+                <p className="text-lg md:text-xl font-bold text-gray-900 animate-count-up">
+                  {animatedPendingVerifications.toLocaleString()}
+                </p>
               </div>
-              <div className="p-2 bg-yellow-100 rounded-lg">
+              <div className="p-2 bg-yellow-100 rounded-lg animate-pulse animation-delay-200">
                 <Clock className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-slide-in-from-left animation-delay-800 hover:scale-105 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs md:text-sm font-medium text-gray-600">Support Tickets</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">{stats.supportTickets}</p>
+                <p className="text-lg md:text-xl font-bold text-gray-900 animate-count-up">
+                  {animatedSupportTickets.toLocaleString()}
+                </p>
               </div>
-              <div className="p-2 bg-red-100 rounded-lg">
+              <div className="p-2 bg-red-100 rounded-lg animate-pulse animation-delay-300">
                 <MessageSquare className="w-5 h-5 md:w-6 md:h-6 text-red-600" />
               </div>
             </div>
@@ -328,78 +402,21 @@ const AdminDashboard = () => {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/users')}>
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">Manage Users</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">Users</p>
-              </div>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Users className="w-5 h-5 md:w-6 md:h-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/drivers')}>
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">Manage Drivers</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">Drivers</p>
-              </div>
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Car className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/bookings')}>
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">View Bookings</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">Bookings</p>
-              </div>
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Calendar className="w-5 h-5 md:w-6 md:h-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin/settings')}>
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs md:text-sm font-medium text-gray-600">System Settings</p>
-                <p className="text-lg md:text-xl font-bold text-gray-900">Settings</p>
-              </div>
-              <div className="p-2 bg-gray-100 rounded-lg">
-                <Settings className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Activities */}
+      {/* Recent Activities with staggered animations */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-900 hover:shadow-lg transition-all duration-300">
           <CardHeader>
-            <CardTitle className="text-lg md:text-xl">Recent Activities</CardTitle>
+            <CardTitle className="text-lg md:text-xl animate-fade-in-up">Recent Activities</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3">
-                  <div className={`p-2 rounded-lg ${getStatusColor(activity.status)}`}>
+              {recentActivities.map((activity, index) => (
+                <div 
+                  key={activity.id} 
+                  className="flex items-start space-x-3 animate-fade-in-up hover:bg-gray-50 p-2 rounded-lg transition-all duration-200"
+                  style={{ animationDelay: `${1000 + index * 100}ms` }}
+                >
+                  <div className={`p-2 rounded-lg ${getStatusColor(activity.status)} animate-bounce-slow`}>
                     {getActivityIcon(activity.type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -413,42 +430,42 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-fade-in-up animation-delay-1000 hover:shadow-lg transition-all duration-300">
           <CardHeader>
-            <CardTitle className="text-lg md:text-xl">System Overview</CardTitle>
+            <CardTitle className="text-lg md:text-xl animate-fade-in-up">System Overview</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div>
+              <div className="animate-fade-in-up animation-delay-1100">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-600">System Health</span>
-                  <span className="text-green-600 font-medium">Excellent</span>
+                  <span className="text-green-600 font-medium animate-pulse">Excellent</span>
                 </div>
-                <Progress value={95} className="h-2" />
+                <Progress value={95} className="h-2 animate-progress-fill" />
               </div>
               
-              <div>
+              <div className="animate-fade-in-up animation-delay-1200">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-600">Server Load</span>
                   <span className="text-blue-600 font-medium">Normal</span>
                 </div>
-                <Progress value={65} className="h-2" />
+                <Progress value={65} className="h-2 animate-progress-fill animation-delay-100" />
               </div>
               
-              <div>
+              <div className="animate-fade-in-up animation-delay-1300">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-600">Database</span>
-                  <span className="text-green-600 font-medium">Healthy</span>
+                  <span className="text-green-600 font-medium animate-pulse animation-delay-200">Healthy</span>
                 </div>
-                <Progress value={88} className="h-2" />
+                <Progress value={88} className="h-2 animate-progress-fill animation-delay-200" />
               </div>
               
-              <div>
+              <div className="animate-fade-in-up animation-delay-1400">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-600">API Response</span>
-                  <span className="text-green-600 font-medium">Fast</span>
+                  <span className="text-green-600 font-medium animate-pulse animation-delay-300">Fast</span>
                 </div>
-                <Progress value={92} className="h-2" />
+                <Progress value={92} className="h-2 animate-progress-fill animation-delay-300" />
               </div>
             </div>
           </CardContent>

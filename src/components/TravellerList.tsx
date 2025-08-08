@@ -155,7 +155,7 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
               <span className="text-muted-foreground">({traveller.reviewCount})</span>
             </div>
             <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${traveller.isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-              {traveller.isBooked ? 'Already Booked' : 'Available'}
+                              Available
             </span>
           </div>
           
@@ -232,7 +232,7 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
                 }
               }}
             >
-              {traveller.isBooked ? 'Already Booked' : 'Book Now'}
+              Book Now
             </Button>
           </div>
         </div>
@@ -316,18 +316,7 @@ Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
           ))}
         </div>
       )}
-      {/* Booked Travellers */}
-      {bookedTravellers.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            Already Booked ({bookedTravellers.length})
-          </h3>
-          {bookedTravellers.map((traveller) => (
-            <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
-          ))}
-        </div>
-      )}
+
       <TravellerDetailsModal 
         traveller={selectedTraveller}
         isOpen={isModalOpen}

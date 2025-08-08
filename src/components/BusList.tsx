@@ -160,7 +160,12 @@ const BusCard = ({ bus, onViewDetails, onBookNow }: {
             </div>
           </div>
           
-          <p className="text-sm text-muted-foreground mb-2">{bus.busName}</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-muted-foreground">{bus.busName}</p>
+            <span className="ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-green-100 text-green-700">
+              Available
+            </span>
+          </div>
           <p className="text-sm font-medium text-foreground mb-2">{bus.busType}</p>
           <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
             <Armchair className="w-4 h-4 mr-1" />
@@ -217,7 +222,7 @@ const BusCard = ({ bus, onViewDetails, onBookNow }: {
                 }
               }}
             >
-              {bus.isBooked ? 'Already Booked' : 'Book Now'}
+              Book Now
             </Button>
           </div>
         </div>
@@ -296,19 +301,6 @@ export const BusList = ({ searchParams }: BusListProps) => {
             Available Buses ({availableBuses.length})
           </h3>
           {availableBuses.map((bus) => (
-            <BusCard key={bus.id} bus={bus} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
-          ))}
-        </div>
-      )}
-
-      {/* Booked Buses */}
-      {bookedBuses.length > 0 && (
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-red-700 mb-4 flex items-center gap-2">
-            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            Already Booked ({bookedBuses.length})
-          </h3>
-          {bookedBuses.map((bus) => (
             <BusCard key={bus.id} bus={bus} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
           ))}
         </div>

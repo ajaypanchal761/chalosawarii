@@ -55,7 +55,7 @@ const Help = () => {
       description: "Speak with our customer care",
       action: "Call Now",
       actionHandler: () => {
-        window.location.href = "tel:+917974838260";
+        window.location.href = "tel:+919171838260";
       }
     },
     {
@@ -222,7 +222,7 @@ const Help = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => window.location.href = "tel:+917974838260"}
+                    onClick={() => window.location.href = "tel:+919171838260"}
                   >
                     Call Now
                   </Button>
@@ -235,7 +235,7 @@ const Help = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => window.open("https://wa.me/917974838260", "_blank")}
+                    onClick={() => window.open("https://wa.me/919171838260", "_blank")}
                   >
                     Chat Now
                   </Button>

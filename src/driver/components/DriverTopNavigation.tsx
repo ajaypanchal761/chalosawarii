@@ -12,7 +12,7 @@ const DriverTopNavigation = () => {
           <div className="flex items-center space-x-4 text-muted-foreground">
             <span className="flex items-center">
               <Phone className="w-4 h-4 mr-2" />
-              Support: +91 7974838260
+              Support: +91 9171838260
             </span>
           </div>
           <div className="flex items-center space-x-4">
