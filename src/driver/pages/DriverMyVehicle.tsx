@@ -957,6 +957,7 @@ const DriverMyVehicle = () => {
 
 // Add Vehicle Form Component
 const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehicle>) => void; onCancel: () => void }) => {
+  const [selectedVehicleCategory, setSelectedVehicleCategory] = useState<'auto-ricksaw' | 'car' | 'bus' | ''>('');
   const [formData, setFormData] = useState({
     name: '',
     type: '',
@@ -1002,38 +1003,107 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="vehicleName">Vehicle Name</Label>
-          <Input 
-            id="vehicleName" 
-            placeholder="e.g., Swift Dzire" 
-            value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="vehicleType">Vehicle Type</Label>
-          <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Sedan">Sedan</SelectItem>
-              <SelectItem value="Hatchback">Hatchback</SelectItem>
-              <SelectItem value="SUV">SUV</SelectItem>
-              <SelectItem value="Bus">Bus</SelectItem>
-            </SelectContent>
-          </Select>
+      {/* Vehicle Category Selection */}
+      <div className="space-y-3">
+        <Label className="text-base font-semibold">What type of vehicle do you want to add?</Label>
+        <div className="grid grid-cols-3 gap-3">
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleCategory('auto-ricksaw')}
+            className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
+              selectedVehicleCategory === 'auto-ricksaw'
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            <div className="text-2xl mb-2">🛺</div>
+            <div className="font-medium">Auto-Ricksaw</div>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleCategory('car')}
+            className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
+              selectedVehicleCategory === 'car'
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            <div className="text-2xl mb-2">🚗</div>
+            <div className="font-medium">Car</div>
+          </button>
+          <button
+            type="button"
+            onClick={() => setSelectedVehicleCategory('bus')}
+            className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
+              selectedVehicleCategory === 'bus'
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            }`}
+          >
+            <div className="text-2xl mb-2">🚌</div>
+            <div className="font-medium">Bus</div>
+          </button>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+
+      {/* Show form only after category selection */}
+      {selectedVehicleCategory && (
+        <>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="vehicleName">Vehicle Name</Label>
+              <Input 
+                id="vehicleName" 
+                placeholder={selectedVehicleCategory === 'auto-ricksaw' ? "e.g., Bajaj Auto" : selectedVehicleCategory === 'car' ? "e.g., Swift Dzire" : "e.g., Volvo Bus"}
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="vehicleType">Vehicle Type</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {selectedVehicleCategory === 'auto-ricksaw' && (
+                    <>
+                      <SelectItem value="Fuel">Fuel Auto-Ricksaw</SelectItem>
+                      <SelectItem value="electric">Electric Auto-Ricksaw</SelectItem>
+                      <SelectItem value="cng">CNG Auto-Ricksaw</SelectItem>
+                    </>
+                  )}
+                  {selectedVehicleCategory === 'car' && (
+                    <>
+                      <SelectItem value="Sedan">Sedan</SelectItem>
+                      <SelectItem value="Hatchback">Hatchback</SelectItem>
+                      <SelectItem value="SUV">SUV</SelectItem>
+                      <SelectItem value="MUV">MUV</SelectItem>
+                      <SelectItem value="Luxury">Luxury</SelectItem>
+                    </>
+                  )}
+                  {selectedVehicleCategory === 'bus' && (
+                    <>
+                      <SelectItem value="ac">AC Sleeper</SelectItem>
+                      <SelectItem value="non-ac">Non-AC Sleeper</SelectItem>
+                      <SelectItem value="52ac_non_ac">52-Seater AC/Non-AC</SelectItem>
+                      <SelectItem value="40ac_non_ac">40-Seater AC/Non-AC</SelectItem>
+                      <SelectItem value="32ac_non_ac">32-Seater AC/Non-AC</SelectItem>
+                      <SelectItem value="26ac_non_ac">26-Seater AC/Non-AC</SelectItem>
+                      <SelectItem value="17ac_non_ac">17-Seater AC/Non-AC</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+              <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="model">Model</Label>
           <Input 
             id="model" 
-            placeholder="e.g., Swift Dzire VDI" 
+            placeholder={selectedVehicleCategory === 'auto-ricksaw' ? "e.g., Bajaj RE" : selectedVehicleCategory === 'car' ? "e.g., Swift Dzire VDI" : "e.g., Volvo 9400"}
             value={formData.model}
             onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))}
             required
@@ -1087,18 +1157,18 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
             </SelectContent>
           </Select>
         </div>
-                 <div>
-           <Label htmlFor="capacity">Passenger Capacity</Label>
-           <Input 
-             id="capacity" 
-             type="number" 
-             placeholder="e.g., 4" 
-             value={formData.capacity}
-             onChange={(e) => setFormData(prev => ({ ...prev, capacity: parseInt(e.target.value) || 4 }))}
-             required
-           />
-         </div>
-       </div>
+        <div>
+          <Label htmlFor="capacity">Passenger Capacity</Label>
+          <Input 
+            id="capacity" 
+            type="number" 
+            placeholder={selectedVehicleCategory === 'auto-ricksaw' ? "e.g., 3" : selectedVehicleCategory === 'car' ? "e.g., 4" : "e.g., 40"}
+            value={formData.capacity}
+            onChange={(e) => setFormData(prev => ({ ...prev, capacity: parseInt(e.target.value) || 4 }))}
+            required
+          />
+        </div>
+      </div>
        
                {/* Vehicle Images Upload */}
         <div className="space-y-4">
@@ -1180,6 +1250,8 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
           Add Vehicle
         </Button>
       </div>
+        </>
+      )}
     </form>
   );
 };

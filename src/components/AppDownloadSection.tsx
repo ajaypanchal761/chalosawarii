@@ -20,7 +20,7 @@ const AppDownloadSection = () => {
               Download Chalo Sawari App
             </h2>
             <p className="text-white/90 text-lg mb-8">
-              Book Bus, Car, and Traveller tickets faster and easier with our mobile app. Get exclusive offers, track your vehicle, and manage bookings on the go.
+              Book Bus, Car, and Auto-Ricksaw tickets faster and easier with our mobile app. Get exclusive offers, track your vehicle, and manage bookings on the go.
             </p>
 
             {/* Stats */}

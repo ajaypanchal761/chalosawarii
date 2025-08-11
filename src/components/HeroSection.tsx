@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import CarImg from "@/assets/Car2.png";
 import BusImg from "@/assets/BusBar.png";
-import TravellerImg from "@/assets/Traveller.png";
+import TravellerImg from "@/assets/AutoLogo.png";
 import React from "react";
 
 
@@ -18,7 +18,7 @@ const LoadingAnimation = () => (
     <div className="flex space-x-8 animate-pulse">
       <img src={CarImg} alt="Car" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '0ms'}} />
       <img src={BusImg} alt="Bus" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '200ms'}} />
-      <img src={TravellerImg} alt="Traveller" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '400ms'}} />
+      <img src={TravellerImg} alt="Auto-Ricksaw" className="w-20 h-20 object-contain animate-bounce" style={{animationDelay: '400ms'}} />
     </div>
     <div className="mt-6 text-xl font-semibold text-primary">Searching best Vehicle for you...</div>
   </div>
@@ -139,7 +139,7 @@ const HeroSection = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center">
             <span className="text-white text-lg font-semibold">
-            Low Cost Better Travels - Bus, Car & Traveller 
+            Low Cost Better Travels - Bus, Car & Auto-Ricksaw 
             </span>
           </div>
         </div>

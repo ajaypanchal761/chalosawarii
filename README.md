@@ -1,16 +1,16 @@
-# Chalo Sawari - Bus, Car & Traveller Booking Platform
+# Chalo Sawari - Bus, Car & Auto-Ricksaw Booking Platform
 
-A modern, responsive web application for booking Bus, Car, and Traveller services. Built with React, TypeScript, and Tailwind CSS.
+A modern, responsive web application for booking Bus, Car, and Auto-Ricksaw services. Built with React, TypeScript, and Tailwind CSS.
 
 ## 🚀 Features
 
 ### Multi-Modal Transportation Booking
 - **Bus Booking**: Intercity and intracity bus services
 - **Car Booking**: Rental cars and chauffeur-driven services  
-- **Traveller Booking**: Group travel and tour packages
+- **Auto-Ricksaw Booking**: Group travel and tour packages
 
 ### Key Features
-- 🎯 **Real-time Vehicle Tracking**: Track your Bus, Car, or Traveller in real-time
+- 🎯 **Real-time Vehicle Tracking**: Track your Bus, Car, or Auto-Ricksaw in real-time
 - 💳 **Secure Payment Gateway**: Multiple payment options including UPI, cards, and digital wallets
 - 📱 **Mobile App**: Download our app for on-the-go bookings
 - 🛡️ **Safe & Secure**: Verified operators and secure transactions

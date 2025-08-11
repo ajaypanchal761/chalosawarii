@@ -7,7 +7,7 @@ const HowToBook = () => {
       step: 1,
       icon: <Search className="w-8 h-8" />,
       title: "Search Vehicles",
-      description: "Enter your source, destination, and travel date to find available Buses, Cars, and Travellers"
+              description: "Enter your source, destination, and travel date to find available Buses, Cars, and Auto-Ricksaws"
     },
     {
       step: 2,
@@ -37,7 +37,7 @@ const HowToBook = () => {
             How to Book Tickets Online?
           </h2>
           <p className="text-muted-foreground text-lg">
-            Simple 4-step process to book your Bus, Car, and Traveller tickets in minutes
+            Simple 4-step process to book your Bus, Car, and Auto-Ricksaw tickets in minutes
           </p>
         </div>
 

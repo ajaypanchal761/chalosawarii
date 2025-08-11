@@ -289,7 +289,7 @@ const AdminDriverManagement = () => {
       hasChargingPoints: true,
       basePricePerTrip: 800,
       pricePerKilometer: 10,
-      vehicleDescription: "Modern traveller with AC and USB charging points",
+              vehicleDescription: "Modern auto-ricksaw with AC and USB charging points",
       availableSeats: 12,
       submittedAt: "2024-03-13 09:20",
       status: "pending"
@@ -2237,7 +2237,7 @@ const AdminDriverManagement = () => {
                     <SelectContent>
                       <SelectItem value="car">Car</SelectItem>
                       <SelectItem value="bus">Bus</SelectItem>
-                      <SelectItem value="traveller">Traveller</SelectItem>
+                      <SelectItem value="traveller">Auto-Ricksaw</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -2815,7 +2815,7 @@ const AdminDriverManagement = () => {
                     <SelectContent>
                       <SelectItem value="car">Car</SelectItem>
                       <SelectItem value="bus">Bus</SelectItem>
-                      <SelectItem value="traveller">Traveller</SelectItem>
+                      <SelectItem value="traveller">Auto-Ricksaw</SelectItem>
                       <SelectItem value="truck">Truck</SelectItem>
                       <SelectItem value="bike">Bike</SelectItem>
                     </SelectContent>

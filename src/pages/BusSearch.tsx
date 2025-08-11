@@ -4,14 +4,14 @@ import { useLocation } from 'react-router-dom';
 import TopNavigation from '@/components/TopNavigation';
 import BusList from '@/components/BusList';
 import CarList from '@/components/CarList';
-import TravellerList from '@/components/TravellerList';
+import AutoList from '@/components/AutoList';
 import FilterSidebar from '@/components/FilterSidebar';
-import TravellerLogo from '@/assets/Traveller.png';
+import AutoLogo from '@/assets/AutoLogo.png';
 import CarBar from '@/assets/CarBar.png';
 import BusBar from '@/assets/BusBar.png';
 import BusHover from '@/assets/BusHover.png';
 import CarBarHover from '@/assets/CarBarHover.png';
-import TravellerHover from '@/assets/TravellerHover.png';
+import AutoHover from '@/assets/autoHover.png';
 
 const BusSearch = () => {
   const isMobile = useIsMobile();
@@ -36,7 +36,7 @@ const BusSearch = () => {
       case 'car':
         return <CarList searchParams={searchParams} />;
       case 'traveller':
-        return <TravellerList searchParams={searchParams} />;
+        return <AutoList searchParams={searchParams} />;
       case 'bus':
       default:
         return <BusList searchParams={searchParams} />;
@@ -52,6 +52,24 @@ const BusSearch = () => {
         <div className="container mx-auto px-1 ">
           {/* Mobile: horizontal scroll, Desktop: grid */}
           <div className="flex lg:grid lg:grid-cols-3 gap-2 lg:gap-0 overflow-x-auto scrollbar-hide rounded-2xl shadow-xl bg-white divide-x-0 lg:divide-x lg:overflow-visible">
+            {/* Auto-Ricksaw Logo */}
+            <div 
+              className={`flex flex-col items-center justify-center p-3 min-w-[130px] cursor-pointer transition-all duration-300 ${
+                selectedType === 'traveller' 
+                  ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl transform scale-105' 
+                  : 'bg-white hover:bg-purple-50 hover:shadow-md'
+              }`}
+              onClick={() => handleLogoClick('traveller')}
+            >
+              <img 
+                src={selectedType === 'traveller' ? AutoHover : AutoLogo} 
+                alt="Auto-Ricksaw" 
+                className={`h-16 w-auto object-contain transition-all duration-300 ${
+                  selectedType === 'traveller' ? 'drop-shadow-lg' : ''
+                }`}
+              />
+              <span className={`text-sm font-bold mt-1 ${selectedType === 'traveller' ? 'text-white' : 'text-gray-800'}`}>Auto-Ricksaw</span>
+            </div>
             {/* Car Logo */}
             <div 
               className={`flex flex-col items-center justify-center p-3 min-w-[130px] cursor-pointer transition-all duration-300 ${
@@ -85,24 +103,6 @@ const BusSearch = () => {
                 }`}
               />
               <span className={`text-sm font-bold mt-1 ${selectedType === 'bus' ? 'text-white' : 'text-gray-800'}`}>Bus</span>
-            </div>
-            {/* Traveller Logo */}
-            <div 
-              className={`flex flex-col items-center justify-center p-3 min-w-[130px] cursor-pointer transition-all duration-300 ${
-                selectedType === 'traveller' 
-                  ? 'bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-xl transform scale-105' 
-                  : 'bg-white hover:bg-purple-50 hover:shadow-md'
-              }`}
-              onClick={() => handleLogoClick('traveller')}
-            >
-              <img 
-                src={selectedType === 'traveller' ? TravellerHover : TravellerLogo} 
-                alt="Traveller" 
-                className={`h-16 w-auto object-contain transition-all duration-300 ${
-                  selectedType === 'traveller' ? 'drop-shadow-lg' : ''
-                }`}
-              />
-              <span className={`text-sm font-bold mt-1 ${selectedType === 'traveller' ? 'text-white' : 'text-gray-800'}`}>Traveller</span>
             </div>
           </div>
         </div>

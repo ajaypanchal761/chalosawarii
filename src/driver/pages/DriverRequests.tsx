@@ -317,9 +317,6 @@ const DriverRequests = () => {
                        <span>{request.vehicleType}</span>
                      </div>
                    </div>
-
-                  
-
                   {/* Action Buttons */}
                   <div className="flex space-x-3">
                     <Button 

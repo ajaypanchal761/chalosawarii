@@ -4,17 +4,17 @@ import { Button } from '@/components/ui2/button';
 import { Card } from '@/components/ui2/card';
 import { Badge } from '@/components/ui2/badge';
 import { Star, Wifi, Tv, Power, Car, Eye, Users, Shield, Armchair } from 'lucide-react';
-import TravellerDetailsModal from './TravellerDetailsModal';
-import Traveller1 from '@/assets/Traveller1.png';
-import Traveller2 from '@/assets/Traveller2.webp';
-import Traveller3 from '@/assets/Traveller3.webp';
-import Traveller4 from '@/assets/Traveller4.png';
+import AutoDetailsModal from './AutoDetailsModal';
+import Auto1 from '@/assets/auto1.webp';
+import Auto2 from '@/assets/auto2.jpg';
+import Auto3 from '@/assets/auto1.webp';
+import Auto4 from '@/assets/auto2.jpg';
 
-interface Traveller {
+interface Auto {
   id: string;
   operatorName: string;
-  travellerName: string;
-  travellerType: string;
+  autoName: string;
+  autoType: string;
   duration: string;
   rating: number;
   reviewCount: number;
@@ -28,7 +28,7 @@ interface Traveller {
   bookedDate?: string; // Optional
 }
 
-interface TravellerListProps {
+interface AutoListProps {
   searchParams?: {
     from?: string;
     to?: string;
@@ -37,35 +37,35 @@ interface TravellerListProps {
   };
 }
 
-const sampleTravellers: Traveller[] = [
+const sampleAutos: Auto[] = [
   {
     id: '1',
-    operatorName: 'Force Traveller Services',
-    travellerName: 'Force Traveller',
-    travellerType: 'Premium Passenger Van',
+    operatorName: 'Auto-Ricksaw Services',
+    autoName: 'Premium Auto-Ricksaw',
+    autoType: 'Premium Passenger Auto-Ricksaw',
     duration: '8h 45m',
     rating: 4.4,
     reviewCount: 203,
     fare: 1800,
     seatsLeft: 12,
     amenities: ['wifi', 'power', 'ac', 'tv'],
-    image: Traveller1,
+    image: Auto1,
     isAc: true,
     totalSeats: 12,
     isBooked: false,
   },
   {
     id: '2',
-    operatorName: 'Traveller Express',
-    travellerName: 'Force Traveller Deluxe',
-    travellerType: 'Luxury Passenger Van',
+    operatorName: 'Auto-Ricksaw Express',
+    autoName: 'Luxury Auto-Ricksaw',
+    autoType: 'Luxury Passenger Auto-Ricksaw',
     duration: '8h 30m',
     rating: 4.7,
     reviewCount: 156,
     fare: 2200,
     seatsLeft: 15,
     amenities: ['wifi', 'tv', 'power', 'ac'],
-    image: Traveller2,
+    image: Auto2,
     isAc: true,
     totalSeats: 15,
     isBooked: true,
@@ -73,32 +73,32 @@ const sampleTravellers: Traveller[] = [
   },
   {
     id: '3',
-    operatorName: 'City Traveller Cabs',
-    travellerName: 'Force Traveller Standard',
-    travellerType: 'Economy Passenger Van',
+    operatorName: 'City Auto-Ricksaw Cabs',
+    autoName: 'Standard Auto-Ricksaw',
+    autoType: 'Economy Passenger Auto-Ricksaw',
     duration: '9h 15m',
     rating: 3.8,
     reviewCount: 98,
     fare: 1400,
     seatsLeft: 10,
     amenities: ['ac', 'power'],
-    image: Traveller3,
+    image: Auto3,
     isAc: true,
     totalSeats: 10,
     isBooked: false,
   },
   {
     id: '4',
-    operatorName: 'Premium Traveller Co.',
-    travellerName: 'Force Traveller Premium',
-    travellerType: 'Executive Passenger Van',
+    operatorName: 'Premium Auto-Ricksaw Co.',
+    autoName: 'Executive Auto-Ricksaw',
+    autoType: 'Executive Passenger Auto-Ricksaw',
     duration: '8h 20m',
     rating: 4.5,
     reviewCount: 178,
     fare: 2000,
     seatsLeft: 13,
     amenities: ['wifi', 'power', 'ac', 'tv'],
-    image: Traveller4,
+    image: Auto4,
     isAc: true,
     totalSeats: 13,
     isBooked: true,
@@ -106,10 +106,10 @@ const sampleTravellers: Traveller[] = [
   },
 ];
 
-const TravellerCard = ({ traveller, onViewDetails, onBookNow }: { 
-  traveller: Traveller; 
-  onViewDetails: (traveller: Traveller) => void;
-  onBookNow: (traveller: Traveller) => void;
+const AutoCard = ({ auto, onViewDetails, onBookNow }: { 
+  auto: Auto; 
+  onViewDetails: (auto: Auto) => void;
+  onBookNow: (auto: Auto) => void;
 }) => {
   const renderAmenityIcon = (amenity: string) => {
     switch (amenity) {
@@ -128,51 +128,51 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
 
   return (
     <Card className={`p-4 mb-4 border border-border hover:shadow-lg transition-shadow ${
-      traveller.isBooked ? 'bg-red-50 border-red-200 cursor-not-allowed' : 'cursor-pointer'
+      auto.isBooked ? 'bg-red-50 border-red-200 cursor-not-allowed' : 'cursor-pointer'
     }`} 
           onClick={() => {
-            if (!traveller.isBooked) {
-              onViewDetails(traveller);
+            if (!auto.isBooked) {
+              onViewDetails(auto);
             }
           }}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
         {/* Vehicle Image - Hidden on mobile, visible on desktop */}
         <div className="hidden lg:block lg:col-span-2">
           <img
-            src={traveller.image}
-            alt={traveller.travellerName}
+            src={auto.image}
+            alt={auto.autoName}
             className="w-full h-20 object-cover rounded-md border border-border"
           />
         </div>
 
-        {/* Traveller Info */}
+        {/* Auto Info */}
         <div className="lg:col-span-6">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="font-semibold text-foreground">{traveller.operatorName}</h3>
+            <h3 className="font-semibold text-foreground">{auto.operatorName}</h3>
             <div className="flex items-center gap-1 text-sm">
               <Star className="w-4 h-4 fill-warning text-warning" />
-              <span className="font-medium">{traveller.rating}</span>
-              <span className="text-muted-foreground">({traveller.reviewCount})</span>
+              <span className="font-medium">{auto.rating}</span>
+              <span className="text-muted-foreground">({auto.reviewCount})</span>
             </div>
-            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${traveller.isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+            <span className={`ml-2 px-2 py-0.5 rounded text-xs font-semibold ${auto.isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                               Available
             </span>
           </div>
           
-          <p className="text-sm text-muted-foreground mb-2">{traveller.travellerName}</p>
-          <p className="text-sm font-medium text-foreground mb-2">{traveller.travellerType}</p>
+          <p className="text-sm text-muted-foreground mb-2">{auto.autoName}</p>
+          <p className="text-sm font-medium text-foreground mb-2">{auto.autoType}</p>
           <p className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
             <Armchair className="w-4 h-4 mr-1" />
-            {traveller.totalSeats} Seater
+            {auto.totalSeats} Seater
           </p>
-          <p className="text-sm text-muted-foreground mb-2">Duration: {traveller.duration}</p>
+          <p className="text-sm text-muted-foreground mb-2">Duration: {auto.duration}</p>
           
           <div className="flex items-center gap-4 mb-2">
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Users className="w-4 h-4" />
-              <span>Max {traveller.maxPassengers} passengers</span>
+              <span>Max {auto.maxPassengers} passengers</span>
             </div>
-            {traveller.isPremium && (
+            {auto.isPremium && (
               <Badge className="bg-yellow-100 text-yellow-800">Premium</Badge>
             )}
           </div>
@@ -180,14 +180,14 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
           {/* Vehicle Image on Mobile */}
           <div className="lg:hidden mb-3">
             <img
-              src={traveller.image}
-              alt={traveller.travellerName}
+              src={auto.image}
+              alt={auto.autoName}
               className="w-full h-32 object-cover rounded-md border border-border"
             />
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {traveller.amenities.map((amenity, index) => (
+            {auto.amenities.map((amenity, index) => (
               <div key={index} className="flex items-center text-muted-foreground">
                 {renderAmenityIcon(amenity)}
               </div>
@@ -199,7 +199,7 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
         <div className="lg:col-span-4">
           <div className="mb-4 text-right">
             <p className="text-sm text-muted-foreground">Starts from</p>
-            <p className="text-2xl font-bold text-foreground">₹ {traveller.fare}</p>
+            <p className="text-2xl font-bold text-foreground">₹ {auto.fare}</p>
           </div>
           
           <div className="flex flex-col gap-3">
@@ -209,9 +209,9 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
               className="w-full border-2 hover:bg-muted/50 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
-                onViewDetails(traveller);
+                onViewDetails(auto);
               }}
-              disabled={traveller.isBooked}
+              disabled={auto.isBooked}
             >
               <Eye className="w-4 h-4 mr-2" />
               View Details
@@ -219,16 +219,16 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
             <Button 
               variant="default" 
               size="lg"
-              disabled={traveller.isBooked}
+              disabled={auto.isBooked}
               className={`w-full font-semibold shadow-lg hover:shadow-xl transition-all duration-200 ${
-                traveller.isBooked 
+                auto.isBooked 
                   ? 'bg-gray-400 cursor-not-allowed' 
                   : 'bg-primary hover:bg-primary/90 text-white'
               }`}
               onClick={(e) => {
                 e.stopPropagation();
-                if (!traveller.isBooked) {
-                  onBookNow(traveller);
+                if (!auto.isBooked) {
+                  onBookNow(auto);
                 }
               }}
             >
@@ -241,22 +241,22 @@ const TravellerCard = ({ traveller, onViewDetails, onBookNow }: {
   );
 };
 
-export const TravellerList = ({ searchParams }: TravellerListProps) => {
+export const AutoList = ({ searchParams }: AutoListProps) => {
   const navigate = useNavigate();
-  const [selectedTraveller, setSelectedTraveller] = useState<Traveller | null>(null);
+  const [selectedAuto, setSelectedAuto] = useState<Auto | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleViewDetails = (traveller: Traveller) => {
-    setSelectedTraveller(traveller);
+  const handleViewDetails = (auto: Auto) => {
+    setSelectedAuto(auto);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedTraveller(null);
+    setSelectedAuto(null);
   };
 
-  const handleBookNow = (traveller: Traveller) => {
+  const handleBookNow = (auto: Auto) => {
     // Check if user is logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     
@@ -264,13 +264,13 @@ export const TravellerList = ({ searchParams }: TravellerListProps) => {
       // Show booking confirmation message
       alert(`Booking Confirmed!
       
-Vehicle: ${traveller.travellerName}
-Operator: ${traveller.operatorName}
+Vehicle: ${auto.autoName}
+Operator: ${auto.operatorName}
 From: Bangalore to Chennai
 Date: 2024-01-15
 Time: 22:00
 Passengers: 1
-Total Fare: ₹${traveller.fare}
+Total Fare: ₹${auto.fare}
 Seats: A1
 
 Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
@@ -284,41 +284,41 @@ Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
     }
   };
 
-  // Filter travellers based on search date
-  const filteredTravellers = sampleTravellers.map(traveller => {
-    if (searchParams?.date && traveller.bookedDate === searchParams.date) {
-      return { ...traveller, isBooked: true };
+  // Filter autos based on search date
+  const filteredAutos = sampleAutos.map(auto => {
+    if (searchParams?.date && auto.bookedDate === searchParams.date) {
+      return { ...auto, isBooked: true };
     }
-    return traveller;
+    return auto;
   });
-  const availableTravellers = filteredTravellers.filter(traveller => !traveller.isBooked);
-  const bookedTravellers = filteredTravellers.filter(traveller => traveller.isBooked);
+  const availableAutos = filteredAutos.filter(auto => !auto.isBooked);
+  const bookedAutos = filteredAutos.filter(auto => auto.isBooked);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-foreground">
-          {filteredTravellers.length} travellers found
+          {filteredAutos.length} auto-ricksaws found
         </h2>
         <div className="text-sm text-muted-foreground">
-          Showing travellers from Bangalore to Chennai
+          Showing auto-ricksaws from Bangalore to Chennai
         </div>
       </div>
-      {/* Available Travellers */}
-      {availableTravellers.length > 0 && (
+      {/* Available Autos */}
+      {availableAutos.length > 0 && (
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-green-700 mb-4 flex items-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            Available Travellers ({availableTravellers.length})
+            Available Auto-Ricksaws ({availableAutos.length})
           </h3>
-          {availableTravellers.map((traveller) => (
-            <TravellerCard key={traveller.id} traveller={traveller} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
+          {availableAutos.map((auto) => (
+            <AutoCard key={auto.id} auto={auto} onViewDetails={handleViewDetails} onBookNow={handleBookNow} />
           ))}
         </div>
       )}
 
-      <TravellerDetailsModal 
-        traveller={selectedTraveller}
+      <AutoDetailsModal 
+        auto={selectedAuto}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
       />
@@ -326,4 +326,4 @@ Your booking has been confirmed. You will receive a confirmation SMS shortly.`);
   );
 };
 
-export default TravellerList; 
+export default AutoList;

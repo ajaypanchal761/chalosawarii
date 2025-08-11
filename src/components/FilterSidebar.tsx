@@ -93,19 +93,12 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
   ];
 
   const travellerTypeOptions: FilterOption[] = [
-    { id: 'mini-traveller', label: 'Mini Traveller' },
-    { id: 'standard-traveller', label: 'Standard Traveller' },
-    { id: 'luxury-traveller', label: 'Luxury Traveller' },
-    { id: 'premium-traveller', label: 'Premium Traveller' },
+    { id: 'fuel', label: 'Fuel' },
+    { id: 'electric', label: 'Electric' },
+    { id: 'cng', label: 'CNG' }
   ];
 
-  const travellerOperatorOptions: FilterOption[] = [
-    { id: 'traveller-express', label: 'Traveller Express' },
-    { id: 'comfort-travels', label: 'Comfort Travels' },
-    { id: 'premium-transport', label: 'Premium Transport' },
-    { id: 'luxury-rides', label: 'Luxury Rides' },
-    { id: 'elite-travels', label: 'Elite Travels' },
-  ];
+  // Auto-Ricksaw operator options removed as requested
 
 
 
@@ -414,7 +407,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
               const allOptions = selectedType === 'car' 
                 ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
                 : selectedType === 'traveller'
-                ? [...priceOptions, ...travellerTypeOptions, ...travellerOperatorOptions]
+                ? [...priceOptions, ...travellerTypeOptions]
                 : [...priceOptions, ...busTypeOptions, ...operatorOptions];
               const option = allOptions.find(opt => opt.id === filterId);
               return (
@@ -461,16 +454,12 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
         ) : selectedType === 'traveller' ? (
           <>
             <FilterSection
-              title="TRAVELLER TYPE"
+                              title="AUTO-RIKSAW TYPE"
               options={travellerTypeOptions}
               sectionKey="busType"
             />
 
-            <FilterSection
-              title="OPERATORS"
-              options={travellerOperatorOptions}
-              sectionKey="operators"
-            />
+
 
             <FilterSection
               title="PRICE"
@@ -638,7 +627,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
                     const allOptions = selectedType === 'car' 
                       ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
                       : selectedType === 'traveller'
-                      ? [...priceOptions, ...travellerTypeOptions, ...travellerOperatorOptions]
+                      ? [...priceOptions, ...travellerTypeOptions]
                       : [...priceOptions, ...busTypeOptions, ...operatorOptions];
                     const option = allOptions.find(opt => opt.id === filterId);
                     return (
@@ -687,16 +676,12 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
               ) : selectedType === 'traveller' ? (
                 <>
                   <FilterSection
-                    title="TRAVELLER TYPE"
+                    title="AUTO-RIKSAW TYPE"
                     options={travellerTypeOptions}
                     sectionKey="busType"
                   />
 
-                  <FilterSection
-                    title="OPERATORS"
-                    options={travellerOperatorOptions}
-                    sectionKey="operators"
-                  />
+
 
                   <FilterSection
                     title="PRICE"

@@ -16,7 +16,7 @@ const Footer = () => {
     },
     {
       title: "Services",
-      links: ["Bus Booking", "Car Booking", "Traveller Booking", "Group Vehicle Booking"]
+              links: ["Bus Booking", "Car Booking", "Auto-Ricksaw Booking", "Group Vehicle Booking"]
     },
     {
       title: "Top Routes",
@@ -57,7 +57,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <img src={busLogo} alt="Bus Logo" className="h-10 w-auto mb-4 filter brightness-0 invert" />
             <p className="text-white/80 mb-4">
-              India's leading Bus, Car, and Traveller booking platform connecting millions of travelers with trusted operators.
+              India's leading Bus, Car, and Auto-Ricksaw booking platform connecting millions of travelers with trusted operators.
             </p>
             <div className="flex space-x-4">
               <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10">

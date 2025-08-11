@@ -32,7 +32,7 @@ const WhyChooseUs = () => {
     {
       icon: <Star className="w-8 h-8" />,
       title: "Best Prices",
-      description: "Compare prices across operators and get the best deals on Bus, Car, and Traveller bookings"
+              description: "Compare prices across operators and get the best deals on Bus, Car, and Auto-Ricksaw bookings"
     },
     {
       icon: <Users className="w-8 h-8" />,
@@ -78,7 +78,7 @@ const WhyChooseUs = () => {
             Why Choose Chalo Sawari?
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto transition-all duration-300 hover:text-foreground">
-            Experience the best Bus, Car, and Traveller booking platform with unmatched service quality and customer satisfaction
+            Experience the best Bus, Car, and Auto-Ricksaw booking platform with unmatched service quality and customer satisfaction
           </p>
         </div>
 
