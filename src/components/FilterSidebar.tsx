@@ -25,6 +25,13 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     busType: false,
     operators: false,
     busPartner: false,
+    carType: false,
+  });
+
+  const [expandedCarTypes, setExpandedCarTypes] = useState({
+    sedan: false,
+    hatchback: false,
+    suv: false,
   });
 
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -75,14 +82,35 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
 
   const carTypeOptions: FilterOption[] = [
     { id: 'sedan', label: 'Sedan' },
-    { id: 'suv', label: 'SUV' },
     { id: 'hatchback', label: 'Hatchback' },
-    { id: 'luxury', label: 'Creata' },
-    { id: 'enova', label: 'Enova' },
-    { id: 'bolero', label: 'Bolero' },
-    { id: 'scorpio', label: 'Scorpio N' },
-    { id: 'ertiga', label: 'Ertiga' },
+    { id: 'suv', label: 'SUV' },
   ];
+
+  const carVariantOptions: Record<string, FilterOption[]> = {
+    sedan: [
+      { id: 'honda-amaze', label: 'Honda Amaze' },
+      { id: 'swift-dzire', label: 'Swift Dzire' },
+      { id: 'ertiga', label: 'Ertiga' },
+      { id: 'hundai-aura', label: 'Hundai Aura' },
+      { id: 'honda-city', label: 'Honda City' },
+      { id: 'ciaz', label: 'Ciaz' },
+      { id: 'xcent-hundai', label: 'Xcent Hundai' },
+    ],
+    hatchback: [
+      { id: 'wagon-r', label: 'Wagon R' },
+      { id: 'swift', label: 'Swift' },
+      { id: 'tiago', label: 'Tiago' },
+      { id: 'renault-climber', label: 'Renault Climber' },
+    ],
+    suv: [
+      { id: 'scorpio-n', label: 'Scorpio N' },
+      { id: 'bolero', label: 'Bolero' },
+      { id: 'scorpio-classic', label: 'Scorpio Classic' },
+      { id: 'inova-crysta', label: 'Inova Crysta' },
+      { id: 'fortuner', label: 'Fortuner' },
+      { id: 'renault-triber', label: 'Renault Triber' },
+    ],
+  };
 
   const carOperatorOptions: FilterOption[] = [
     { id: 'uber', label: 'Uber' },
@@ -106,6 +134,13 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
+    }));
+  };
+
+  const toggleCarType = (carType: keyof typeof expandedCarTypes) => {
+    setExpandedCarTypes(prev => ({
+      ...prev,
+      [carType]: !prev[carType]
     }));
   };
 
@@ -133,6 +168,11 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
       standardTraveller: false,
       luxuryTraveller: false,
     });
+    setExpandedCarTypes({
+      sedan: false,
+      hatchback: false,
+      suv: false,
+    });
     setSortOption('');
   };
 
@@ -151,7 +191,11 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
   // Get total active filters count
   const getTotalActiveFilters = () => {
     const mobileFilterCount = Object.values(selectedMobileFilters).filter(Boolean).length;
-    return selectedFilters.length + mobileFilterCount + (sortOption ? 1 : 0);
+    const carVariantCount = selectedType === 'car' ? 
+      selectedFilters.filter(filter => 
+        Object.values(carVariantOptions).flat().some(variant => variant.id === filter)
+      ).length : 0;
+    return selectedFilters.length + mobileFilterCount + carVariantCount + (sortOption ? 1 : 0);
   };
 
   const FilterSection = ({ 
@@ -182,25 +226,115 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
       {expandedSections[sectionKey] && (
         <div className="mt-4 space-y-3 px-2">
           {options.map((option) => (
-            <div key={option.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150">
-              <Checkbox
-                id={option.id}
-                checked={selectedFilters.includes(option.id)}
-                onCheckedChange={(checked) => 
-                  handleFilterChange(option.id, checked as boolean)
-                }
-                className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-              />
-              <Label
-                htmlFor={option.id}
-                className="text-sm text-gray-700 cursor-pointer flex-1 font-medium"
+            <div key={option.id}>
+              <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150">
+                <Checkbox
+                  id={option.id}
+                  checked={selectedFilters.includes(option.id)}
+                  onCheckedChange={(checked) => 
+                    handleFilterChange(option.id, checked as boolean)
+                  }
+                  className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                />
+                <Label
+                  htmlFor={option.id}
+                  className="text-sm text-gray-700 cursor-pointer flex-1 font-medium"
+                >
+                  {option.label}
+                </Label>
+                {option.count && (
+                  <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-200">
+                    {option.count}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <Separator className="mt-6 bg-gray-100" />
+    </div>
+  );
+
+  // New component for car types with individual expand/collapse
+  const CarTypeSection = () => (
+    <div className="mb-6">
+      <button
+        onClick={() => toggleSection('carType')}
+        className="flex items-center justify-between w-full py-3 px-4 text-left bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:border-gray-200 transition-all duration-200 shadow-sm"
+      >
+        <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-blue-500" />
+          CAR TYPES
+        </h3>
+        {expandedSections.carType ? (
+          <ChevronUp className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+        ) : (
+          <ChevronDown className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+        )}
+      </button>
+      
+      {expandedSections.carType && (
+        <div className="mt-4 space-y-3 px-2">
+          {carTypeOptions.map((option) => (
+            <div key={option.id} className="border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
+              <button
+                onClick={() => toggleCarType(option.id as keyof typeof expandedCarTypes)}
+                className="flex items-center justify-between w-full py-4 px-4 text-left bg-white hover:bg-blue-50 transition-all duration-200 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-200"
               >
-                {option.label}
-              </Label>
-              {option.count && (
-                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-200">
-                  {option.count}
-                </Badge>
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                    expandedCarTypes[option.id as keyof typeof expandedCarTypes] 
+                      ? 'bg-blue-500' 
+                      : 'bg-gray-300'
+                  }`} />
+                  <Label className="text-sm text-gray-700 cursor-pointer font-medium">
+                    {option.label}
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                    {carVariantOptions[option.id]?.length || 0} models
+                  </span>
+                  {expandedCarTypes[option.id as keyof typeof expandedCarTypes] ? (
+                    <ChevronUp className="w-5 h-5 text-blue-500 transition-transform duration-200" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+                  )}
+                </div>
+              </button>
+              
+              {/* Show car variants when expanded */}
+              {expandedCarTypes[option.id as keyof typeof expandedCarTypes] && carVariantOptions[option.id] && (
+                <div className="px-4 pb-4 space-y-3 border-t border-gray-100 bg-gradient-to-b from-blue-50/30 to-white">
+                  <div className="text-xs text-blue-600 font-medium mt-3 mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    Available Models
+                  </div>
+                  <div className="grid gap-2">
+                    {carVariantOptions[option.id].map((variant) => (
+                      <div key={variant.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-150 ml-4 border border-gray-100 bg-white/80">
+                        <Checkbox
+                          id={variant.id}
+                          checked={selectedFilters.includes(variant.id)}
+                          onCheckedChange={(checked) => 
+                            handleFilterChange(variant.id, checked as boolean)
+                          }
+                          className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                        />
+                        <Label
+                          htmlFor={variant.id}
+                          className="text-sm text-gray-600 cursor-pointer flex-1 font-medium hover:text-blue-600 transition-colors duration-150"
+                        >
+                          {variant.label}
+                        </Label>
+                        {selectedFilters.includes(variant.id) && (
+                          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
           ))}
@@ -276,6 +410,32 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
               <Car className="w-4 h-4" />
               <span className="text-sm font-medium">Hatchback</span>
             </button>
+
+            {/* Popular Car Variants */}
+            {selectedFilters.some(filter => carVariantOptions.sedan.some(v => v.id === filter)) && (
+              <button 
+                className="flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap bg-blue-50 border-blue-300 text-blue-700"
+              >
+                <Car className="w-4 h-4" />
+                <span className="text-sm font-medium">Honda City</span>
+              </button>
+            )}
+            {selectedFilters.some(filter => carVariantOptions.suv.some(v => v.id === filter)) && (
+              <button 
+                className="flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap bg-blue-50 border-blue-300 text-blue-700"
+              >
+                <Car className="w-4 h-4" />
+                <span className="text-sm font-medium">Scorpio N</span>
+              </button>
+            )}
+            {selectedFilters.some(filter => carVariantOptions.hatchback.some(v => v.id === filter)) && (
+              <button 
+                className="flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap bg-blue-50 border-blue-300 text-blue-700"
+              >
+                <Car className="w-4 h-4" />
+                <span className="text-sm font-medium">Swift</span>
+              </button>
+            )}
           </>
         ) : selectedType === 'traveller' ? (
           <>
@@ -405,7 +565,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
           <div className="flex flex-wrap gap-2">
             {selectedFilters.slice(0, 3).map((filterId) => {
               const allOptions = selectedType === 'car' 
-                ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
+                ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions, ...Object.values(carVariantOptions).flat()]
                 : selectedType === 'traveller'
                 ? [...priceOptions, ...travellerTypeOptions]
                 : [...priceOptions, ...busTypeOptions, ...operatorOptions];
@@ -433,11 +593,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
       <div className="space-y-2">
         {selectedType === 'car' ? (
           <>
-            <FilterSection
-              title="CAR TYPE"
-              options={carTypeOptions}
-              sectionKey="busType"
-            />
+            <CarTypeSection />
 
             <FilterSection
               title="OPERATORS"
@@ -603,6 +759,17 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
                       Hatchback
                     </Badge>
                   )}
+                  {/* Show selected car variants */}
+                  {selectedType === 'car' && selectedFilters.filter(filter => 
+                    Object.values(carVariantOptions).flat().some(variant => variant.id === filter)
+                  ).map((variantId) => {
+                    const variant = Object.values(carVariantOptions).flat().find(v => v.id === variantId);
+                    return variant ? (
+                      <Badge key={variantId} variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                        {variant.label}
+                      </Badge>
+                    ) : null;
+                  })}
                   {selectedMobileFilters.miniTraveller && (
                     <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
                       26 Seater
@@ -625,7 +792,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
                   )}
                   {selectedFilters.slice(0, 2).map((filterId) => {
                     const allOptions = selectedType === 'car' 
-                      ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions]
+                      ? [...priceOptions, ...carTypeOptions, ...carOperatorOptions, ...Object.values(carVariantOptions).flat()]
                       : selectedType === 'traveller'
                       ? [...priceOptions, ...travellerTypeOptions]
                       : [...priceOptions, ...busTypeOptions, ...operatorOptions];
@@ -655,11 +822,90 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
             <div className="space-y-2">
               {selectedType === 'car' ? (
                 <>
-                  <FilterSection
-                    title="CAR TYPE"
-                    options={carTypeOptions}
-                    sectionKey="busType"
-                  />
+                  {/* Custom Car Type Section for Mobile */}
+                  <div className="mb-6">
+                    <button
+                      onClick={() => toggleSection('carType')}
+                      className="flex items-center justify-between w-full py-3 px-4 text-left bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:border-gray-200 transition-all duration-200 shadow-sm"
+                    >
+                      <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-blue-500" />
+                        CAR TYPES
+                      </h3>
+                      {expandedSections.carType ? (
+                        <ChevronUp className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+                      )}
+                    </button>
+                    
+                    {expandedSections.carType && (
+                      <div className="mt-4 space-y-3 px-2">
+                        {carTypeOptions.map((option) => (
+                          <div key={option.id} className="border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
+                            <button
+                              onClick={() => toggleCarType(option.id as keyof typeof expandedCarTypes)}
+                              className="flex items-center justify-between w-full py-4 px-4 text-left bg-white hover:bg-blue-50 transition-all duration-200 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                                  expandedCarTypes[option.id as keyof typeof expandedCarTypes] 
+                                    ? 'bg-blue-500' 
+                                    : 'bg-gray-300'
+                                }`} />
+                                <Label className="text-sm text-gray-700 cursor-pointer font-medium">
+                                  {option.label}
+                                </Label>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                  {carVariantOptions[option.id]?.length || 0} models
+                                </span>
+                                {expandedCarTypes[option.id as keyof typeof expandedCarTypes] ? (
+                                  <ChevronUp className="w-5 h-5 text-blue-500 transition-transform duration-200" />
+                                ) : (
+                                  <ChevronDown className="w-5 h-5 text-gray-500 transition-transform duration-200" />
+                                )}
+                              </div>
+                            </button>
+                            
+                            {/* Show car variants when expanded */}
+                            {expandedCarTypes[option.id as keyof typeof expandedCarTypes] && carVariantOptions[option.id] && (
+                              <div className="px-4 pb-4 space-y-3 border-t border-gray-100 bg-gradient-to-b from-blue-50/30 to-white">
+                                <div className="text-xs text-blue-600 font-medium mt-3 mb-2 flex items-center gap-2">
+                                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                  Available Models
+                                </div>
+                                <div className="grid gap-2">
+                                  {carVariantOptions[option.id].map((variant) => (
+                                    <div key={variant.id} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-150 ml-4 border border-gray-100 bg-white/80">
+                                      <Checkbox
+                                        id={`mobile-${variant.id}`}
+                                        checked={selectedFilters.includes(variant.id)}
+                                        onCheckedChange={(checked) => 
+                                          handleFilterChange(variant.id, checked as boolean)
+                                        }
+                                        className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                                      />
+                                      <Label
+                                        htmlFor={`mobile-${variant.id}`}
+                                        className="text-sm text-gray-600 cursor-pointer flex-1 font-medium hover:text-blue-600 transition-colors duration-200"
+                                      >
+                                        {variant.label}
+                                      </Label>
+                                      {selectedFilters.includes(variant.id) && (
+                                        <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
                   <FilterSection
                     title="OPERATORS"

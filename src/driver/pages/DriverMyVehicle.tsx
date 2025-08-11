@@ -18,6 +18,7 @@ interface Vehicle {
   id: string;
   name: string;
   type: string;
+  carVariant?: string; // Optional field for car variants
   model: string;
   year: string;
   registrationNumber: string;
@@ -48,6 +49,21 @@ const DriverMyVehicle = () => {
   const [viewingVehicle, setViewingVehicle] = useState<Vehicle | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: string]: number }>({});
   const [detailImageIndex, setDetailImageIndex] = useState(0);
+
+  // Car variants based on our FilterSidebar structure
+  const carVariantOptions = {
+    'Sedan': [
+      'Honda Amaze', 'Swift Dzire', 'Ertiga', 'Hundai Aura', 
+      'Honda City', 'Ciaz', 'Xcent Hundai'
+    ],
+    'Hatchback': [
+      'Wagon R', 'Swift', 'Tiago', 'Renault Climber'
+    ],
+    'SUV': [
+      'Scorpio N', 'Bolero', 'Scorpio Classic', 'Inova Crysta', 
+      'Fortuner', 'Renault Triber'
+    ]
+  };
   const [vehicles, setVehicles] = useState<Vehicle[]>([
     {
       id: "1",
@@ -167,9 +183,18 @@ const DriverMyVehicle = () => {
   };
 
   const handleAddVehicle = (vehicleData: Partial<Vehicle>) => {
+    // For cars, use the car variant as the name
+    let vehicleName = '';
+    if (vehicleData.type && vehicleData.carVariant && ['Sedan', 'Hatchback', 'SUV'].includes(vehicleData.type)) {
+      vehicleName = vehicleData.carVariant;
+    } else if (vehicleData.type) {
+      // For other vehicle types, use the type as name
+      vehicleName = vehicleData.type;
+    }
+
     const newVehicle: Vehicle = {
       id: Date.now().toString(),
-      name: vehicleData.name || '',
+      name: vehicleName,
       type: vehicleData.type || '',
       model: vehicleData.model || '',
       year: vehicleData.year || '',
@@ -333,11 +358,7 @@ const DriverMyVehicle = () => {
                   <DialogTitle>Add New Vehicle</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="vehicleName">Vehicle Name</Label>
-                      <Input id="vehicleName" placeholder="e.g., Swift Dzire" />
-                    </div>
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <Label htmlFor="vehicleType">Vehicle Type</Label>
                       <Select>
@@ -719,7 +740,11 @@ const DriverMyVehicle = () => {
           <DialogHeader>
             <DialogTitle>Add New Vehicle</DialogTitle>
           </DialogHeader>
-          <AddVehicleForm onSubmit={handleAddVehicle} onCancel={() => setShowAddDialog(false)} />
+          <AddVehicleForm 
+            onSubmit={handleAddVehicle} 
+            onCancel={() => setShowAddDialog(false)} 
+            carVariantOptions={carVariantOptions}
+          />
         </DialogContent>
       </Dialog>
 
@@ -729,13 +754,14 @@ const DriverMyVehicle = () => {
            <DialogHeader>
              <DialogTitle>Edit Vehicle</DialogTitle>
            </DialogHeader>
-           {editingVehicle && (
-             <EditVehicleForm 
-               vehicle={editingVehicle} 
-               onSubmit={(updates) => handleEditVehicle(editingVehicle.id, updates)} 
-               onCancel={() => setEditingVehicle(null)} 
-             />
-           )}
+                        {editingVehicle && (
+               <EditVehicleForm 
+                 vehicle={editingVehicle} 
+                 onSubmit={(updates) => handleEditVehicle(editingVehicle.id, updates)} 
+                 onCancel={() => setEditingVehicle(null)} 
+                 carVariantOptions={carVariantOptions}
+               />
+             )}
          </DialogContent>
        </Dialog>
 
@@ -956,11 +982,19 @@ const DriverMyVehicle = () => {
 };
 
 // Add Vehicle Form Component
-const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehicle>) => void; onCancel: () => void }) => {
+const AddVehicleForm = ({ 
+  onSubmit, 
+  onCancel, 
+  carVariantOptions 
+}: { 
+  onSubmit: (data: Partial<Vehicle>) => void; 
+  onCancel: () => void; 
+  carVariantOptions: { [key: string]: string[] };
+}) => {
   const [selectedVehicleCategory, setSelectedVehicleCategory] = useState<'auto-ricksaw' | 'car' | 'bus' | ''>('');
   const [formData, setFormData] = useState({
-    name: '',
     type: '',
+    carVariant: '', // New field for car variants
     model: '',
     year: '',
     registrationNumber: '',
@@ -1049,17 +1083,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
       {/* Show form only after category selection */}
       {selectedVehicleCategory && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="vehicleName">Vehicle Name</Label>
-              <Input 
-                id="vehicleName" 
-                placeholder={selectedVehicleCategory === 'auto-ricksaw' ? "e.g., Bajaj Auto" : selectedVehicleCategory === 'car' ? "e.g., Swift Dzire" : "e.g., Volvo Bus"}
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                required
-              />
-            </div>
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <Label htmlFor="vehicleType">Vehicle Type</Label>
               <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
@@ -1079,8 +1103,6 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
                       <SelectItem value="Sedan">Sedan</SelectItem>
                       <SelectItem value="Hatchback">Hatchback</SelectItem>
                       <SelectItem value="SUV">SUV</SelectItem>
-                      <SelectItem value="MUV">MUV</SelectItem>
-                      <SelectItem value="Luxury">Luxury</SelectItem>
                     </>
                   )}
                   {selectedVehicleCategory === 'bus' && (
@@ -1098,6 +1120,23 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
               </Select>
             </div>
           </div>
+
+          {/* Car Variant Selection - Only show for cars */}
+          {selectedVehicleCategory === 'car' && formData.type && (
+            <div>
+              <Label htmlFor="carVariant">Car Model</Label>
+              <Select value={formData.carVariant} onValueChange={(value) => setFormData(prev => ({ ...prev, carVariant: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select car model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {carVariantOptions[formData.type as keyof typeof carVariantOptions]?.map((variant) => (
+                    <SelectItem key={variant} value={variant}>{variant}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="model">Model</Label>
@@ -1257,10 +1296,20 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
 };
 
 // Edit Vehicle Form Component
-const EditVehicleForm = ({ vehicle, onSubmit, onCancel }: { vehicle: Vehicle; onSubmit: (data: Partial<Vehicle>) => void; onCancel: () => void }) => {
+const EditVehicleForm = ({ 
+  vehicle, 
+  onSubmit, 
+  onCancel, 
+  carVariantOptions 
+}: { 
+  vehicle: Vehicle; 
+  onSubmit: (data: Partial<Vehicle>) => void; 
+  onCancel: () => void; 
+  carVariantOptions: { [key: string]: string[] };
+}) => {
   const [formData, setFormData] = useState({
-    name: vehicle.name,
     type: vehicle.type,
+    carVariant: vehicle.carVariant || '',
     model: vehicle.model,
     year: vehicle.year,
     registrationNumber: vehicle.registrationNumber,
@@ -1304,17 +1353,7 @@ const EditVehicleForm = ({ vehicle, onSubmit, onCancel }: { vehicle: Vehicle; on
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="editVehicleName">Vehicle Name</Label>
-          <Input 
-            id="editVehicleName" 
-            placeholder="e.g., Swift Dzire" 
-            value={formData.name}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-            required
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-4">
         <div>
           <Label htmlFor="editVehicleType">Vehicle Type</Label>
           <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
@@ -1330,6 +1369,23 @@ const EditVehicleForm = ({ vehicle, onSubmit, onCancel }: { vehicle: Vehicle; on
           </Select>
         </div>
       </div>
+
+      {/* Car Variant Selection - Only show for cars */}
+      {formData.type && ['Sedan', 'Hatchback', 'SUV'].includes(formData.type) && (
+        <div>
+          <Label htmlFor="editCarVariant">Car Model</Label>
+          <Select value={formData.carVariant} onValueChange={(value) => setFormData(prev => ({ ...prev, carVariant: value }))}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select car model" />
+            </SelectTrigger>
+            <SelectContent>
+              {carVariantOptions[formData.type as keyof typeof carVariantOptions]?.map((variant) => (
+                <SelectItem key={variant} value={variant}>{variant}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="editModel">Model</Label>
