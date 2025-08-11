@@ -316,29 +316,6 @@ const DriverRequests = () => {
                        <span className="font-medium">Vehicle Type:</span>
                        <span>{request.vehicleType}</span>
                      </div>
-                     <div className="flex items-center space-x-2">
-                       <Phone className="w-4 h-4 text-gray-500" />
-                       <span className="font-medium">Contact:</span>
-                       <span>{request.customerPhone}</span>
-                     </div>
-                     <div className="flex space-x-1">
-                       <Button
-                         size="sm"
-                         variant="outline"
-                         onClick={() => handleCallCustomer(request.customerPhone)}
-                         className="h-6 w-6 p-0"
-                       >
-                         <Phone className="w-3 h-3" />
-                       </Button>
-                       <Button
-                         size="sm"
-                         variant="outline"
-                         onClick={() => handleSendMessage(request.customerPhone)}
-                         className="h-6 w-6 p-0"
-                       >
-                         <MessageSquare className="w-3 h-3" />
-                       </Button>
-                     </div>
                    </div>
 
                   

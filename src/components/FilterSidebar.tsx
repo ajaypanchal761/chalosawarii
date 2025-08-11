@@ -57,10 +57,11 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
   ];
 
   const busTypeOptions: FilterOption[] = [
-    { id: 'ac', label: 'AC' },
-    { id: 'non-ac', label: 'Non AC' },
-    { id: 'sleeper', label: 'Sleeper' },
-    { id: 'semi-sleeper', label: 'Semi Sleeper' },
+    { id: 'ac', label: 'AC Sleeper' },
+    { id: 'non-ac', label: 'Non-AC Sleeper' },
+    { id: '52ac_non_ac', label: '52-Seater AC/Non-AC' },
+    { id: '40ac_non_ac', label: '40-Seater AC/Non-AC' },
+    { id: '32ac_non_ac', label: '32-Seater AC/Non-AC' }
   ];
 
   const operatorOptions: FilterOption[] = [
@@ -77,7 +78,10 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     { id: 'suv', label: 'SUV' },
     { id: 'hatchback', label: 'Hatchback' },
     { id: 'luxury', label: 'Creata' },
-    { id: 'economy', label: 'Enova' },
+    { id: 'enova', label: 'Enova' },
+    { id: 'bolero', label: 'Bolero' },
+    { id: 'scorpio', label: 'Scorpio N' },
+    { id: 'ertiga', label: 'Ertiga' },
   ];
 
   const carOperatorOptions: FilterOption[] = [
