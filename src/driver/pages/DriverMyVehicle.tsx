@@ -715,7 +715,7 @@ const DriverMyVehicle = () => {
 
       {/* Add Vehicle Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Vehicle</DialogTitle>
           </DialogHeader>
@@ -1006,7 +1006,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
       {/* Vehicle Category Selection */}
       <div className="space-y-3">
         <Label className="text-base font-semibold">What type of vehicle do you want to add?</Label>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
             type="button"
             onClick={() => setSelectedVehicleCategory('auto-ricksaw')}
@@ -1049,7 +1049,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
       {/* Show form only after category selection */}
       {selectedVehicleCategory && (
         <>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="vehicleName">Vehicle Name</Label>
               <Input 
@@ -1098,7 +1098,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
               </Select>
             </div>
           </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="model">Model</Label>
           <Input 
@@ -1120,7 +1120,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="registrationNumber">Registration Number</Label>
           <Input 
@@ -1142,7 +1142,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="fuelType">Fuel Type</Label>
           <Select value={formData.fuelType} onValueChange={(value) => setFormData(prev => ({ ...prev, fuelType: value }))}>
@@ -1242,7 +1242,7 @@ const AddVehicleForm = ({ onSubmit, onCancel }: { onSubmit: (data: Partial<Vehic
           </div>
         </div>
        
-       <div className="flex space-x-3 pt-4">
+       <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
         <Button type="button" variant="outline" onClick={onCancel} className="flex-1">
           Cancel
         </Button>
