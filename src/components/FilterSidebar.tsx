@@ -48,9 +48,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     sedan: false,
     suv: false,
     hatchback: false,
-    miniTraveller: false,
-    standardTraveller: false,
-    luxuryTraveller: false,
   });
 
   const [sortOption, setSortOption] = useState<string>('');
@@ -164,9 +161,6 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
       sedan: false,
       suv: false,
       hatchback: false,
-      miniTraveller: false,
-      standardTraveller: false,
-      luxuryTraveller: false,
     });
     setExpandedCarTypes({
       sedan: false,
@@ -439,44 +433,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
           </>
         ) : selectedType === 'traveller' ? (
           <>
-            {/* 26 Seater Button */}
-            <button 
-              onClick={() => handleMobileFilterToggle('miniTraveller')}
-              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-                selectedMobileFilters.miniTraveller
-                  ? 'bg-blue-50 border-blue-300 text-blue-700'
-                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-              }`}
-            >
-              <Car className="w-4 h-4" />
-              <span className="text-sm font-medium">26 Seater</span>
-            </button>
-
-            {/* 17 Seater Button */}
-            <button 
-              onClick={() => handleMobileFilterToggle('standardTraveller')}
-              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-                selectedMobileFilters.standardTraveller
-                  ? 'bg-blue-50 border-blue-300 text-blue-700'
-                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-              }`}
-            >
-              <Car className="w-4 h-4" />
-              <span className="text-sm font-medium">17 Seater</span>
-            </button>
-
-            {/* 13 Seater Button */}
-            <button 
-              onClick={() => handleMobileFilterToggle('luxuryTraveller')}
-              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
-                selectedMobileFilters.luxuryTraveller
-                  ? 'bg-blue-50 border-blue-300 text-blue-700'
-                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
-              }`}
-            >
-              <Car className="w-4 h-4" />
-              <span className="text-sm font-medium">13 Seater</span>
-            </button>
+            
           </>
         ) : (
           <>
@@ -770,21 +727,7 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
                       </Badge>
                     ) : null;
                   })}
-                  {selectedMobileFilters.miniTraveller && (
-                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                      26 Seater
-                    </Badge>
-                  )}
-                  {selectedMobileFilters.standardTraveller && (
-                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                      17 Seater
-                    </Badge>
-                  )}
-                  {selectedMobileFilters.luxuryTraveller && (
-                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
-                      13 Seater
-                    </Badge>
-                  )}
+
                   {sortOption && (
                     <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
                       {priceOptions.find(opt => opt.id === sortOption)?.label || 'Sort'}
