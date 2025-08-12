@@ -48,6 +48,8 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     sedan: false,
     suv: false,
     hatchback: false,
+    electric: false,
+    fuel: false,
   });
 
   const [sortOption, setSortOption] = useState<string>('');
@@ -161,6 +163,8 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
       sedan: false,
       suv: false,
       hatchback: false,
+      electric: false,
+      fuel: false,
     });
     setExpandedCarTypes({
       sedan: false,
@@ -433,7 +437,31 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
           </>
         ) : selectedType === 'traveller' ? (
           <>
-            
+            {/* Electric Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('electric')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.electric
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">Electric</span>
+            </button>
+
+            {/* Fuel Button */}
+            <button 
+              onClick={() => handleMobileFilterToggle('fuel')}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg shadow-sm transition-all duration-200 whitespace-nowrap ${
+                selectedMobileFilters.fuel
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-700'
+              }`}
+            >
+              <Car className="w-4 h-4" />
+              <span className="text-sm font-medium">Fuel</span>
+            </button>
           </>
         ) : (
           <>
@@ -727,6 +755,18 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
                       </Badge>
                     ) : null;
                   })}
+
+                  {/* Electric and Fuel filter badges for traveller type */}
+                  {selectedMobileFilters.electric && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Electric
+                    </Badge>
+                  )}
+                  {selectedMobileFilters.fuel && (
+                    <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
+                      Fuel
+                    </Badge>
+                  )}
 
                   {sortOption && (
                     <Badge variant="secondary" className="bg-white text-blue-700 border-blue-200 hover:bg-blue-50">
