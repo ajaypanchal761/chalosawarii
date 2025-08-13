@@ -177,7 +177,7 @@ const AdminPriceManagement = () => {
           } else if (priceCalculator.distance <= 200) {
             rate = variantPrices['200km'];
           }
-          return rate * priceCalculator.distance;
+        return rate * priceCalculator.distance;
         } else {
           // Simple pricing (fallback)
           return variantPrices * priceCalculator.distance;
@@ -331,34 +331,42 @@ const AdminPriceManagement = () => {
 
         {/* Bus Variant Prices - Only show when bus category is selected */}
         {selectedCategory === 'bus' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg md:text-xl">Bus Variant Prices</CardTitle>
+          <Card className="shadow-lg border-0">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+              <CardTitle className="text-xl font-bold text-blue-800 flex items-center gap-2">
+                🚌 Bus Variant Prices
+              </CardTitle>
+              <p className="text-sm text-blue-600">Manage distance-based pricing for all bus types</p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {isEditingPrices ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
-                    <div key={vehicleType} className="border border-gray-100 rounded-lg p-3">
-                      <h5 className="font-medium text-gray-700 mb-2">{vehicleType}</h5>
-                      <div className="grid grid-cols-2 gap-2">
+                    <div key={vehicleType} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                      <h5 className="font-semibold text-gray-800 mb-4 text-lg flex items-center gap-2">
+                        <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                        {vehicleType}
+                      </h5>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         {Object.entries(distancePrices as any).map(([distance, price]) => (
-                          <div key={distance}>
-                            <Label htmlFor={`${vehicleType}-${distance}`}>{distance}</Label>
+                          <div key={distance} className="space-y-2">
+                            <Label htmlFor={`${vehicleType}-${distance}`} className="text-sm font-medium text-gray-700">
+                              {distance}
+                            </Label>
                             <Input
                               id={`${vehicleType}-${distance}`}
                               type="number"
                               value={editPrices[selectedCategory][vehicleType][distance as keyof typeof distancePrices]}
                               onChange={(e) => handlePriceChange(selectedCategory, vehicleType, distance, e.target.value)}
-                              className="mt-1"
+                              className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             />
                           </div>
                         ))}
                       </div>
                     </div>
                   ))}
-                  <div className="flex space-x-2">
-                    <Button onClick={() => setIsEditingPrices(false)} variant="outline">
+                  <div className="flex space-x-3 pt-4">
+                    <Button onClick={() => setIsEditingPrices(false)} variant="outline" className="px-6">
                       Cancel
                     </Button>
                     <Button onClick={() => {
@@ -369,64 +377,41 @@ const AdminPriceManagement = () => {
                         description: "Bus prices have been updated successfully",
                         variant: "default",
                       });
-                    }}>
+                    }} className="px-6 bg-blue-600 hover:bg-blue-700">
                       Save Changes
                     </Button>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {/* Distance Headers - Hidden on mobile */}
-                  <div className="hidden md:grid grid-cols-5 gap-2 mb-3">
-                    <div className="text-xs font-medium text-gray-500">Bus Type</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">50km</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">100km</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">150km</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">200km</div>
-                  </div>
-                  
-                  {/* Desktop View */}
-                  <div className="hidden md:space-y-2">
-                    {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
-                      <div key={vehicleType} className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                        <div className="w-1/5 font-medium text-gray-700">{vehicleType}</div>
-                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
-                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</div>
-                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</div>
-                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Mobile View */}
-                  <div className="md:hidden space-y-3">
-                    {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
-                      <div key={vehicleType} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                        <h5 className="font-medium text-gray-700 mb-2 text-sm">{vehicleType}</h5>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex justify-between items-center p-2 bg-white rounded">
-                            <span className="text-xs text-gray-600">50km</span>
-                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</span>
-                          </div>
-                          <div className="flex justify-between items-center p-2 bg-white rounded">
-                            <span className="text-xs text-gray-600">100km</span>
-                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</span>
-                          </div>
-                          <div className="flex justify-between items-center p-2 bg-white rounded">
-                            <span className="text-xs text-gray-600">150km</span>
-                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</span>
-                          </div>
-                          <div className="flex justify-between items-center p-2 bg-white rounded">
-                            <span className="text-xs text-gray-600">200km</span>
-                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</span>
-                          </div>
+                <div className="space-y-5">
+                  {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
+                    <div key={vehicleType} className="bg-gradient-to-r from-gray-50 to-blue-50 border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all duration-200">
+                      <h5 className="font-semibold text-gray-800 mb-4 text-lg flex items-center gap-2">
+                        <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                        {vehicleType}
+                      </h5>
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="bg-white rounded-lg p-3 border border-gray-200">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">50km</span>
+                          <div className="text-lg font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 border border-gray-200">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">100km</span>
+                          <div className="text-lg font-bold text-green-600">₹{(distancePrices as any)['100km']}/km</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 border border-gray-200">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">150km</span>
+                          <div className="text-lg font-bold text-purple-600">₹{(distancePrices as any)['150km']}/km</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 border border-gray-200">
+                          <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">200km</span>
+                          <div className="text-lg font-bold text-orange-600">₹{(distancePrices as any)['200km']}/km</div>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                  
-                  <Button onClick={() => setIsEditingPrices(true)} className="w-full">
-                    <Edit className="w-4 h-4 mr-2" />
+                    </div>
+                  ))}
+                  <Button onClick={() => setIsEditingPrices(true)} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold">
+                    <Edit className="w-5 h-5 mr-3" />
                     Edit Bus Variant Prices
                   </Button>
                 </div>
@@ -437,32 +422,43 @@ const AdminPriceManagement = () => {
 
                 {/* Car Variant Prices - Only show when car category is selected */}
         {selectedCategory === 'car' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg md:text-xl">Car Variant Prices</CardTitle>
+          <Card className="shadow-lg border-0">
+            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
+              <CardTitle className="text-xl font-bold text-green-800 flex items-center gap-2">
+                🚗 Car Variant Prices
+              </CardTitle>
+              <p className="text-sm text-green-600">Manage distance-based pricing for all car models</p>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
 
 
               {isEditingCarVariants ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {Object.entries(carVariantPrices).map(([carType, variants]) => (
-                    <div key={carType} className="border border-gray-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-800 mb-3 capitalize">{carType} Models</h4>
-                      <div className="space-y-3">
+                    <div key={carType} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                      <h4 className="font-semibold text-gray-800 mb-4 text-lg capitalize flex items-center gap-2">
+                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                        {carType} Models
+                      </h4>
+                      <div className="space-y-4">
                         {Object.entries(variants).map(([variant, distancePrices]) => (
-                          <div key={variant} className="border border-gray-100 rounded-lg p-3">
-                            <h5 className="font-medium text-gray-700 mb-2">{variant}</h5>
-                            <div className="grid grid-cols-2 gap-2">
+                          <div key={variant} className="bg-gradient-to-r from-gray-50 to-green-50 border border-gray-200 rounded-lg p-4">
+                            <h5 className="font-medium text-gray-700 mb-3 text-base flex items-center gap-2">
+                              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                              {variant}
+                            </h5>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                               {Object.entries(distancePrices as any).map(([distance, price]) => (
-                                <div key={distance}>
-                                  <Label htmlFor={`${carType}-${variant}-${distance}`}>{distance}</Label>
-                                  <Input
+                                <div key={distance} className="space-y-2">
+                                  <Label htmlFor={`${carType}-${variant}-${distance}`} className="text-sm font-medium text-gray-700">
+                                    {distance}
+                                  </Label>
+                            <Input
                                     id={`${carType}-${variant}-${distance}`}
-                                    type="number"
+                              type="number"
                                     value={editCarVariantPrices[carType as keyof typeof editCarVariantPrices][variant][distance as keyof typeof distancePrices]}
                                     onChange={(e) => handleCarVariantPriceChange(carType, variant, distance, e.target.value)}
-                                    className="mt-1"
+                                    className="border-gray-300 focus:border-green-500 focus:ring-green-500"
                                   />
                                 </div>
                               ))}
@@ -472,64 +468,46 @@ const AdminPriceManagement = () => {
                       </div>
                     </div>
                   ))}
-                  <div className="flex space-x-2">
-                    <Button onClick={() => setIsEditingCarVariants(false)} variant="outline">
+                  <div className="flex space-x-3 pt-4">
+                    <Button onClick={() => setIsEditingCarVariants(false)} variant="outline" className="px-6">
                       Cancel
                     </Button>
-                    <Button onClick={saveCarVariantPrices}>
+                    <Button onClick={saveCarVariantPrices} className="px-6 bg-green-600 hover:bg-green-700">
                       Save Changes
                     </Button>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {Object.entries(carVariantPrices).map(([carType, variants]) => (
-                    <div key={carType} className="border border-gray-200 rounded-lg p-4">
-                      <h4 className="font-semibold text-gray-800 mb-3 capitalize">{carType} Models</h4>
-                      
-                      {/* Distance Headers - Hidden on mobile */}
-                      <div className="hidden md:grid grid-cols-5 gap-2 mb-3">
-                        <div className="text-xs font-medium text-gray-500">Model</div>
-                        <div className="text-xs font-medium text-gray-500 text-center">50km</div>
-                        <div className="text-xs font-medium text-gray-500 text-center">100km</div>
-                        <div className="text-xs font-medium text-gray-500 text-center">150km</div>
-                        <div className="text-xs font-medium text-gray-500 text-center">200km</div>
-                      </div>
-                      
-                      {/* Desktop View */}
-                      <div className="hidden md:space-y-2">
+                    <div key={carType} className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                      <h4 className="font-semibold text-gray-800 mb-4 text-lg capitalize flex items-center gap-2">
+                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                        {carType} Models
+                      </h4>
+                      <div className="space-y-4">
                         {Object.entries(variants as any).map(([variant, distancePrices]) => (
-                          <div key={variant} className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                            <div className="w-1/5 font-medium text-gray-700">{variant}</div>
-                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
-                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</div>
-                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</div>
-                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Mobile View */}
-                      <div className="md:hidden space-y-3">
-                        {Object.entries(variants as any).map(([variant, distancePrices]) => (
-                          <div key={variant} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
-                            <h5 className="font-medium text-gray-700 mb-2 text-sm">{variant}</h5>
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex justify-between items-center p-2 bg-white rounded">
-                                <span className="text-xs text-gray-600">50km</span>
-                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</span>
+                          <div key={variant} className="bg-gradient-to-r from-gray-50 to-green-50 border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200">
+                            <h5 className="font-medium text-gray-700 mb-3 text-base flex items-center gap-2">
+                              <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                              {variant}
+                            </h5>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">50km</span>
+                                <div className="text-lg font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
                               </div>
-                              <div className="flex justify-between items-center p-2 bg-white rounded">
-                                <span className="text-xs text-gray-600">100km</span>
-                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</span>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">100km</span>
+                                <div className="text-lg font-bold text-green-600">₹{(distancePrices as any)['100km']}/km</div>
                               </div>
-                              <div className="flex justify-between items-center p-2 bg-white rounded">
-                                <span className="text-xs text-gray-600">150km</span>
-                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</span>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">150km</span>
+                                <div className="text-lg font-bold text-purple-600">₹{(distancePrices as any)['150km']}/km</div>
                               </div>
-                              <div className="flex justify-between items-center p-2 bg-white rounded">
-                                <span className="text-xs text-gray-600">200km</span>
-                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</span>
+                              <div className="bg-white rounded-lg p-3 border border-gray-200">
+                                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">200km</span>
+                                <div className="text-lg font-bold text-orange-600">₹{(distancePrices as any)['200km']}/km</div>
                               </div>
                             </div>
                           </div>
@@ -537,8 +515,8 @@ const AdminPriceManagement = () => {
                       </div>
                     </div>
                   ))}
-                  <Button onClick={() => setIsEditingCarVariants(true)} className="w-full">
-                    <Edit className="w-4 h-4 mr-2" />
+                  <Button onClick={() => setIsEditingCarVariants(true)} className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-lg font-semibold">
+                    <Edit className="w-5 h-5 mr-3" />
                     Edit Car Variant Prices
                   </Button>
                 </div>
@@ -625,7 +603,7 @@ const AdminPriceManagement = () => {
             </div>
           </CardContent>
         </Card>
-      </div>  
+      </div>
     </AdminLayout>
   );
 };

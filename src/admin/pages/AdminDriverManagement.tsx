@@ -2144,10 +2144,8 @@ const AdminDriverManagement = () => {
           </DialogHeader>
           
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="basic">Basic Info</TabsTrigger>
-              <TabsTrigger value="vehicle">Vehicle</TabsTrigger>
-              <TabsTrigger value="pricing">Pricing</TabsTrigger>
               <TabsTrigger value="documents">Documents</TabsTrigger>
               <TabsTrigger value="account">Account</TabsTrigger>
             </TabsList>
@@ -2165,147 +2163,63 @@ const AdminDriverManagement = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="registrationNumber">Registration Number *</Label>
+                  <Label htmlFor="driverEmail">Driver Email *</Label>
                   <Input
-                    id="registrationNumber"
-                    placeholder="Vehicle registration number"
+                    id="driverEmail"
+                    type="email"
+                    placeholder="driver@example.com"
+                    value={newDriverForm.driverEmail}
+                    onChange={(e) => handleFormChange('driverEmail', e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="driverPhone">Driver Phone *</Label>
+                  <Input
+                    id="driverPhone"
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    value={newDriverForm.driverPhone}
+                    onChange={(e) => handleFormChange('driverPhone', e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="driverLicense">Driver License Number *</Label>
+                  <Input
+                    id="driverLicense"
+                    placeholder="e.g., DL-01-2020-1234567"
                     value={newDriverForm.registrationNumber}
                     onChange={(e) => handleFormChange('registrationNumber', e.target.value)}
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="seatingCapacity">Seating Capacity *</Label>
+                  <Label htmlFor="driverLocation">Driver Location *</Label>
                   <Input
-                    id="seatingCapacity"
-                    type="number"
-                    placeholder="Number of seats"
-                    value={newDriverForm.seatingCapacity}
-                    onChange={(e) => handleFormChange('seatingCapacity', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="fuelType">Fuel Type *</Label>
-                  <Select value={newDriverForm.fuelType} onValueChange={(value) => handleFormChange('fuelType', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select fuel type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="petrol">Petrol</SelectItem>
-                      <SelectItem value="diesel">Diesel</SelectItem>
-                      <SelectItem value="electric">Electric</SelectItem>
-                      <SelectItem value="hybrid">Hybrid</SelectItem>
-                      <SelectItem value="cng">CNG</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="manufacturingYear">Manufacturing Year *</Label>
-                  <Input
-                    id="manufacturingYear"
-                    type="number"
-                    placeholder="e.g., 2020"
-                    min="1990"
-                    max={new Date().getFullYear()}
+                    id="driverLocation"
+                    placeholder="e.g., Delhi, Mumbai, Bangalore"
                     value={newDriverForm.manufacturingYear}
                     onChange={(e) => handleFormChange('manufacturingYear', e.target.value)}
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="vehicleColor">Vehicle Color *</Label>
+                  <Label htmlFor="driverExperience">Years of Experience</Label>
                   <Input
-                    id="vehicleColor"
-                    placeholder="e.g., White, Black, Red"
-                    value={newDriverForm.vehicleColor}
-                    onChange={(e) => handleFormChange('vehicleColor', e.target.value)}
-                  />
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="vehicle" className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="vehicleType">Vehicle Type *</Label>
-                  <Select value={newDriverForm.vehicleType} onValueChange={(value: 'car' | 'bus' | 'traveller') => handleFormChange('vehicleType', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select vehicle type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="car">Car</SelectItem>
-                      <SelectItem value="bus">Bus</SelectItem>
-                      <SelectItem value="traveller">Auto-Ricksaw</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="availableSeats">Available Seats</Label>
-                  <Input
-                    id="availableSeats"
+                    id="driverExperience"
                     type="number"
-                    placeholder="Number of available seats"
-                    value={newDriverForm.availableSeats}
-                    onChange={(e) => handleFormChange('availableSeats', e.target.value)}
+                    placeholder="e.g., 5"
+                    min="0"
+                    max="50"
+                    value={newDriverForm.seatingCapacity}
+                    onChange={(e) => handleFormChange('seatingCapacity', e.target.value)}
                   />
                 </div>
               </div>
-
-              <div className="space-y-4">
-                <Label className="text-base font-medium">Vehicle Features</Label>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="hasAC"
-                      checked={newDriverForm.hasAC}
-                      onCheckedChange={(checked) => handleFormChange('hasAC', checked)}
-                    />
-                    <Label htmlFor="hasAC" className="flex items-center gap-2">
-                      <Snowflake className="w-4 h-4" />
-                      AC
-                    </Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="hasSleeper"
-                      checked={newDriverForm.hasSleeper}
-                      onCheckedChange={(checked) => handleFormChange('hasSleeper', checked)}
-                    />
-                    <Label htmlFor="hasSleeper" className="flex items-center gap-2">
-                      <Bed className="w-4 h-4" />
-                      Sleeper
-                    </Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="hasChargingPoints"
-                      checked={newDriverForm.hasChargingPoints}
-                      onCheckedChange={(checked) => handleFormChange('hasChargingPoints', checked)}
-                    />
-                    <Label htmlFor="hasChargingPoints" className="flex items-center gap-2">
-                      <Zap className="w-4 h-4" />
-                      Charging Points
-                    </Label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="vehicleDescription">Vehicle Description</Label>
-                <Textarea
-                  id="vehicleDescription"
-                  placeholder="Describe the vehicle, its features, and any special amenities..."
-                  value={newDriverForm.vehicleDescription}
-                  onChange={(e) => handleFormChange('vehicleDescription', e.target.value)}
-                  rows={3}
-                />
-              </div>
             </TabsContent>
+
+
 
             <TabsContent value="pricing" className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
