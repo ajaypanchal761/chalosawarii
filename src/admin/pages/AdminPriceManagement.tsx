@@ -13,6 +13,30 @@ import {
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
+// Type definitions for pricing structures
+interface DistanceBasedPricing {
+  '50km': number;
+  '100km': number;
+  '150km': number;
+  '200km': number;
+}
+
+interface SimplePricing {
+  [key: string]: number;
+}
+
+interface VehiclePricing {
+  'auto-ricksaw': SimplePricing;
+  'car': SimplePricing;
+  'bus': { [key: string]: DistanceBasedPricing };
+}
+
+interface CarVariantPricing {
+  [carType: string]: {
+    [variant: string]: DistanceBasedPricing;
+  };
+}
+
 
 
 const AdminPriceManagement = () => {
@@ -20,7 +44,7 @@ const AdminPriceManagement = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<'auto-ricksaw' | 'car' | 'bus' | ''>('');
-  const [prices, setPrices] = useState({
+  const [prices, setPrices] = useState<VehiclePricing>({
     'auto-ricksaw': {
       'Fuel Auto-Ricksaw': 30,
       'Electric Auto-Ricksaw': 35,
@@ -32,40 +56,39 @@ const AdminPriceManagement = () => {
       'SUV': 50,
     },
     'bus': {
-      'AC Sleeper': 120,
-      'Non-AC Sleeper': 100,
-      '52-Seater AC/Non-AC': 90,
-      '40-Seater AC/Non-AC': 85,
-      '32-Seater AC/Non-AC': 80,
-      '26-Seater AC/Non-AC': 75,
-      '17-Seater AC/Non-AC': 70,
+      'AC Sleeper': { '50km': 120, '100km': 115, '150km': 110, '200km': 105 },
+      'Non-AC Sleeper': { '50km': 100, '100km': 95, '150km': 90, '200km': 85 },
+      '52-Seater AC/Non-AC': { '50km': 90, '100km': 85, '150km': 80, '200km': 75 },
+      '40-Seater AC/Non-AC': { '50km': 85, '100km': 80, '150km': 75, '200km': 70 },
+      '32-Seater AC/Non-AC': { '50km': 80, '100km': 75, '150km': 70, '200km': 65 },
+      '26-Seater AC/Non-AC': { '50km': 75, '100km': 70, '150km': 65, '200km': 60 },
+      '17-Seater AC/Non-AC': { '50km': 70, '100km': 65, '150km': 60, '200km': 55 },
     }
   });
 
-  // Car variants with individual pricing
-  const [carVariantPrices, setCarVariantPrices] = useState({
+  // Car variants with distance-based pricing
+  const [carVariantPrices, setCarVariantPrices] = useState<CarVariantPricing>({
     'sedan': {
-      'Honda Amaze': 42,
-      'Swift Dzire': 40,
-      'Ertiga': 45,
-      'Hundai Aura': 38,
-      'Honda City': 48,
-      'Ciaz': 50,
-      'Xcent Hundai': 35,
+      'Honda Amaze': { '50km': 42, '100km': 40, '150km': 38, '200km': 35 },
+      'Swift Dzire': { '50km': 40, '100km': 38, '150km': 36, '200km': 34 },
+      'Ertiga': { '50km': 45, '100km': 43, '150km': 41, '200km': 39 },
+      'Hundai Aura': { '50km': 38, '100km': 36, '150km': 34, '200km': 32 },
+      'Honda City': { '50km': 48, '100km': 46, '150km': 44, '200km': 42 },
+      'Ciaz': { '50km': 50, '100km': 48, '150km': 46, '200km': 44 },
+      'Xcent Hundai': { '50km': 35, '100km': 33, '150km': 31, '200km': 29 },
     },
     'hatchback': {
-      'Wagon R': 32,
-      'Swift': 35,
-      'Tiago': 30,
-      'Renault Climber': 33,
+      'Wagon R': { '50km': 32, '100km': 30, '150km': 28, '200km': 26 },
+      'Swift': { '50km': 35, '100km': 33, '150km': 31, '200km': 29 },
+      'Tiago': { '50km': 30, '100km': 28, '150km': 26, '200km': 24 },
+      'Renault Climber': { '50km': 33, '100km': 31, '150km': 29, '200km': 27 },
     },
     'suv': {
-      'Scorpio N': 55,
-      'Bolero': 45,
-      'Scorpio Classic': 52,
-      'Inova Crysta': 58,
-      'Fortuner': 75,
-      'Renault Triber': 48,
+      'Scorpio N': { '50km': 55, '100km': 53, '150km': 51, '200km': 49 },
+      'Bolero': { '50km': 45, '100km': 43, '150km': 41, '200km': 39 },
+      'Inova Crysta': { '50km': 58, '100km': 56, '150km': 54, '200km': 52 },
+      'Fortuner': { '50km': 75, '100km': 73, '150km': 71, '200km': 69 },
+      'Renault Triber': { '50km': 48, '100km': 46, '150km': 44, '200km': 42 },
     }
   });
   const [editPrices, setEditPrices] = useState(prices);
@@ -79,22 +102,30 @@ const AdminPriceManagement = () => {
     vehicleType: "Sedan" as string
   });
 
-  const handlePriceChange = (category: 'auto-ricksaw' | 'car' | 'bus', vehicleType: string, value: string) => {
+  const handlePriceChange = (category: 'auto-ricksaw' | 'car' | 'bus', vehicleType: string, distance: string, value: string) => {
     setEditPrices((prev) => ({
       ...prev,
       [category]: {
         ...prev[category],
-        [vehicleType]: Number(value)
+        [vehicleType]: category === 'auto-ricksaw' 
+          ? Number(value) // Simple pricing for auto-ricksaw
+          : { // Distance-based pricing for bus and car
+              ...(prev[category][vehicleType] as any),
+              [distance]: Number(value)
+            }
       }
     }));
   };
 
-  const handleCarVariantPriceChange = (carType: string, variant: string, value: string) => {
+  const handleCarVariantPriceChange = (carType: string, variant: string, distance: string, value: string) => {
     setEditCarVariantPrices((prev) => ({
       ...prev,
       [carType]: {
         ...prev[carType as keyof typeof prev],
-        [variant]: Number(value)
+        [variant]: {
+          ...(prev[carType as keyof typeof prev][variant] as any),
+          [distance]: Number(value)
+        }
       }
     }));
   };
@@ -108,7 +139,20 @@ const AdminPriceManagement = () => {
     for (const carType in carVariantPrices) {
       if (carVariantPrices[carType as keyof typeof carVariantPrices] && 
           priceCalculator.vehicleType in (carVariantPrices[carType as keyof typeof carVariantPrices] as any)) {
-        const rate = (carVariantPrices[carType as keyof typeof carVariantPrices] as any)[priceCalculator.vehicleType];
+        const variantPrices = (carVariantPrices[carType as keyof typeof carVariantPrices] as any)[priceCalculator.vehicleType];
+        
+        // Determine which distance bracket to use
+        let rate = variantPrices['200km']; // default to highest distance
+        if (priceCalculator.distance <= 50) {
+          rate = variantPrices['50km'];
+        } else if (priceCalculator.distance <= 100) {
+          rate = variantPrices['100km'];
+        } else if (priceCalculator.distance <= 150) {
+          rate = variantPrices['150km'];
+        } else if (priceCalculator.distance <= 200) {
+          rate = variantPrices['200km'];
+        }
+        
         return rate * priceCalculator.distance;
       }
     }
@@ -118,8 +162,26 @@ const AdminPriceManagement = () => {
       if (prices[category as keyof typeof prices] && 
           typeof prices[category as keyof typeof prices] === 'object' &&
           priceCalculator.vehicleType in (prices[category as keyof typeof prices] as any)) {
-        const rate = (prices[category as keyof typeof prices] as any)[priceCalculator.vehicleType];
-        return rate * priceCalculator.distance;
+        const variantPrices = (prices[category as keyof typeof prices] as any)[priceCalculator.vehicleType];
+        
+        // Check if it's distance-based pricing
+        if (typeof variantPrices === 'object' && variantPrices !== null) {
+          // Determine which distance bracket to use
+          let rate = variantPrices['200km']; // default to highest distance
+          if (priceCalculator.distance <= 50) {
+            rate = variantPrices['50km'];
+          } else if (priceCalculator.distance <= 100) {
+            rate = variantPrices['100km'];
+          } else if (priceCalculator.distance <= 150) {
+            rate = variantPrices['150km'];
+          } else if (priceCalculator.distance <= 200) {
+            rate = variantPrices['200km'];
+          }
+          return rate * priceCalculator.distance;
+        } else {
+          // Simple pricing (fallback)
+          return variantPrices * priceCalculator.distance;
+        }
       }
     }
     
@@ -211,13 +273,11 @@ const AdminPriceManagement = () => {
       <div className={`grid gap-6 md:gap-8 mb-6 md:mb-8 ${
         selectedCategory === 'car' ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'
       }`}>
-        {/* Price Settings - Only show for Auto-Ricksaw and Bus */}
-        {selectedCategory && selectedCategory !== 'car' && (
+        {/* Price Settings - Only show for Auto-Ricksaw */}
+        {selectedCategory === 'auto-ricksaw' && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg md:text-xl">
-                {selectedCategory === 'auto-ricksaw' ? 'Auto-Ricksaw' : 'Bus'} Price Settings
-              </CardTitle>
+              <CardTitle className="text-lg md:text-xl">Auto-Ricksaw Price Settings</CardTitle>
             </CardHeader>
             <CardContent>
               {isEditingPrices ? (
@@ -229,7 +289,7 @@ const AdminPriceManagement = () => {
                         id={`${vehicleType}-price`}
                         type="number"
                         value={editPrices[selectedCategory][vehicleType]}
-                        onChange={(e) => handlePriceChange(selectedCategory, vehicleType, e.target.value)}
+                        onChange={(e) => handlePriceChange(selectedCategory, vehicleType, 'base', e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -243,7 +303,7 @@ const AdminPriceManagement = () => {
                       setIsEditingPrices(false);
                       toast({
                         title: "Prices Updated",
-                        description: `${selectedCategory === 'auto-ricksaw' ? 'Auto-Ricksaw' : 'Bus'} prices have been updated successfully`,
+                        description: "Auto-Ricksaw prices have been updated successfully",
                         variant: "default",
                       });
                     }}>
@@ -269,6 +329,112 @@ const AdminPriceManagement = () => {
           </Card>
         )}
 
+        {/* Bus Variant Prices - Only show when bus category is selected */}
+        {selectedCategory === 'bus' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg md:text-xl">Bus Variant Prices</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isEditingPrices ? (
+                <div className="space-y-4">
+                  {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
+                    <div key={vehicleType} className="border border-gray-100 rounded-lg p-3">
+                      <h5 className="font-medium text-gray-700 mb-2">{vehicleType}</h5>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(distancePrices as any).map(([distance, price]) => (
+                          <div key={distance}>
+                            <Label htmlFor={`${vehicleType}-${distance}`}>{distance}</Label>
+                            <Input
+                              id={`${vehicleType}-${distance}`}
+                              type="number"
+                              value={editPrices[selectedCategory][vehicleType][distance as keyof typeof distancePrices]}
+                              onChange={(e) => handlePriceChange(selectedCategory, vehicleType, distance, e.target.value)}
+                              className="mt-1"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  <div className="flex space-x-2">
+                    <Button onClick={() => setIsEditingPrices(false)} variant="outline">
+                      Cancel
+                    </Button>
+                    <Button onClick={() => {
+                      setPrices(editPrices);
+                      setIsEditingPrices(false);
+                      toast({
+                        title: "Prices Updated",
+                        description: "Bus prices have been updated successfully",
+                        variant: "default",
+                      });
+                    }}>
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Distance Headers - Hidden on mobile */}
+                  <div className="hidden md:grid grid-cols-5 gap-2 mb-3">
+                    <div className="text-xs font-medium text-gray-500">Bus Type</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">50km</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">100km</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">150km</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">200km</div>
+                  </div>
+                  
+                  {/* Desktop View */}
+                  <div className="hidden md:space-y-2">
+                    {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
+                      <div key={vehicleType} className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div className="w-1/5 font-medium text-gray-700">{vehicleType}</div>
+                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
+                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</div>
+                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</div>
+                        <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile View */}
+                  <div className="md:hidden space-y-3">
+                    {Object.entries(prices[selectedCategory]).map(([vehicleType, distancePrices]) => (
+                      <div key={vehicleType} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                        <h5 className="font-medium text-gray-700 mb-2 text-sm">{vehicleType}</h5>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex justify-between items-center p-2 bg-white rounded">
+                            <span className="text-xs text-gray-600">50km</span>
+                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</span>
+                          </div>
+                          <div className="flex justify-between items-center p-2 bg-white rounded">
+                            <span className="text-xs text-gray-600">100km</span>
+                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</span>
+                          </div>
+                          <div className="flex justify-between items-center p-2 bg-white rounded">
+                            <span className="text-xs text-gray-600">150km</span>
+                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</span>
+                          </div>
+                          <div className="flex justify-between items-center p-2 bg-white rounded">
+                            <span className="text-xs text-gray-600">200km</span>
+                            <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <Button onClick={() => setIsEditingPrices(true)} className="w-full">
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Bus Variant Prices
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
                 {/* Car Variant Prices - Only show when car category is selected */}
         {selectedCategory === 'car' && (
           <Card>
@@ -284,16 +450,23 @@ const AdminPriceManagement = () => {
                     <div key={carType} className="border border-gray-200 rounded-lg p-4">
                       <h4 className="font-semibold text-gray-800 mb-3 capitalize">{carType} Models</h4>
                       <div className="space-y-3">
-                        {Object.entries(variants).map(([variant, price]) => (
-                          <div key={variant}>
-                            <Label htmlFor={`${carType}-${variant}-price`}>{variant} Price (per km)</Label>
-                            <Input
-                              id={`${carType}-${variant}-price`}
-                              type="number"
-                              value={editCarVariantPrices[carType as keyof typeof editCarVariantPrices][variant]}
-                              onChange={(e) => handleCarVariantPriceChange(carType, variant, e.target.value)}
-                              className="mt-1"
-                            />
+                        {Object.entries(variants).map(([variant, distancePrices]) => (
+                          <div key={variant} className="border border-gray-100 rounded-lg p-3">
+                            <h5 className="font-medium text-gray-700 mb-2">{variant}</h5>
+                            <div className="grid grid-cols-2 gap-2">
+                              {Object.entries(distancePrices as any).map(([distance, price]) => (
+                                <div key={distance}>
+                                  <Label htmlFor={`${carType}-${variant}-${distance}`}>{distance}</Label>
+                                  <Input
+                                    id={`${carType}-${variant}-${distance}`}
+                                    type="number"
+                                    value={editCarVariantPrices[carType as keyof typeof editCarVariantPrices][variant][distance as keyof typeof distancePrices]}
+                                    onChange={(e) => handleCarVariantPriceChange(carType, variant, distance, e.target.value)}
+                                    className="mt-1"
+                                  />
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -313,11 +486,52 @@ const AdminPriceManagement = () => {
                   {Object.entries(carVariantPrices).map(([carType, variants]) => (
                     <div key={carType} className="border border-gray-200 rounded-lg p-4">
                       <h4 className="font-semibold text-gray-800 mb-3 capitalize">{carType} Models</h4>
-                      <div className="space-y-2">
-                        {Object.entries(carVariantPrices[carType as keyof typeof carVariantPrices]).map(([variant, price]) => (
-                          <div key={variant} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                            <span className="text-sm font-medium">{variant}</span>
-                            <span className="text-sm font-bold text-blue-600">₹{price}/km</span>
+                      
+                      {/* Distance Headers - Hidden on mobile */}
+                      <div className="hidden md:grid grid-cols-5 gap-2 mb-3">
+                        <div className="text-xs font-medium text-gray-500">Model</div>
+                        <div className="text-xs font-medium text-gray-500 text-center">50km</div>
+                        <div className="text-xs font-medium text-gray-500 text-center">100km</div>
+                        <div className="text-xs font-medium text-gray-500 text-center">150km</div>
+                        <div className="text-xs font-medium text-gray-500 text-center">200km</div>
+                      </div>
+                      
+                      {/* Desktop View */}
+                      <div className="hidden md:space-y-2">
+                        {Object.entries(variants as any).map(([variant, distancePrices]) => (
+                          <div key={variant} className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                            <div className="w-1/5 font-medium text-gray-700">{variant}</div>
+                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</div>
+                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</div>
+                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</div>
+                            <div className="w-1/5 text-center text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Mobile View */}
+                      <div className="md:hidden space-y-3">
+                        {Object.entries(variants as any).map(([variant, distancePrices]) => (
+                          <div key={variant} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                            <h5 className="font-medium text-gray-700 mb-2 text-sm">{variant}</h5>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex justify-between items-center p-2 bg-white rounded">
+                                <span className="text-xs text-gray-600">50km</span>
+                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['50km']}/km</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 bg-white rounded">
+                                <span className="text-xs text-gray-600">100km</span>
+                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['100km']}/km</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 bg-white rounded">
+                                <span className="text-xs text-gray-600">150km</span>
+                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['150km']}/km</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 bg-white rounded">
+                                <span className="text-xs text-gray-600">200km</span>
+                                <span className="text-sm font-bold text-blue-600">₹{(distancePrices as any)['200km']}/km</span>
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -389,11 +603,11 @@ const AdminPriceManagement = () => {
                     ))}
                     
                     <SelectItem value="car-variants" disabled>-- Car Models --</SelectItem>
-                    {Object.entries(carVariantPrices).map(([carType, variants]) => (
-                      Object.entries(variants).map(([variant, price]) => (
+                    {Object.entries(carVariantPrices).map(([carType, variants]) => 
+                      Object.entries(variants as any).map(([variant, distancePrices]) => (
                         <SelectItem key={variant} value={variant}>{variant}</SelectItem>
                       ))
-                    ))}
+                    ).flat()}
                     
                     <SelectItem value="bus" disabled>-- Bus Types --</SelectItem>
                     {Object.entries(prices.bus).map(([type, price]) => (
@@ -411,219 +625,7 @@ const AdminPriceManagement = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Auto-Ricksaw Detailed Price Breakdown */}
-      {selectedCategory === 'auto-ricksaw' && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
-              🛺 Auto-Ricksaw Price Details & Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-blue-800 mb-2">Fuel Auto-Ricksaw</h3>
-                <div className="text-2xl font-bold text-blue-600">₹30/km</div>
-                <p className="text-sm text-blue-600 mt-1">Standard petrol/diesel</p>
-                <div className="mt-2 text-xs text-blue-600">
-                  <p>• Base fare: ₹30</p>
-                  <p>• Night charge: +₹5</p>
-                  <p>• Peak hours: +₹3</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-800 mb-2">Electric Auto-Ricksaw</h3>
-                <div className="text-2xl font-bold text-green-600">₹35/km</div>
-                <p className="text-sm text-green-600 mt-1">Eco-friendly option</p>
-                <div className="mt-2 text-xs text-green-600">
-                  <p>• Base fare: ₹35</p>
-                  <p>• Green incentive: +₹2</p>
-                  <p>• Battery charge: +₹1</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-purple-800 mb-2">CNG Auto-Ricksaw</h3>
-                <div className="text-2xl font-bold text-purple-600">₹32/km</div>
-                <p className="text-sm text-purple-600 mt-1">Compressed natural gas</p>
-                <div className="mt-2 text-xs text-purple-600">
-                  <p>• Base fare: ₹32</p>
-                  <p>• Fuel efficiency: +₹1</p>
-                  <p>• Maintenance: +₹1</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Additional Charges & Policies</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>Waiting Charges:</strong> ₹2/minute after 5 minutes</p>
-                  <p><strong>Luggage:</strong> ₹5 per bag (max 2 bags)</p>
-                  <p><strong>Late Night:</strong> 10 PM - 6 AM (+₹5)</p>
-                  <p><strong>Peak Hours:</strong> 8-10 AM, 6-8 PM (+₹3)</p>
-                  <p><strong>Airport:</strong> +₹20 surcharge</p>
-                  <p><strong>Highway:</strong> +₹10 surcharge</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Service Features</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>24/7 Service:</strong> Available round the clock</p>
-                  <p><strong>Digital Payment:</strong> UPI, cards, digital wallets</p>
-                  <p><strong>Safety Features:</strong> GPS tracking, driver verification</p>
-                  <p><strong>Comfort:</strong> Clean vehicles, AC options</p>
-                  <p><strong>Accessibility:</strong> Wheelchair-friendly options</p>
-                  <p><strong>Insurance:</strong> Passenger coverage included</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Car Detailed Price Breakdown */}
-      {selectedCategory === 'car' && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
-              🚗 Car Price Details & Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-blue-800 mb-2">Sedan</h3>
-                <div className="text-2xl font-bold text-blue-600">₹40/km</div>
-                <p className="text-sm text-blue-600 mt-1">Comfort & Style</p>
-                <div className="mt-2 text-xs text-blue-600">
-                  <p>• Base fare: ₹40</p>
-                  <p>• AC included</p>
-                  <p>• 4-5 passengers</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-800 mb-2">Hatchback</h3>
-                <div className="text-2xl font-bold text-green-600">₹35/km</div>
-                <p className="text-sm text-green-600 mt-1">Compact & Efficient</p>
-                <div className="mt-2 text-xs text-green-600">
-                  <p>• Base fare: ₹35</p>
-                  <p>• AC included</p>
-                  <p>• 4-5 passengers</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                <h3 className="font-semibold text-purple-800 mb-2">SUV</h3>
-                <div className="text-2xl font-bold text-purple-600">₹50/km</div>
-                <p className="text-sm text-purple-600 mt-1">Spacious & Powerful</p>
-                <div className="mt-2 text-xs text-purple-600">
-                  <p>• Base fare: ₹50</p>
-                  <p>• AC included</p>
-                  <p>• 6-8 passengers</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Additional Charges & Policies</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>Waiting Charges:</strong> ₹3/minute after 3 minutes</p>
-                  <p><strong>Luggage:</strong> ₹10 per bag (max 3 bags)</p>
-                  <p><strong>Late Night:</strong> 10 PM - 6 AM (+₹10)</p>
-                  <p><strong>Peak Hours:</strong> 8-10 AM, 6-8 PM (+₹5)</p>
-                  <p><strong>Airport:</strong> +₹50 surcharge</p>
-                  <p><strong>Highway:</strong> +₹20 surcharge</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Service Features</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>24/7 Service:</strong> Available round the clock</p>
-                  <p><strong>Digital Payment:</strong> UPI, cards, digital wallets</p>
-                  <p><strong>Safety Features:</strong> GPS tracking, driver verification</p>
-                  <p><strong>Comfort:</strong> Clean vehicles, AC, music system</p>
-                  <p><strong>Accessibility:</strong> Child seats available</p>
-                  <p><strong>Insurance:</strong> Passenger coverage included</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Bus Detailed Price Breakdown */}
-      {selectedCategory === 'bus' && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
-              🚌 Bus Price Details & Breakdown
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-semibold text-blue-800 mb-2">AC Sleeper</h3>
-                <div className="text-2xl font-bold text-blue-600">₹120/km</div>
-                <p className="text-sm text-blue-600 mt-1">Premium comfort</p>
-                <div className="mt-2 text-xs text-blue-600">
-                  <p>• Base fare: ₹120</p>
-                  <p>• AC included</p>
-                  <p>• Sleeper berths</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                <h3 className="font-semibold text-green-800 mb-2">Non-AC Sleeper</h3>
-                <div className="text-2xl font-bold text-green-600">₹100/km</div>
-                <p className="text-sm text-green-600 mt-1">Economy option</p>
-                <div className="mt-2 text-xs text-green-600">
-                  <p>• Base fare: ₹100</p>
-                  <p>• Sleeper berths</p>
-                  <p>• Ventilation</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Additional Charges & Policies</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>Waiting Charges:</strong> ₹5/minute after 10 minutes</p>
-                  <p><strong>Luggage:</strong> ₹15 per bag (max 5 bags)</p>
-                  <p><strong>Late Night:</strong> 10 PM - 6 AM (+₹20)</p>
-                  <p><strong>Peak Hours:</strong> 8-10 AM, 6-8 PM (+₹10)</p>
-                  <p><strong>Airport:</strong> +₹100 surcharge</p>
-                  <p><strong>Highway:</strong> +₹50 surcharge</p>
-                </div>
-              </div>
-              
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-semibold text-gray-800 mb-3">Service Features</h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <p><strong>24/7 Service:</strong> Available round the clock</p>
-                  <p><strong>Digital Payment:</strong> UPI, cards, digital wallets</p>
-                  <p><strong>Safety Features:</strong> GPS tracking, driver verification</p>
-                  <p><strong>Comfort:</strong> Clean vehicles, AC, sleeper berths</p>
-                  <p><strong>Accessibility:</strong> Wheelchair-friendly options</p>
-                  <p><strong>Insurance:</strong> Passenger coverage included</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-
-
-
+      </div>  
     </AdminLayout>
   );
 };

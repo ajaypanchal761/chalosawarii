@@ -1,7 +1,8 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { List, Clock, MapPin, Calendar, User, Home, HelpCircle, X, Bus, CreditCard, Phone, Mail } from "lucide-react";
+import { List, Clock, MapPin, Calendar, User, Home, HelpCircle, X, Bus, CreditCard, Phone, Mail, ArrowRight, Navigation, Car, Train, Plane } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import TopNavigation from "@/components/TopNavigation";
@@ -10,7 +11,9 @@ const Bookings = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const upcomingBookings = [
     {
@@ -31,7 +34,10 @@ const Bookings = () => {
       arrivalTerminal: "Delhi ISBT",
       duration: "18 hours",
       busType: "AC Sleeper",
-      operator: "Maharashtra State Transport"
+      operator: "Maharashtra State Transport",
+      vehicleType: "bus",
+      driverName: "Rajesh Kumar",
+      driverPhone: "+91 98765 12345"
     },
     {
       id: 2,
@@ -51,7 +57,10 @@ const Bookings = () => {
       arrivalTerminal: "Chennai Central",
       duration: "8 hours",
       busType: "AC Seater",
-      operator: "Karnataka State Transport"
+      operator: "Karnataka State Transport",
+      vehicleType: "bus",
+      driverName: "Suresh Reddy",
+      driverPhone: "+91 87654 23456"
     }
   ];
 
@@ -74,7 +83,10 @@ const Bookings = () => {
       arrivalTerminal: "Mumbai Central",
       duration: "4 hours",
       busType: "Non-AC Seater",
-      operator: "Maharashtra State Transport"
+      operator: "Maharashtra State Transport",
+      vehicleType: "bus",
+      driverName: "Mohan Singh",
+      driverPhone: "+91 76543 34567"
     }
   ];
 
@@ -83,204 +95,397 @@ const Bookings = () => {
     setIsDetailModalOpen(true);
   };
 
-  const handleCancelBooking = () => {
-    setIsCancelModalOpen(true);
-  };
 
-  const confirmCancelBooking = () => {
-    // Here you would typically make an API call to cancel the booking
-    console.log("Cancelling booking:", selectedBooking.bookingId);
-    setIsCancelModalOpen(false);
-    setIsDetailModalOpen(false);
-    setSelectedBooking(null);
-    // You could also update the local state to remove the booking
-  };
 
   const currentBookings = activeTab === "upcoming" ? upcomingBookings : pastBookings;
+  
+  // Filter bookings based on search and status
+  const filteredBookings = currentBookings.filter(booking => {
+    const matchesSearch = 
+      booking.from.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.to.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.bookingId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.passengerName.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = filterStatus === "all" || booking.status.toLowerCase() === filterStatus.toLowerCase();
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Confirmed":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "Completed":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "Cancelled":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getVehicleIcon = (vehicleType) => {
+    switch (vehicleType) {
+      case "bus":
+        return <Bus className="w-5 h-5 text-blue-600" />;
+      case "car":
+        return <Car className="w-5 h-5 text-green-600" />;
+      case "train":
+        return <Train className="w-5 h-5 text-purple-600" />;
+      case "plane":
+        return <Plane className="w-5 h-5 text-indigo-600" />;
+      default:
+        return <Bus className="w-5 h-5 text-blue-600" />;
+    }
+  };
 
   return (
-   
-    <div className="min-h-screen bg-background">
-       <TopNavigation/>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <TopNavigation />
+      
       {/* Header */}
-      <div className="bg-primary text-primary-foreground p-4">
-        <h1 className="text-xl font-semibold">My Bookings</h1>
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+        <div className="container mx-auto">
+          <h1 className="text-3xl font-bold mb-2">My Bookings</h1>
+          <p className="text-blue-100">Manage your travel reservations</p>
+        </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="sticky top-0 z-40 flex border-b border-border bg-background">
-        <button
-          className={`flex-1 py-3 text-sm font-medium ${
-            activeTab === "upcoming"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground"
-          }`}
-          onClick={() => setActiveTab("upcoming")}
-        >
-          Booking
-        </button>
-        <button
-          className={`flex-1 py-3 text-sm font-medium ${
-            activeTab === "past"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground"
-          }`}
-          onClick={() => setActiveTab("past")}
-        >
-          Past
-        </button>
+      <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200">
+        <div className="container mx-auto">
+          <div className="flex">
+            <button
+              className={`flex-1 py-4 text-sm font-medium transition-all duration-200 ${
+                activeTab === "upcoming"
+                  ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+              onClick={() => setActiveTab("upcoming")}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Calendar className="w-4 h-4" />
+                <span>Upcoming</span>
+              </div>
+            </button>
+            <button
+              className={`flex-1 py-4 text-sm font-medium transition-all duration-200 ${
+                activeTab === "past"
+                  ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                  : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+              }`}
+              onClick={() => setActiveTab("past")}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Clock className="w-4 h-4" />
+                <span>Past</span>
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-4 pb-20">
-        {currentBookings.length > 0 ? (
-          currentBookings.map((booking) => (
-            <Card key={booking.id} className="p-4 border border-border">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="font-semibold text-foreground">
-                    {booking.from} → {booking.to}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">Booking ID: {booking.bookingId}</p>
-                </div>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  booking.status === "Confirmed" 
-                    ? "bg-green-100 text-green-800" 
-                    : "bg-gray-100 text-gray-800"
-                }`}>
-                  {booking.status}
-                </span>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-foreground">{booking.date}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-foreground">{booking.time}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Bus className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm text-foreground">Seat {booking.seatNumber}</span>
-                </div>
-              </div>
-              
-              <div className="flex space-x-2 mt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex-1"
-                  onClick={() => handleViewDetails(booking)}
-                >
-                  View Details
-                </Button>
-              </div>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-8">
-            <List className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">No {activeTab} bookings</p>
+      <div className="container mx-auto p-6 space-y-6 pb-24">
+
+
+        {/* Bookings List */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {activeTab === "upcoming" ? "Upcoming" : "Past"} Bookings
+            </h2>
           </div>
-        )}
+          
+          {filteredBookings.length > 0 ? (
+            filteredBookings.map((booking) => (
+            <Card key={booking.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-white">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-3">
+                    {getVehicleIcon(booking.vehicleType)}
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {booking.from} <ArrowRight className="inline w-4 h-4 mx-2 text-gray-400" /> {booking.to}
+                      </h3>
+                      <p className="text-sm text-gray-500">Booking ID: {booking.bookingId}</p>
+                    </div>
+                  </div>
+                  <Badge className={`${getStatusColor(booking.status)} font-medium`}>
+                    {booking.status}
+                  </Badge>
+                </div>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Date</p>
+                      <p className="text-sm font-semibold text-gray-900">{booking.date}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Clock className="w-5 h-5 text-green-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Time</p>
+                      <p className="text-sm font-semibold text-gray-900">{booking.time}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Bus className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Seat</p>
+                      <p className="text-sm font-semibold text-gray-900">{booking.seatNumber}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg mb-4">
+                  <div className="flex items-center space-x-2">
+                    <CreditCard className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-gray-600">Total Fare:</span>
+                  </div>
+                  <span className="text-xl font-bold text-blue-600">{booking.fare}</span>
+                </div>
+                
+                <div className="flex space-x-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300"
+                    onClick={() => handleViewDetails(booking)}
+                  >
+                    <Navigation className="w-4 h-4 mr-2" />
+                    View Details
+                  </Button>
+
+                </div>
+              </CardContent>
+            </Card>
+            ))
+          ) : (
+            <div className="text-center py-16">
+              {searchTerm || filterStatus !== "all" ? (
+                <>
+                  <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <List className="w-12 h-12 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No bookings found</h3>
+                  <p className="text-gray-500 mb-6">
+                    No bookings match your current search criteria.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    onClick={() => {
+                      setSearchTerm("");
+                      setFilterStatus("all");
+                    }}
+                    className="mr-3"
+                  >
+                    Clear Filters
+                  </Button>
+                  <Link to="/">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Book a Trip
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <List className="w-12 h-12 text-gray-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No {activeTab} bookings</h3>
+                  <p className="text-gray-500 mb-6">You don't have any {activeTab} bookings at the moment.</p>
+                  <Link to="/">
+                    <Button className="bg-blue-600 hover:bg-blue-700">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      Book a Trip
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Booking Details Modal */}
       <Dialog open={isDetailModalOpen} onOpenChange={setIsDetailModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
+        <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto p-4 md:p-6">
+          <DialogHeader className="pb-4">
+            <DialogTitle className="text-lg md:text-xl">
               <span>Booking Details</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsDetailModalOpen(false)}
-              >
-               
-              </Button>
             </DialogTitle>
           </DialogHeader>
           
           {selectedBooking && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* Route Info */}
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-lg">
-                    {selectedBooking.from} → {selectedBooking.to}
-                  </h3>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    selectedBooking.status === "Confirmed" 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-gray-100 text-gray-800"
-                  }`}>
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 md:p-6 rounded-xl border border-blue-200">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 space-y-3 md:space-y-0">
+                  <div className="flex items-center space-x-2 md:space-x-3">
+                    {getVehicleIcon(selectedBooking.vehicleType)}
+                    <h3 className="text-lg md:text-2xl font-bold text-gray-900">
+                      {selectedBooking.from} <ArrowRight className="inline w-4 h-4 md:w-6 md:h-6 mx-2 md:mx-3 text-blue-500" /> {selectedBooking.to}
+                    </h3>
+                  </div>
+                  <Badge className={`${getStatusColor(selectedBooking.status)} text-xs md:text-sm font-medium px-2 py-1 md:px-3 md:py-1 w-fit`}>
                     {selectedBooking.status}
-                  </span>
+                  </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground">Booking ID: {selectedBooking.bookingId}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600 font-medium">Booking ID</p>
+                    <p className="font-mono font-semibold text-gray-900 text-sm md:text-base">{selectedBooking.bookingId}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-medium">Fare</p>
+                    <p className="text-lg md:text-xl font-bold text-blue-600">{selectedBooking.fare}</p>
+                  </div>
+                </div>
               </div>
 
               {/* Journey Details */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-foreground">Journey Details</h4>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.date}</span>
+              <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5 mr-2 text-blue-600" />
+                  Journey Details
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Date</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.date}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.time}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Clock className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Time</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.time}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Bus className="w-4 h-4 text-muted-foreground" />
-                    <span>Seat {selectedBooking.seatNumber}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Bus className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Seat</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.seatNumber}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <CreditCard className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.fare}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Clock className="w-4 h-4 md:w-5 md:h-5 text-orange-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Duration</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.duration}</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Bus Details */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-foreground">Bus Details</h4>
-                <div className="space-y-2 text-sm">
-                  <div><strong>Bus Number:</strong> {selectedBooking.busNumber}</div>
-                  <div><strong>Bus Type:</strong> {selectedBooking.busType}</div>
-                  <div><strong>Operator:</strong> {selectedBooking.operator}</div>
-                  <div><strong>Duration:</strong> {selectedBooking.duration}</div>
+              <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Bus className="w-4 h-4 md:w-5 md:h-5 mr-2 text-purple-600" />
+                  Vehicle Details
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 font-medium">Bus Number</p>
+                    <p className="font-semibold font-mono text-sm md:text-base">{selectedBooking.busNumber}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 font-medium">Type</p>
+                    <p className="font-semibold text-sm md:text-base">{selectedBooking.busType}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 font-medium">Operator</p>
+                    <p className="font-semibold text-sm md:text-base">{selectedBooking.operator}</p>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs text-gray-500 font-medium">Duration</p>
+                    <p className="font-semibold text-sm md:text-base">{selectedBooking.duration}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Driver Information */}
+              <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <User className="w-4 h-4 md:w-5 md:h-5 mr-2 text-orange-600" />
+                  Driver Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <User className="w-4 h-4 md:w-5 md:h-5 text-orange-600" />
+                    <div>
+                      <p className="text-xs text-orange-600 font-medium">Driver Name</p>
+                      <p className="font-semibold text-gray-900 text-sm md:text-base">{selectedBooking.driverName}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <Phone className="w-4 h-4 md:w-5 md:h-5 text-orange-600" />
+                    <div>
+                      <p className="text-xs text-orange-600 font-medium">Driver Contact</p>
+                      <p className="font-semibold text-gray-900 text-sm md:text-base">{selectedBooking.driverPhone}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Passenger Details */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-foreground">Passenger Details</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.passengerName}</span>
+              <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <User className="w-4 h-4 md:w-5 md:h-5 mr-2 text-green-600" />
+                  Passenger Details
+                </h4>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <User className="w-4 h-4 md:w-5 md:h-5 text-green-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Name</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.passengerName}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Phone className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.passengerPhone}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Phone className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Phone</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.passengerPhone}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <Mail className="w-4 h-4 text-muted-foreground" />
-                    <span>{selectedBooking.passengerEmail}</span>
+                  <div className="flex items-center space-x-2 md:space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <Mail className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
+                    <div>
+                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedBooking.passengerEmail}</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Terminals */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-foreground">Terminals</h4>
-                <div className="space-y-2 text-sm">
-                  <div><strong>Departure:</strong> {selectedBooking.departureTerminal}</div>
-                  <div><strong>Arrival:</strong> {selectedBooking.arrivalTerminal}</div>
+              <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200">
+                <h4 className="text-base md:text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5 mr-2 text-red-600" />
+                  Terminal Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                  <div className="p-3 md:p-4 bg-red-50 rounded-lg border border-red-200">
+                    <p className="text-xs text-red-600 font-medium mb-1">Departure Terminal</p>
+                    <p className="font-semibold text-gray-900 text-sm md:text-base">{selectedBooking.departureTerminal}</p>
+                  </div>
+                  <div className="p-3 md:p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-xs text-green-600 font-medium mb-1">Arrival Terminal</p>
+                    <p className="font-semibold text-gray-900 text-sm md:text-base">{selectedBooking.arrivalTerminal}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -288,58 +493,26 @@ const Bookings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Cancel Confirmation Modal */}
-      <Dialog open={isCancelModalOpen} onOpenChange={setIsCancelModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Cancel Booking</DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <p className="text-muted-foreground">
-              Are you sure you want to cancel your booking from {selectedBooking?.from} to {selectedBooking?.to}?
-            </p>
-            <p className="text-sm text-muted-foreground">
-              <strong>Note:</strong> Cancellation charges may apply based on the cancellation policy.
-            </p>
-            
-            <div className="flex space-x-3">
-              <Button 
-                variant="outline" 
-                className="flex-1"
-                onClick={() => setIsCancelModalOpen(false)}
-              >
-                Keep Booking
-              </Button>
-              <Button 
-                className="flex-1 bg-red-600 text-white hover:bg-red-700"
-                onClick={confirmCancelBooking}
-              >
-                Cancel Booking
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background z-50">
-        <div className="flex justify-around py-2">
+      <div className="fixed bottom-0 left-0 right-0 border-t border-gray-200 bg-white shadow-lg z-50">
+        <div className="flex justify-around py-3">
           <Link to="/" className="flex flex-col items-center space-y-1">
-            <Home className="w-5 h-5 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Home</span>
+            <Home className="w-5 h-5 text-gray-500" />
+            <span className="text-xs text-gray-500">Home</span>
           </Link>
           <Link to="/bookings" className="flex flex-col items-center space-y-1">
-            <List className="w-5 h-5 text-primary" />
-            <span className="text-xs text-primary font-medium">Bookings</span>
+            <List className="w-5 h-5 text-blue-600" />
+            <span className="text-xs text-blue-600 font-medium">Bookings</span>
           </Link>
           <Link to="/help" className="flex flex-col items-center space-y-1">
-            <HelpCircle className="w-5 h-5 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Help</span>
+            <HelpCircle className="w-5 h-5 text-gray-500" />
+            <span className="text-xs text-gray-500">Help</span>
           </Link>
           <Link to="/profile" className="flex flex-col items-center space-y-1">
-            <User className="w-5 h-5 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Account</span>
+            <User className="w-5 h-5 text-gray-500" />
+            <span className="text-xs text-gray-500">Account</span>
           </Link>
         </div>
       </div>
