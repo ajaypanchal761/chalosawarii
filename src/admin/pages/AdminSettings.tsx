@@ -14,14 +14,12 @@ import { Separator } from "@/components/ui/separator";
 import { 
   Settings, 
   Shield, 
-  Bell, 
   Database,
   Save,
   RefreshCw,
   Eye,
   EyeOff,
   Globe,
-  CreditCard,
   Users,
   Truck,
   AlertTriangle,
@@ -65,15 +63,6 @@ const AdminSettings = () => {
     lockoutDuration: 15,
     enableAuditLog: true,
     
-    // Notification Settings
-    emailNotifications: true,
-    smsNotifications: true,
-    pushNotifications: true,
-    bookingConfirmations: true,
-    paymentNotifications: true,
-    systemAlerts: true,
-    marketingEmails: false,
-    
     // API Settings
     enableApi: true,
     apiKey: import.meta.env.VITE_API_KEY || "demo_api_key_for_development",
@@ -87,14 +76,6 @@ const AdminSettings = () => {
     refundPolicy: "Full refund within 24 hours of booking",
     termsOfService: "Standard terms and conditions apply",
     privacyPolicy: "We respect your privacy and protect your data",
-    
-    // Payment Settings
-    enableOnlinePayment: true,
-    enableCashPayment: true,
-    enableWallet: true,
-    paymentGateway: "razorpay",
-    taxRate: 5,
-    serviceCharge: 2,
   });
 
   useEffect(() => {
@@ -191,13 +172,6 @@ const AdminSettings = () => {
         requireSpecialChars: true,
         lockoutDuration: 15,
         enableAuditLog: true,
-        emailNotifications: true,
-        smsNotifications: true,
-        pushNotifications: true,
-        bookingConfirmations: true,
-        paymentNotifications: true,
-        systemAlerts: true,
-        marketingEmails: false,
         enableApi: true,
         apiKey: import.meta.env.VITE_API_KEY || "demo_api_key_for_development",
         rateLimit: 1000,
@@ -208,12 +182,6 @@ const AdminSettings = () => {
         refundPolicy: "Full refund within 24 hours of booking",
         termsOfService: "Standard terms and conditions apply",
         privacyPolicy: "We respect your privacy and protect your data",
-        enableOnlinePayment: true,
-        enableCashPayment: true,
-        enableWallet: true,
-        paymentGateway: "razorpay",
-        taxRate: 5,
-        serviceCharge: 2,
       });
       toast({
         title: "🔄 Settings Reset",
@@ -266,20 +234,6 @@ const AdminSettings = () => {
           >
             <Shield className="w-3 h-3 md:w-4 md:h-4" />
             <span>Security</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="notifications" 
-            className="flex items-center justify-center space-x-1 md:space-x-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-gray-900 whitespace-nowrap min-w-fit px-3 md:px-4 py-2 text-gray-600 hover:text-gray-900 text-xs md:text-sm transition-all duration-200"
-          >
-            <Bell className="w-3 h-3 md:w-4 md:h-4" />
-            <span>Notifications</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="payments" 
-            className="flex items-center justify-center space-x-1 md:space-x-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-gray-900 whitespace-nowrap min-w-fit px-3 md:px-4 py-2 text-gray-600 hover:text-gray-900 text-xs md:text-sm transition-all duration-200"
-          >
-            <CreditCard className="w-3 h-3 md:w-4 md:h-4" />
-            <span>Payments</span>
           </TabsTrigger>
         </TabsList>
 
@@ -582,114 +536,7 @@ const AdminSettings = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg md:text-xl flex items-center">
-                <Bell className="w-5 h-5 mr-2 text-blue-600" />
-                Notification Preferences
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-gray-900 flex items-center">
-                    <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
-                    Email Notifications
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                      <div>
-                        <Label htmlFor="emailNotifications">General Email Notifications</Label>
-                        <p className="text-xs sm:text-sm text-gray-600">Receive notifications via email</p>
-                      </div>
-                      <Switch
-                        id="emailNotifications"
-                        checked={settings.emailNotifications}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, emailNotifications: checked }))}
-                      />
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                      <div>
-                        <Label htmlFor="bookingConfirmations">Booking Confirmations</Label>
-                        <p className="text-xs sm:text-sm text-gray-600">Email confirmations for bookings</p>
-                      </div>
-                      <Switch
-                        id="bookingConfirmations"
-                        checked={settings.bookingConfirmations}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, bookingConfirmations: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="paymentNotifications">Payment Notifications</Label>
-                        <p className="text-sm text-gray-600">Payment status updates</p>
-                      </div>
-                      <Switch
-                        id="paymentNotifications"
-                        checked={settings.paymentNotifications}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, paymentNotifications: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="systemAlerts">System Alerts</Label>
-                        <p className="text-sm text-gray-600">Important system notifications</p>
-                      </div>
-                      <Switch
-                        id="systemAlerts"
-                        checked={settings.systemAlerts}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, systemAlerts: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="marketingEmails">Marketing Emails</Label>
-                        <p className="text-sm text-gray-600">Promotional content and offers</p>
-                      </div>
-                      <Switch
-                        id="marketingEmails"
-                        checked={settings.marketingEmails}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, marketingEmails: checked }))}
-                      />
-                    </div>
-                  </div>
-                </div>
 
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-gray-900 flex items-center">
-                    <Bell className="w-4 h-4 mr-2 text-blue-600" />
-                    Other Notifications
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="smsNotifications">SMS Notifications</Label>
-                        <p className="text-sm text-gray-600">Send notifications via SMS</p>
-                      </div>
-                      <Switch
-                        id="smsNotifications"
-                        checked={settings.smsNotifications}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, smsNotifications: checked }))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label htmlFor="pushNotifications">Push Notifications</Label>
-                        <p className="text-sm text-gray-600">Mobile app push notifications</p>
-                      </div>
-                      <Switch
-                        id="pushNotifications"
-                        checked={settings.pushNotifications}
-                        onCheckedChange={(checked) => setSettings(prev => ({ ...prev, pushNotifications: checked }))}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         <TabsContent value="business" className="space-y-6">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
@@ -776,117 +623,7 @@ const AdminSettings = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="payments" className="space-y-6">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-            <Card className="border-l-4 border-l-green-500">
-              <CardHeader>
-                <CardTitle className="text-lg md:text-xl flex items-center">
-                  <CreditCard className="w-5 h-5 mr-2 text-green-600" />
-                  Payment Methods
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="enableOnlinePayment">Online Payment</Label>
-                      <p className="text-sm text-gray-600">Credit/Debit cards, UPI, etc.</p>
-                    </div>
-                    <Switch
-                      id="enableOnlinePayment"
-                      checked={settings.enableOnlinePayment}
-                      onCheckedChange={(checked) => setSettings(prev => ({ ...prev, enableOnlinePayment: checked }))}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="enableCashPayment">Cash Payment</Label>
-                      <p className="text-sm text-gray-600">Pay at pickup/drop location</p>
-                    </div>
-                    <Switch
-                      id="enableCashPayment"
-                      checked={settings.enableCashPayment}
-                      onCheckedChange={(checked) => setSettings(prev => ({ ...prev, enableCashPayment: checked }))}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label htmlFor="enableWallet">Digital Wallet</Label>
-                      <p className="text-sm text-gray-600">Paytm, PhonePe, etc.</p>
-                    </div>
-                    <Switch
-                      id="enableWallet"
-                      checked={settings.enableWallet}
-                      onCheckedChange={(checked) => setSettings(prev => ({ ...prev, enableWallet: checked }))}
-                    />
-                  </div>
-                </div>
-                <Separator />
-                <div>
-                  <Label htmlFor="paymentGateway">Payment Gateway</Label>
-                  <Select value={settings.paymentGateway} onValueChange={(value) => setSettings(prev => ({ ...prev, paymentGateway: value }))}>
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="razorpay">Razorpay</SelectItem>
-                      <SelectItem value="stripe">Stripe</SelectItem>
-                      <SelectItem value="paypal">PayPal</SelectItem>
-                      <SelectItem value="paytm">Paytm</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
 
-            <Card className="border-l-4 border-l-orange-500">
-              <CardHeader>
-                <CardTitle className="text-lg md:text-xl flex items-center">
-                  <CreditCard className="w-5 h-5 mr-2 text-orange-600" />
-                  Fees & Charges
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div>
-                    <Label htmlFor="taxRate">Tax Rate (%)</Label>
-                    <Input
-                      id="taxRate"
-                      type="number"
-                      value={settings.taxRate}
-                      onChange={(e) => setSettings(prev => ({ ...prev, taxRate: parseFloat(e.target.value) || 5 }))}
-                      className="mt-1"
-                      min="0"
-                      max="20"
-                      step="0.1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="serviceCharge">Service Charge (%)</Label>
-                    <Input
-                      id="serviceCharge"
-                      type="number"
-                      value={settings.serviceCharge}
-                      onChange={(e) => setSettings(prev => ({ ...prev, serviceCharge: parseFloat(e.target.value) || 2 }))}
-                      className="mt-1"
-                      min="0"
-                      max="10"
-                      step="0.1"
-                    />
-                  </div>
-                </div>
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <div className="flex items-center">
-                    <Info className="w-4 h-4 text-blue-600 mr-2" />
-                    <span className="text-sm text-blue-800">
-                      Total charges: {settings.taxRate + settings.serviceCharge}% (Tax: {settings.taxRate}% + Service: {settings.serviceCharge}%)
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
 
         <TabsContent value="api" className="space-y-6">
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">

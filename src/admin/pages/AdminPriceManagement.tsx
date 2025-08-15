@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Plus,
@@ -44,6 +45,7 @@ const AdminPriceManagement = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<'auto-ricksaw' | 'car' | 'bus' | ''>('');
+  const [tripType, setTripType] = useState<'one-trip' | 'return-trip'>('one-trip');
   const [prices, setPrices] = useState<VehiclePricing>({
     'auto-ricksaw': {
       'Fuel Auto-Ricksaw': 30,
@@ -237,7 +239,7 @@ const AdminPriceManagement = () => {
             onClick={() => setSelectedCategory('auto-ricksaw')}
             className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
               selectedCategory === 'auto-ricksaw'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                ? 'border-blue-500 bg-blue-500 text-white'
                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
             }`}
           >
@@ -248,7 +250,7 @@ const AdminPriceManagement = () => {
             onClick={() => setSelectedCategory('car')}
             className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
               selectedCategory === 'car'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                ? 'border-blue-500 bg-blue-500 text-white'
                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
             }`}
           >
@@ -259,7 +261,7 @@ const AdminPriceManagement = () => {
             onClick={() => setSelectedCategory('bus')}
             className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
               selectedCategory === 'bus'
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                ? 'border-blue-500 bg-blue-500 text-white'
                 : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
             }`}
           >
@@ -269,6 +271,39 @@ const AdminPriceManagement = () => {
         </div>
       </div>
 
+      {/* Trip Type Selection */}
+      {selectedCategory && (
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-4">Select Trip Type</h2>
+          <div className="grid grid-cols-2 gap-4 max-w-md">
+            <button
+              onClick={() => setTripType('one-trip')}
+              className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
+                tripType === 'one-trip'
+                  ? 'border-green-500 bg-green-500 text-white'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-2xl mb-2">➡️</div>
+              <div className="font-medium">One Trip</div>
+              <div className="text-sm opacity-90">Single Journey</div>
+            </button>
+            <button
+              onClick={() => setTripType('return-trip')}
+              className={`p-4 border-2 rounded-lg text-center transition-all duration-200 ${
+                tripType === 'return-trip'
+                  ? 'border-green-500 bg-green-500 text-white'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              <div className="text-2xl mb-2">🔄</div>
+              <div className="font-medium">Return Trip</div>
+              <div className="text-sm opacity-90">Round Journey</div>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Price Management Section */}
       <div className={`grid gap-6 md:gap-8 mb-6 md:mb-8 ${
         selectedCategory === 'car' ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'
@@ -277,7 +312,12 @@ const AdminPriceManagement = () => {
         {selectedCategory === 'auto-ricksaw' && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg md:text-xl">Auto-Ricksaw Price Settings</CardTitle>
+              <CardTitle className="text-lg md:text-xl flex items-center gap-2">
+                🛺 Auto-Ricksaw Price Settings
+                <Badge variant="secondary" className="ml-2 bg-green-100 text-green-700 border-green-200">
+                  {tripType === 'one-trip' ? 'One Trip' : 'Return Trip'}
+                </Badge>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               {isEditingPrices ? (
@@ -335,6 +375,9 @@ const AdminPriceManagement = () => {
             <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
               <CardTitle className="text-xl font-bold text-blue-800 flex items-center gap-2">
                 🚌 Bus Variant Prices
+                <Badge variant="secondary" className="ml-2 bg-green-100 text-green-700 border-green-200">
+                  {tripType === 'one-trip' ? 'One Trip' : 'Return Trip'}
+                </Badge>
               </CardTitle>
               <p className="text-sm text-blue-600">Manage distance-based pricing for all bus types</p>
             </CardHeader>
@@ -426,6 +469,9 @@ const AdminPriceManagement = () => {
             <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
               <CardTitle className="text-xl font-bold text-green-800 flex items-center gap-2">
                 🚗 Car Variant Prices
+                <Badge variant="secondary" className="ml-2 bg-green-100 text-green-700 border-green-200">
+                  {tripType === 'one-trip' ? 'One Trip' : 'Return Trip'}
+                </Badge>
               </CardTitle>
               <p className="text-sm text-green-600">Manage distance-based pricing for all car models</p>
             </CardHeader>
@@ -528,7 +574,12 @@ const AdminPriceManagement = () => {
         {/* Fare Calculator */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg md:text-xl">Fare Calculator</CardTitle>
+            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
+              🧮 Fare Calculator
+              <Badge variant="secondary" className="ml-2 bg-blue-100 text-blue-700 border-blue-200">
+                {tripType === 'one-trip' ? 'One Trip' : 'Return Trip'}
+              </Badge>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
