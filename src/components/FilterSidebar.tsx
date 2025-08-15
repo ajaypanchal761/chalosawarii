@@ -67,7 +67,9 @@ export const FilterSidebar = ({ isOpen = true, onToggle, selectedType = 'bus' }:
     { id: 'non-ac', label: 'Non-AC Sleeper' },
     { id: '52ac_non_ac', label: '52-Seater AC/Non-AC' },
     { id: '40ac_non_ac', label: '40-Seater AC/Non-AC' },
-    { id: '32ac_non_ac', label: '32-Seater AC/Non-AC' }
+    { id: '32ac_non_ac', label: '32-Seater AC/Non-AC' },
+    { id: '26ac_non_ac', label: '26-Seater AC/Non-AC' },
+    { id: '17ac_non_ac', label: '17-Seater AC/Non-AC' }
   ];
 
   const operatorOptions: FilterOption[] = [
